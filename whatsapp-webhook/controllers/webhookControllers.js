@@ -26,7 +26,7 @@ const testing_chatbot = {
                 {
                     type: "text",
                     text: "Stark Edge",
-                    parameter_name: "company_name"
+                    name: "company_name"
                 }
             ]
         },
