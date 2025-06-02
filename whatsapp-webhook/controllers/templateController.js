@@ -65,7 +65,7 @@ export const fetchTemplates = async (req, res) => {
 export const createTemplate = async (req, res) => {
     try {
         const payload = req.body;
-        console.log(payload);
+        console.log("backend creating template: " + payload);
 
         const response = await axios.post(baseURL, payload, {
             headers: {
