@@ -94,6 +94,10 @@ export const editTemplate = async (req, res) => {
         const { id } = req.params;
         const payload = req.body;
 
+
+        console.log("backend editing template: " + JSON.stringify(payload))
+        console.log("id: " + id);
+
         const response = await axios.post(`https://graph.facebook.com/v22.0/${id}`, payload, {
             headers: {
                 'Content-Type': 'application/json',
@@ -134,10 +138,11 @@ export const deleteTemplate = async (req, res) => {
         const response = await axios.delete(deleteUrl);
 
         if (response.data.success) {
-            await Template.findOneAndUpdate({ id }, { deleted: true, updatedAt: new Date() });
+            await Template.deleteOne({ id });
+
             res.status(200).json({ success: true, id });
         } else {
-            throw new Error('Delete failed');
+            throw new Error('Delete failed on WhatsApp');
         }
     } catch (error) {
         console.error('Delete Error:', error.message);
@@ -147,3 +152,4 @@ export const deleteTemplate = async (req, res) => {
         });
     }
 };
+
