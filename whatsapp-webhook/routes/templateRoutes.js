@@ -6,7 +6,7 @@ import { fetchTemplates, createTemplate, editTemplate, deleteTemplate  } from '.
 
 router.get('/templates', fetchTemplates);
 router.post('/createTemplate', createTemplate);
-router.post('/editTemplate', editTemplate);
+router.post('/editTemplate/:id', editTemplate);
 router.delete('/deleteTemplate', deleteTemplate);
 
 export default router;
