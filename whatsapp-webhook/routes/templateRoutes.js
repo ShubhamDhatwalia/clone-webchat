@@ -4,10 +4,10 @@ import { fetchTemplates, createTemplate, editTemplate, deleteTemplate } from '..
 
 
 
-router.get('/', fetchTemplates);
-router.post('/', createTemplate);
-router.put('/:id', editTemplate);
-router.delete('/', deleteTemplate);
+router.get('/templates', fetchTemplates);
+router.post('/createTemplate', createTemplate);
+router.put('template/:id', editTemplate);
+router.delete('/deleteTemplate', deleteTemplate);
 
 export default router;
 

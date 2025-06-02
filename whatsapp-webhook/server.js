@@ -24,7 +24,7 @@ app.use(express.json());
 
 
 app.use('/', webhookRoutes);
-app.use('/templates', templateRoutes);
+app.use('/', templateRoutes);
 
 console.log(process.env.ATLAS_URI);
 
