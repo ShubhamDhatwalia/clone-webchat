@@ -52,7 +52,7 @@ export const deleteTemplate = createAsyncThunk(
   async ({ id, name }, { rejectWithValue }) => {
     try {
       // Send id and name as query parameters
-      const response = await axios.delete(`/template?id=${id}&name=${encodeURIComponent(name)}`);
+      const response = await axios.delete(`/deleteTemplate?id=${id}&name=${encodeURIComponent(name)}`);
       toast.success('Template deleted successfully!');
       return id;
     } catch (error) {
