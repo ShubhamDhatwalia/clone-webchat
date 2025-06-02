@@ -10,7 +10,7 @@ export const createTemplate = createAsyncThunk(
   'templates/createTemplate',
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_BASE}/templates`, payload);
+      const response = await axios.post(`${API_BASE}/createTemplate`, payload);
       toast.success('Template created successfully!');
       return response.data;
     } catch (error) {
@@ -24,7 +24,7 @@ export const editTemplate = createAsyncThunk(
   'templates/editTemplate',
   async ({ id, payload }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${API_BASE}/templates/${id}`, payload);
+      const response = await axios.put(`${API_BASE}/template/${id}`, payload);
       toast.success('Template updated successfully!');
       return response.data;
     } catch (error) {
@@ -52,7 +52,7 @@ export const deleteTemplate = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
 
-      await axios.delete(`${API_BASE}/templates/${id}`);
+      await axios.delete(`${API_BASE}/template/${id}`);
       toast.success('Template deleted successfully!');
       return id;
     } catch (error) {
