@@ -24,18 +24,19 @@ export const fetchTemplates = async (req, res) => {
     try {
         const response = await axios.get(`${baseURL}?access_token=${accessToken}&limit=1000`);
         const templates = response.data.data;
-        console.log(templates);
 
+        // Bulk insert/update all templates
+        const operations = templates.map(t => ({
+            updateOne: {
+                filter: { id: t.id },
+                update: { ...t, updatedAt: new Date() },
+                upsert: true
+            }
+        }));
 
-        // Save/update templates to MongoDB
-        for (const t of templates) {
-            await Template.findOneAndUpdate(
-                { id: t.id },
-                { ...t, updatedAt: new Date() },
-                { upsert: true, new: true }
-            );
-        }
+        await Template.bulkWrite(operations);
 
+        // Fetch non-deleted templates
         const visibleTemplates = await Template.find({ deleted: { $ne: true } });
 
         res.status(200).json({ templates: visibleTemplates });
