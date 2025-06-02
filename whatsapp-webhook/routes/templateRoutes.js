@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-import { fetchTemplates,  } from '../controllers/templateController.js';
+import { fetchTemplates, createTemplate, editTemplate, deleteTemplate  } from '../controllers/templateController.js';
 
 
 
