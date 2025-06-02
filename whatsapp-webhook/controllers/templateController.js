@@ -1,7 +1,7 @@
 import axios from 'axios';
 import  Template  from '../models/templates.js'
 
-const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
+const accessToken = process.env.WHATSAPP_API_TOKEN;
 const businessId = process.env.WHATSAPP_BUSINESS_ID;
 const baseURL = `https://graph.facebook.com/v22.0/${businessId}/message_templates`;
 
