@@ -63,35 +63,35 @@ export const fetchTemplates = async (req, res) => {
 
 // ------------------------- Create Template -------------------------
 export const createTemplate = async (req, res) => {
-    try {
-        const payload = req.body;
-        console.log("backend creating template: " + JSON.stringify(payload));
+  try {
+    const payload = req.body;
+    console.log("backend creating template: " + JSON.stringify(payload));
 
-        const response = await axios.post(baseURL, payload, {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: `Bearer ${accessToken}`,
-            },
-        });
+    const response = await axios.post(baseURL, payload, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
 
-        const newTemplateData = {
-            ...response.data,
-            createdAt: new Date(),
-        };
+    const newTemplateData = {
+      ...response.data,  
+      ...payload,        
+      createdAt: new Date()
+    };
 
-        console.log(newTemplateData);
+    console.log("Template to save:", newTemplateData);
 
+    const saved = await Template.create(newTemplateData);
 
-        const saved = await Template.create(newTemplateData);
-
-        res.status(201).json({ template: saved });
-    } catch (error) {
-        console.error('Create Error:', error.message);
-        res.status(500).json({
-            message: 'Failed to create template',
-            error: error.response?.data || error.message,
-        });
-    }
+    res.status(201).json({ template: saved });
+  } catch (error) {
+    console.error('Create Error:', error.message);
+    res.status(500).json({
+      message: 'Failed to create template',
+      error: error.response?.data || error.message,
+    });
+  }
 };
 
 // ------------------------- Edit Template -------------------------
