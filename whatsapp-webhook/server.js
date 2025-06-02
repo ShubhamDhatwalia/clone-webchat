@@ -10,7 +10,11 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+
+const cors = require("cors");
 app.use(cors());
+
 
 
 mongoose.connect(process.env.ATLAS_URI, {
