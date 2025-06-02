@@ -12,6 +12,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 
+const allowedOrigins = ['http://localhost:5173', 'https://clone-webchat.onrender.com'];
+
+app.use(cors({
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true,
+}));
+
+
 app.use(cors());
 
 

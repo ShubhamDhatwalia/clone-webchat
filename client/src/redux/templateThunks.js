@@ -2,8 +2,6 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
-// Your backend base URL
-const API_BASE = 'https://clone-webchat.onrender.com';
 
 //
 export const createTemplate = createAsyncThunk(
@@ -38,7 +36,7 @@ export const fetchTemplates = createAsyncThunk(
   'templates/fetchTemplates',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_BASE}/templates`);
+      const response = await axios.get('/templates');
       return response.data;
     } catch (error) {
       toast.error('Failed to fetch templates.');

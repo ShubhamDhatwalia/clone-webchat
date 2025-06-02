@@ -10,6 +10,9 @@ const businessId = process.env.WHATSAPP_BUSINESS_ID;
 const baseURL = `https://graph.facebook.com/v22.0/${businessId}/message_templates`;
 
 console.log(baseURL);
+console.log(accessToken);
+console.log(businessId);
+
 
 
 
@@ -21,6 +24,8 @@ export const fetchTemplates = async (req, res) => {
     try {
         const response = await axios.get(`${baseURL}?access_token=${accessToken}&limit=1000`);
         const templates = response.data.data;
+        console.log(templates);
+
 
         // Save/update templates to MongoDB
         for (const t of templates) {
