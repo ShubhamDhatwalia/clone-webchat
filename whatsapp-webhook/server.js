@@ -23,10 +23,11 @@ app.use(cors({
 
 
 
-
 mongoose.connect(process.env.ATLAS_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  ssl: true,
+  tlsAllowInvalidCertificates: false,
 });
 
 
