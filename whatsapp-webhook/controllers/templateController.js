@@ -103,6 +103,7 @@ export const editTemplate = async (req, res) => {
 
         const updatedData = {
             ...response.data,
+            payload,
             updatedAt: new Date(),
         };
 

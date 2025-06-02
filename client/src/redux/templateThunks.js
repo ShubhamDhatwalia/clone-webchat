@@ -10,7 +10,7 @@ export const createTemplate = createAsyncThunk(
     console.log("creating template: " + JSON.stringify(payload));
     try {
       const response = await axios.post(`/createTemplate`, payload);
-      toast.success('Template created successfully!');
+      // toast.success('Template created successfully!');
       return response.data;
     } catch (error) {
       toast.error('Failed to create template.');
@@ -51,7 +51,6 @@ export const deleteTemplate = createAsyncThunk(
   'templates/deleteTemplate',
   async ({ id, name }, { rejectWithValue }) => {
     try {
-      // Send id and name as query parameters
       const response = await axios.delete(`/deleteTemplate?id=${id}&name=${encodeURIComponent(name)}`);
       toast.success('Template deleted successfully!');
       return id;
