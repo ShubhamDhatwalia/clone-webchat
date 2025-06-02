@@ -22,32 +22,25 @@ console.log(businessId);
 // ------------------------- Fetch Templates -------------------------
 export const fetchTemplates = async (req, res) => {
     try {
+        // Step 1: Fetch from WhatsApp API
         const response = await axios.get(`${baseURL}?access_token=${accessToken}&limit=1000`);
         const templates = response.data.data;
 
-        const fetchedIds = templates.map(t => t.id);
+        // Step 2: Create upsert operations for all templates
+        const operations = templates.map(t => ({
+            updateOne: {
+                filter: { id: t.id },
+                update: {
+                    $set: { ...t, updatedAt: new Date() }
+                },
+                upsert: true
+            }
+        }));
 
-        const existingTemplates = await Template.find({ id: { $in: fetchedIds } }, { id: 1 });
-        const existingIds = new Set(existingTemplates.map(t => t.id));
+        await Template.bulkWrite(operations);
 
-        const newTemplates = templates.filter(t => !existingIds.has(t.id));
-
-        if (newTemplates.length > 0) {
-
-            const operations = newTemplates.map(t => ({
-                updateOne: {
-                    filter: { id: t.id },
-                    update: { ...t, updatedAt: new Date() },
-                    upsert: true
-                }
-            }));
-
-            await Template.bulkWrite(operations);
-        }
-
-
+        // Step 3: Fetch all non-deleted templates from DB
         const visibleTemplates = await Template.find({ deleted: { $ne: true } });
-        console.log(visibleTemplates)
 
         res.status(200).json({ templates: visibleTemplates });
     } catch (error) {
@@ -61,37 +54,38 @@ export const fetchTemplates = async (req, res) => {
 
 
 
+
 // ------------------------- Create Template -------------------------
 export const createTemplate = async (req, res) => {
-  try {
-    const payload = req.body;
-    console.log("backend creating template: " + JSON.stringify(payload));
+    try {
+        const payload = req.body;
+        console.log("backend creating template: " + JSON.stringify(payload));
 
-    const response = await axios.post(baseURL, payload, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+        const response = await axios.post(baseURL, payload, {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${accessToken}`,
+            },
+        });
 
-    const newTemplateData = {
-      ...response.data,  
-      ...payload,        
-      createdAt: new Date()
-    };
+        const newTemplateData = {
+            ...response.data,
+            ...payload,
+            createdAt: new Date()
+        };
 
-    console.log("Template to save:", newTemplateData);
+        console.log("Template to save:", newTemplateData);
 
-    const saved = await Template.create(newTemplateData);
+        const saved = await Template.create(newTemplateData);
 
-    res.status(201).json({ template: saved });
-  } catch (error) {
-    console.error('Create Error:', error.message);
-    res.status(500).json({
-      message: 'Failed to create template',
-      error: error.response?.data || error.message,
-    });
-  }
+        res.status(201).json({ template: saved });
+    } catch (error) {
+        console.error('Create Error:', error.message);
+        res.status(500).json({
+            message: 'Failed to create template',
+            error: error.response?.data || error.message,
+        });
+    }
 };
 
 // ------------------------- Edit Template -------------------------
