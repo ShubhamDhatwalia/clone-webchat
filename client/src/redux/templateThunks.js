@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 export const createTemplate = createAsyncThunk(
   'templates/createTemplate',
   async (payload, { rejectWithValue }) => {
-    console.log(payload);
+    console.log("creating template: " + payload);
     try {
       const response = await axios.post(`/createTemplate`, payload);
       toast.success('Template created successfully!');
