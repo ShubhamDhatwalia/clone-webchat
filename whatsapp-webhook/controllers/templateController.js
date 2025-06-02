@@ -94,6 +94,9 @@ export const editTemplate = async (req, res) => {
         const { id } = req.params;
         const payload = req.body;
 
+        console.log("id: " + id)
+        console.log("payload: " + JSON.stringify(payload));
+
 
         console.log("backend editing template: " + JSON.stringify(payload))
         console.log("id: " + id);
