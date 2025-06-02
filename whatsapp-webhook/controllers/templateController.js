@@ -1,11 +1,15 @@
 import axios from 'axios';
-import  Template  from '../models/templates.js'
+import Template from '../models/templates.js'
+
+import dotenv from 'dotenv';
+dotenv.config();
+
 
 const accessToken = process.env.WHATSAPP_API_TOKEN;
 const businessId = process.env.WHATSAPP_BUSINESS_ID;
 const baseURL = `https://graph.facebook.com/v22.0/${businessId}/message_templates`;
 
-
+console.log(baseURL);
 
 
 
