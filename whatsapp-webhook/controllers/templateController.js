@@ -33,7 +33,7 @@ export const fetchTemplates = async (req, res) => {
         const newTemplates = templates.filter(t => !existingIds.has(t.id));
 
         if (newTemplates.length > 0) {
-            
+
             const operations = newTemplates.map(t => ({
                 updateOne: {
                     filter: { id: t.id },
@@ -45,7 +45,7 @@ export const fetchTemplates = async (req, res) => {
             await Template.bulkWrite(operations);
         }
 
-        
+
         const visibleTemplates = await Template.find({ deleted: { $ne: true } });
         console.log(visibleTemplates)
 
@@ -65,7 +65,7 @@ export const fetchTemplates = async (req, res) => {
 export const createTemplate = async (req, res) => {
     try {
         const payload = req.body;
-        console.log("backend creating template: " + payload);
+        console.log("backend creating template: " + JSON.stringify(payload));
 
         const response = await axios.post(baseURL, payload, {
             headers: {
