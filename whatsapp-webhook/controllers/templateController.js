@@ -124,6 +124,7 @@ export const editTemplate = async (req, res) => {
 export const deleteTemplate = async (req, res) => {
     try {
         const { id, name } = req.query;
+        console.log(id, name);
 
         if (!id || !name) {
             return res.status(400).json({ message: 'Missing template id or name' });
