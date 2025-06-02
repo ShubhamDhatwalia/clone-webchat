@@ -1,13 +1,13 @@
 import { Router } from 'express';
 const router = Router();
-import { fetchTemplates, createTemplate, editTemplate, deleteTemplate } from '../controllers/templateController.js';
+import { fetchTemplates,  } from '../controllers/templateController.js';
 
 
 
 router.get('/templates', fetchTemplates);
-router.post('/createTemplate', createTemplate);
-router.put('template/:id', editTemplate);
-router.delete('/deleteTemplate/:id', deleteTemplate);
+// router.post('/createTemplate', createTemplate);
+// router.put('template/:id', editTemplate);
+// router.delete('/deleteTemplate/:id', deleteTemplate);
 
 export default router;
 
