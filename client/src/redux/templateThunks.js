@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 export const createTemplate = createAsyncThunk(
   'templates/createTemplate',
   async (payload, { rejectWithValue }) => {
+    console.log(payload);
     try {
       const response = await axios.post(`/createTemplate`, payload);
       toast.success('Template created successfully!');
@@ -22,7 +23,7 @@ export const editTemplate = createAsyncThunk(
   'templates/editTemplate',
   async ({ id, payload }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`/template/${id}`, payload);
+      const response = await axios.post(`/template/${id}`, payload);
       toast.success('Template updated successfully!');
       return response.data;
     } catch (error) {
@@ -48,10 +49,10 @@ export const fetchTemplates = createAsyncThunk(
 
 export const deleteTemplate = createAsyncThunk(
   'templates/deleteTemplate',
-  async (id, { rejectWithValue }) => {
+  async ({ id, name }, { rejectWithValue }) => {
     try {
-
-      await axios.delete(`/template/${id}`);
+      // Send id and name as query parameters
+      const response = await axios.delete(`/template?id=${id}&name=${encodeURIComponent(name)}`);
       toast.success('Template deleted successfully!');
       return id;
     } catch (error) {
@@ -60,3 +61,4 @@ export const deleteTemplate = createAsyncThunk(
     }
   }
 );
+

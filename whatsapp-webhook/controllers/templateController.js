@@ -79,6 +79,9 @@ export const createTemplate = async (req, res) => {
             createdAt: new Date(),
         };
 
+        console.log(newTemplateData);
+
+
         const saved = await Template.create(newTemplateData);
 
         res.status(201).json({ template: saved });
