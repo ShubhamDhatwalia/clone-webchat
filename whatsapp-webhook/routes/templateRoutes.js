@@ -5,9 +5,9 @@ import { fetchTemplates,  } from '../controllers/templateController.js';
 
 
 router.get('/templates', fetchTemplates);
-// router.post('/createTemplate', createTemplate);
-// router.put('template/:id', editTemplate);
-// router.delete('/deleteTemplate/:id', deleteTemplate);
+router.post('/createTemplate', createTemplate);
+router.put('template/:id', editTemplate);
+router.delete('/deleteTemplate/:id', deleteTemplate);
 
 export default router;
 

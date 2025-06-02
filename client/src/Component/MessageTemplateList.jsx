@@ -10,18 +10,20 @@ import Skeleton from '@mui/material/Skeleton';
 
 function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId }) {
   const dispatch = useDispatch();
-  const { templates, loading, deleteStatus } = useSelector((state) => state.templates.templates);
 
   const [limit, setLimit] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
 
-  console.log(templates);
+
 
 
   useEffect(() => {
     dispatch(fetchTemplates());
   }, []);
+
+
+  const { templates, loading, deleteStatus } = useSelector((state) => state.templates);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -120,7 +122,7 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
                 currentData.map((template) => (
                   <tr
                     key={template.id}
-                    onClick={() => onSelectTemplateId?.(template.id)}
+                    onClick={() => {onSelectTemplateId?.(template.id); console.log(template.id)}}
                     className={`group text-nowrap text-center hover:bg-green-50 font-semibold cursor-pointer text-sm ${selectedTemplateId === template.id ? 'bg-green-50' : ''
                       }`}
                   >

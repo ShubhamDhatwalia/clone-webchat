@@ -3,12 +3,12 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 
-//
+
 export const createTemplate = createAsyncThunk(
   'templates/createTemplate',
   async (payload, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${API_BASE}/createTemplate`, payload);
+      const response = await axios.post(`/createTemplate`, payload);
       toast.success('Template created successfully!');
       return response.data;
     } catch (error) {
@@ -22,7 +22,7 @@ export const editTemplate = createAsyncThunk(
   'templates/editTemplate',
   async ({ id, payload }, { rejectWithValue }) => {
     try {
-      const response = await axios.put(`${API_BASE}/template/${id}`, payload);
+      const response = await axios.put(`/template/${id}`, payload);
       toast.success('Template updated successfully!');
       return response.data;
     } catch (error) {
@@ -38,6 +38,7 @@ export const fetchTemplates = createAsyncThunk(
     try {
       const response = await axios.get('/templates');
       return response.data;
+      console.log(response.data);
     } catch (error) {
       toast.error('Failed to fetch templates.');
       return rejectWithValue(error.response?.data?.error || error.message);
@@ -50,7 +51,7 @@ export const deleteTemplate = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
 
-      await axios.delete(`${API_BASE}/template/${id}`);
+      await axios.delete(`/template/${id}`);
       toast.success('Template deleted successfully!');
       return id;
     } catch (error) {

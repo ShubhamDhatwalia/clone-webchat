@@ -9,11 +9,13 @@ const templateSlice = createSlice({
     error: null,
     deleteStatus: 'idle',
   },
+
   reducers: {
     clearTemplates(state) {
       state.templates = [];
     },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchTemplates.pending, (state) => {
@@ -21,7 +23,7 @@ const templateSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchTemplates.fulfilled, (state, action) => {
-        state.templates = action.payload;
+        state.templates = action.payload.templates;
         state.loading = false;
       })
       .addCase(fetchTemplates.rejected, (state, action) => {
@@ -44,7 +46,6 @@ const templateSlice = createSlice({
         state.error = action.payload;
         state.loading = false;
       })
-
       .addCase(editTemplate.pending, (state) => {
         state.loading = true;
         state.error = null;

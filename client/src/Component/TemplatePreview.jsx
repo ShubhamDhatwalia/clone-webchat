@@ -1,7 +1,21 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { fetchTemplates } from '../redux/templateThunks.js';
+import { useDispatch } from 'react-redux';
+
 
 function TemplatePreview({ templateId, liveTemplateData }) {
     const [template, setTemplate] = useState(null);
+
+    const dispatch = useDispatch();
+
+
+    useEffect(() => {
+        dispatch(fetchTemplates());
+    }, []);
+
+
+    const { templates, loading, deleteStatus } = useSelector((state) => state.templates);
 
 
 
@@ -45,9 +59,9 @@ function TemplatePreview({ templateId, liveTemplateData }) {
         if (liveTemplateData && Array.isArray(liveTemplateData.components)) {
             setTemplate(liveTemplateData);
         } else {
-            const storedTemplates = localStorage.getItem('whatsappTemplates');
+            const storedTemplates = templates;
             if (storedTemplates && templateId) {
-                const templates = JSON.parse(storedTemplates);
+                const templates = storedTemplates;
                 const matched = templates.find((t) => t.id === templateId);
                 setTemplate(matched || sampleTemplate);
             } else {
@@ -56,13 +70,13 @@ function TemplatePreview({ templateId, liveTemplateData }) {
         }
     }, [templateId, liveTemplateData]);
 
-    
+
     const replaceVariables = (text, component, parameterFormat) => {
         if (!text || !component.example) return text;
-    
+
         if (parameterFormat === 'POSITIONAL') {
             let values = [];
-    
+
             if (component.type === 'HEADER') {
                 const headerValues = component.example?.header_text;
                 values = Array.isArray(headerValues[0]) ? headerValues[0] : headerValues;
@@ -70,29 +84,29 @@ function TemplatePreview({ templateId, liveTemplateData }) {
                 const bodyValues = component.example?.body_text;
                 values = Array.isArray(bodyValues[0]) ? bodyValues[0] : bodyValues;
             }
-    
+
             return text.replace(/{{(\d+)}}/g, (match, index) => values?.[parseInt(index) - 1] || match);
         }
-    
+
         if (parameterFormat === 'NAMED') {
             let namedValues = [];
-    
+
             // Support both header and body
             if (component.type === 'HEADER') {
                 namedValues = component.example?.header_text_named_params || [];
             } else if (component.type === 'BODY') {
                 namedValues = component.example?.body_text_named_params || [];
             }
-    
+
             return text.replace(/{{(\w+)}}/g, (match, key) => {
                 const param = namedValues.find((p) => p.param_name === key);
                 return param?.example || match;
             });
         }
-    
+
         return text;
     };
-    
+
 
 
     if (!template || !template.components) {
@@ -114,7 +128,7 @@ function TemplatePreview({ templateId, liveTemplateData }) {
         ));
     };
 
-    
+
     return (
         <div className='mt-4 bg-[url("./assets/whatsapp-bg.jpg")] rounded-md bg-no-repeat bg-center bg-cover opacity-70 p-4 pb-8 min-h-[calc(100vh-200px)]'>
             <div className='mt-5 p-2 bg-white max-w-[300px] min-w-[300px] rounded-md'>

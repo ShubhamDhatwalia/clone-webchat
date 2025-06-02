@@ -62,6 +62,7 @@ function BroadCast() {
 
 
   const { templates, loading, error } = useSelector((state) => state.templates);
+  console.log(templates);
 
 
 
@@ -410,7 +411,7 @@ function BroadCast() {
                   fullWidth
                   options={templates}
                   getOptionLabel={(option) => option.name}
-                  value={templates.find(t => t.id === formInput.template) || null}
+                  value={templates?.find(t => t.id === formInput.template) || null}
                   onChange={(event, newValue) => {
                     handleChange({
                       target: {
