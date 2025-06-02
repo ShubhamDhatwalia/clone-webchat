@@ -10,12 +10,13 @@ import Skeleton from '@mui/material/Skeleton';
 
 function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId }) {
   const dispatch = useDispatch();
-  const { templates, loading, deleteStatus } = useSelector((state) => state.templates);
+  const { templates, loading, deleteStatus } = useSelector((state) => state.templates.templates);
 
   const [limit, setLimit] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
 
+  console.log(templates);
 
 
   useEffect(() => {

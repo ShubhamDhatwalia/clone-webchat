@@ -25,18 +25,30 @@ export const fetchTemplates = async (req, res) => {
         const response = await axios.get(`${baseURL}?access_token=${accessToken}&limit=1000`);
         const templates = response.data.data;
 
-        // Bulk insert/update all templates
-        const operations = templates.map(t => ({
-            updateOne: {
-                filter: { id: t.id },
-                update: { ...t, updatedAt: new Date() },
-                upsert: true
-            }
-        }));
+        // Get all template IDs from the fetched data
+        const fetchedIds = templates.map(t => t.id);
 
-        await Template.bulkWrite(operations);
+        // Find existing templates by those IDs
+        const existingTemplates = await Template.find({ id: { $in: fetchedIds } }, { id: 1 });
+        const existingIds = new Set(existingTemplates.map(t => t.id));
 
-        // Fetch non-deleted templates
+        // Filter only new templates that are NOT in DB
+        const newTemplates = templates.filter(t => !existingIds.has(t.id));
+
+        if (newTemplates.length > 0) {
+            // Insert new templates
+            const operations = newTemplates.map(t => ({
+                updateOne: {
+                    filter: { id: t.id },
+                    update: { ...t, updatedAt: new Date() },
+                    upsert: true
+                }
+            }));
+
+            await Template.bulkWrite(operations);
+        }
+
+        // Fetch all non-deleted templates
         const visibleTemplates = await Template.find({ deleted: { $ne: true } });
 
         res.status(200).json({ templates: visibleTemplates });
@@ -48,6 +60,7 @@ export const fetchTemplates = async (req, res) => {
         });
     }
 };
+
 
 
 // // ------------------------- Create Template -------------------------
