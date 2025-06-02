@@ -1,21 +1,15 @@
 import mongoose from 'mongoose';
-// import { MongoMemoryServer } from 'mongodb-memory-server';
-import dotenv from "dotenv";
-dotenv.config();
-
 
 async function connect(url) {
-    // const mongodb = await MongoMemoryServer.create();
-    // const getUri = mongodb.getUri();
 
-    // const db = await mongoose.connect(getUri);
+    console.log(url);
 
-    // console.log("Database Connected");
-    // return db;
-
+    if (!url) {
+        throw new Error("MongoDB connection string URL is required");
+    }
     mongoose.set('strictQuery', true);
 
-     mongoose.connect(url)
+    await mongoose.connect(url);
     console.log("Database connected");
 }
 

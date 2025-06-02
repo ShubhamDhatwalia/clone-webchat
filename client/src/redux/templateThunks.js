@@ -64,7 +64,7 @@ export const editTemplate = createAsyncThunk(
           ? {
             ...t,
             ...updatedTemplate,
-            createdAt: new Date().toISOString() 
+            createdAt: new Date().toISOString()
           }
           : t
       );
@@ -82,35 +82,49 @@ export const editTemplate = createAsyncThunk(
 
 
 
+// export const fetchTemplates = createAsyncThunk(
+//   'templates/fetchTemplates',
+//   async (_, { rejectWithValue }) => {
+//     try {
+//       const queryParams = new URLSearchParams({
+//         access_token: accessToken,
+//         limit: '1000',
+//       });
+
+//       const response = await axios.get(
+//         `https://graph.facebook.com/v22.0/${businessId}/message_templates?${queryParams}`
+//       );
+
+//       const apiTemplates = response.data.data;
+//       const existing = JSON.parse(localStorage.getItem('whatsappTemplates') || '[]');
+
+//       const updated = existing.map((e) => {
+//         const latest = apiTemplates.find((t) => t.id === e.id);
+//         return latest ? { ...e, ...latest } : e;
+//       });
+
+//       const onlyNew = apiTemplates.filter((t) => !existing.some((e) => e.id === t.id));
+//       const finalTemplates = [...onlyNew, ...updated];
+//       const visibleTemplates = finalTemplates.filter((t) => !t.deleted);
+
+//       localStorage.setItem('whatsappTemplates', JSON.stringify(finalTemplates));
+//       return visibleTemplates;
+//     } catch (error) {
+//       console.error('Error fetching templates:', error);
+//       return rejectWithValue(error.message);
+//     }
+//   }
+// );
+
+
 export const fetchTemplates = createAsyncThunk(
   'templates/fetchTemplates',
   async (_, { rejectWithValue }) => {
     try {
-      const queryParams = new URLSearchParams({
-        access_token: accessToken,
-        limit: '1000',
-      });
-
-      const response = await axios.get(
-        `https://graph.facebook.com/v22.0/${businessId}/message_templates?${queryParams}`
-      );
-
-      const apiTemplates = response.data.data;
-      const existing = JSON.parse(localStorage.getItem('whatsappTemplates') || '[]');
-
-      const updated = existing.map((e) => {
-        const latest = apiTemplates.find((t) => t.id === e.id);
-        return latest ? { ...e, ...latest } : e;
-      });
-
-      const onlyNew = apiTemplates.filter((t) => !existing.some((e) => e.id === t.id));
-      const finalTemplates = [...onlyNew, ...updated];
-      const visibleTemplates = finalTemplates.filter((t) => !t.deleted);
-
-      localStorage.setItem('whatsappTemplates', JSON.stringify(finalTemplates));
-      return visibleTemplates;
+      const response = await axios.get('/templates');
+      return response.data; 
     } catch (error) {
-      console.error('Error fetching templates:', error);
+      toast.error('Failed to fetch templates.');
       return rejectWithValue(error.message);
     }
   }
