@@ -23,7 +23,7 @@ export const editTemplate = createAsyncThunk(
   'templates/editTemplate',
   async ({ id, payload }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`/template/${id}`, payload);
+      const response = await axios.post(`/editTemplate/${id}`, payload);
       toast.success('Template updated successfully!');
       return response.data;
     } catch (error) {
