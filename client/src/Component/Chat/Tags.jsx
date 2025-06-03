@@ -1,7 +1,7 @@
 import React, { use, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import { addTags, removeTags } from '../../redux/contacts/contactSlice.js';
+import { addTags, removeTags } from '../../redux/contacts/contactThunk';
 
 
 

@@ -1,8 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useState } from 'react'
-import { addNotes, removeNotes, updateNote } from '../../redux/contacts/contactSlice';
-
-
+import { addNotes, removeNotes, updateNote } from '../../redux/contacts/contactThunk';
 
 
 

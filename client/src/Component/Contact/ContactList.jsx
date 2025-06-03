@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteContact } from '../../redux/contacts/contactSlice.js';
+import { deleteContact } from '../../redux/contacts/contactThunk';
 import { toast } from 'react-toastify';
 
 

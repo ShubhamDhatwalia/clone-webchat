@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact, updateContact } from '../../redux/contacts/contactSlice';
+import { addContact, updateContact } from '../../redux/contacts/contactThunk';
 import { toast } from 'react-toastify';
 import ContactList from '../Contact/ContactList.jsx';
 import { useLocation } from 'react-router-dom';
