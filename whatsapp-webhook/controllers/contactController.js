@@ -1,5 +1,5 @@
 
-import Contacts from "../models/contacts";
+import Contacts from "../models/contacts.js";
 
 
 export const fetchContacts = async (req, res) => {
