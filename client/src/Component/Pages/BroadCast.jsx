@@ -277,15 +277,18 @@ function BroadCast() {
       return;
     }
 
-    const exists = campaigns.some(c =>
-      c.campaignName === campaignName &&
-      JSON.stringify(c) === JSON.stringify(formInput)
-    );
+    // const exists = campaigns.some(c =>
+    //   c.campaignName === campaignName &&
+    //   JSON.stringify(c) === JSON.stringify(formInput)
+    // );
 
-    if (exists) {
-      toast.warning("Campaign with identical data already exists");
-      return;
-    }
+    // if (exists) {
+    //   toast.warning("Campaign with identical data already exists");
+    //   return;
+
+    // }
+
+    console.log(formInput);
 
     dispatch(createCampaign(formInput));
     toast.success("Campaign saved successfully");
