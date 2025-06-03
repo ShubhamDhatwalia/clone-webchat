@@ -10,6 +10,7 @@ import { addTags, removeTags } from '../../redux/contacts/contactThunk';
 function Tags({ selectedUser }) {
     const dispatch = useDispatch();
     const [inputValue, setInputValue] = useState('');
+    console.log(selectedUser);
 
 
     const User = useSelector((state) => state.contact.contacts.find((contact) => contact.phone === selectedUser?.phone));
@@ -27,7 +28,7 @@ function Tags({ selectedUser }) {
                 return;
             }
 
-            dispatch(addTags({ phone: selectedUser.phone, tags: [newTag] }));
+            dispatch(addTags({ phone: selectedUser._id, tags: [newTag] }));
             setInputValue('');
         }
     };

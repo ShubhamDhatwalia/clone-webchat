@@ -47,6 +47,7 @@ export const deleteContact = async (req, res) => {
     }
 };
 
+
 // Add tags to a contact
 export const addTags = async (req, res) => {
     try {

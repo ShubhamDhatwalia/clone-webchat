@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import profile_icon from '../../assets/profile_icon.svg';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Chat from '../Pages/Chat';
+import { fetchContacts } from '../../redux/contacts/contactThunk';
 
 const conversation = [
   {
@@ -23,6 +24,7 @@ const conversation = [
 
 function ChatList({ onSelectUser, selectedUser, onSearch }) {
   const contacts = useSelector((state) => state.contact.contacts);
+  const dispatch = useDispatch();
 
   const chatData = conversation
     .map((chat) => {
@@ -35,6 +37,14 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
       };
     })
     .filter(Boolean);
+
+
+  useEffect(() => {
+    if (contacts.length === 0) {
+      dispatch(fetchContacts())
+    }
+  }, []);
+
 
 
   const filteredChatData = chatData.filter((chat) => {
