@@ -14,28 +14,26 @@ export const fetchContacts = async (req, res) => {
 // Create a new contact
 export const createContact = async (req, res) => {
     try {
-        
+
         console.log(req.body);
         const contactData = await Contacts.create(req.body);
         res.status(201).json(contactData);
     } catch (error) {
         console.error("Error creating contact:", error);
-        res.status(500).json({ message: "Failed to create contact"  });
+        res.status(500).json({ message: "Failed to create contact" });
     }
 };
-
-// Update an existing contact
 export const updateContact = async (req, res) => {
     try {
         const { id } = req.params;
-        const { contact } = req.body;
-        const contactData = await Contacts.findByIdAndUpdate(id, contact, { new: true });
+        const contactData = await Contacts.findByIdAndUpdate(id, req.body, { new: true });
         res.status(200).json(contactData);
     } catch (error) {
         console.error("Error updating contact:", error);
-        res.status(500).json({ message: "Failed to update contact" });
+        res.status(500).json({ message: "Failed to update contact", error: error.message });
     }
 };
+
 
 // Delete a contact
 export const deleteContact = async (req, res) => {

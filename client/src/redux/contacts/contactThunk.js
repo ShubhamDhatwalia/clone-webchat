@@ -20,17 +20,19 @@ export const fetchContacts = createAsyncThunk('contacts/fetch', async (_, { reje
 export const addContact = createAsyncThunk('contacts/add', async (contact, { rejectWithValue }) => {
     try {
         const res = await axios.post('/addContacts', contact);
-        
+
         return res.data;
     } catch (err) {
-       
+
         return rejectWithValue(err.response?.data || err.message);
     }
 });
 
-export const updateContact = createAsyncThunk('contacts/update', async ({ id, data }, { rejectWithValue }) => {
+export const updateContact = createAsyncThunk('contacts/update', async ({ id, updatedData }, { rejectWithValue }) => {
     try {
-        const res = await axios.put(`/updateContact/${id}`, data);
+        console.log(id);
+        console.log(updatedData);
+        const res = await axios.put(`/updateContact/${id}`, updatedData);
         toast.success('Contact updated');
         return res.data;
     } catch (err) {
@@ -42,10 +44,10 @@ export const updateContact = createAsyncThunk('contacts/update', async ({ id, da
 export const deleteContact = createAsyncThunk('contacts/delete', async (id, { rejectWithValue }) => {
     try {
         await axios.delete(`/deleteContact/${id}`);
-        
+
         return id;
     } catch (err) {
-       
+
         return rejectWithValue(err.response?.data || err.message);
     }
 });

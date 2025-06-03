@@ -107,7 +107,7 @@ function Contact() {
             );
         } else {
             console.log(contactData);
-            dispatch(updateContact({ phone: selectedContact._id, updatedData: contactData }));
+            dispatch(updateContact({ id: selectedContact._id, updatedData: contactData }));
         }
 
         setFormData({ name: '', phone: '' });
