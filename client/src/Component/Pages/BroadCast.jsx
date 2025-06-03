@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, FormControl, Select, InputLabel, MenuItem, Checkbox, ListItemText, FormControlLabel, Autocomplete, Button } from '@mui/material';
 import TemplatePreview from '../TemplatePreview';
-// import CampaignList from '../CampaignList';
+import CampaignList from '../CampaignList';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchTemplates } from '../../redux/templateThunks';
 import { fetchPhoneNumbers } from '../../redux/phoneNumberThunks';
@@ -290,8 +290,21 @@ function BroadCast() {
 
     console.log(formInput);
 
-    dispatch(createCampaign(formInput));
-    toast.success("Campaign saved successfully");
+    toast.promise(
+      dispatch(createCampaign(formInput)),
+      {
+        pending: 'Creating campaign...',
+        success: 'Campaign created!',
+        error: {
+          render({ data }) {
+            return typeof data === 'string' ? data : 'Failed to create';
+          }
+        }
+      }
+    );
+
+
+
 
     setFormInput({
       campaignName: '',
@@ -648,7 +661,7 @@ function BroadCast() {
           </form>
 
           <div className='mt-20'>
-            {/* <CampaignList onEdit={handleEditCampaign} broadcast={handleBroadCast} /> */}
+            <CampaignList onEdit={handleEditCampaign} broadcast={handleBroadCast} />
           </div>
 
         </div>

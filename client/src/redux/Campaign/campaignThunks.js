@@ -1,3 +1,4 @@
+// campaignThunks.js
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
@@ -6,8 +7,8 @@ export const fetchCampaigns = createAsyncThunk(
     'campaign/fetchCampaigns',
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get('/campaign'); 
-            return response.data; 
+            const response = await axios.get('/campaign');
+            return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);
         }
@@ -20,7 +21,7 @@ export const createCampaign = createAsyncThunk(
     async (campaignData, { rejectWithValue }) => {
         try {
             const response = await axios.post('/campaign', campaignData);
-            return response.data; 
+            return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);
         }
@@ -33,7 +34,7 @@ export const updateCampaign = createAsyncThunk(
     async ({ id, updatedData }, { rejectWithValue }) => {
         try {
             const response = await axios.put(`/campaign/${id}`, updatedData);
-            return response.data; 
+            return response.data;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);
         }
@@ -46,7 +47,7 @@ export const deleteCampaign = createAsyncThunk(
     async (id, { rejectWithValue }) => {
         try {
             await axios.delete(`/campaign/${id}`);
-            return id; 
+            return id;
         } catch (error) {
             return rejectWithValue(error.response?.data || error.message);
         }
