@@ -15,11 +15,12 @@ export const fetchContacts = async (req, res) => {
 export const createContact = async (req, res) => {
     try {
         const { contact } = req.body;
+        console.log(contact);
         const contactData = await Contacts.create(contact);
         res.status(201).json(contactData);
     } catch (error) {
         console.error("Error creating contact:", error);
-        res.status(500).json({ message: "Failed to create contact" });
+        res.status(500).json({ message: "Failed to create contact"  });
     }
 };
 
