@@ -8,7 +8,7 @@ router.get('/contacts', fetchContacts)
 router.post('/addContacts', createContact);
 router.put('/updateContact/:id', updateContact)
 router.delete('/deleteContact/:id', deleteContact)
-router.patch('/contacts/${id}/tags', addTags)
+router.patch('/contacts/:id/addTags', addTags)
 // router.patch('/contacts/${id}/tags/remove')
 // router.patch('/contacts/${id}/notes')
 // router.patch('/contacts/${id}/notes/remove')

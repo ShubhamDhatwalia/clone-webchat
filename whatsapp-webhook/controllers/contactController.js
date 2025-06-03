@@ -53,6 +53,7 @@ export const addTags = async (req, res) => {
     try {
         const { id } = req.params;
         const { tags } = req.body;
+        console.log(tags);
         const contactData = await Contacts.findByIdAndUpdate(id, { $push: { tags: { $each: tags } } }, { new: true });
         res.status(200).json(contactData);
     } catch (error) {
