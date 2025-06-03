@@ -62,13 +62,13 @@ function BroadCast() {
 
 
   const { templates, loading, error } = useSelector((state) => state.templates);
-  console.log(templates);
+  
 
 
 
-  useEffect(() => {
-    dispatch(fetchTemplates());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(fetchTemplates());
+  // }, [dispatch]);
 
 
   const [contacts, setContacts] = useState([

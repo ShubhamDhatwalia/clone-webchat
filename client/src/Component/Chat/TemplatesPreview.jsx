@@ -9,10 +9,13 @@ import { toast } from 'react-toastify';
 
 
 
-function TemplatesPreview({ templateId, onClose, onBack, selectedUser }) {
+function TemplatesPreview({ template, onClose, onBack, selectedUser }) {
 
-    const [template, setTemplate] = useState(null);
+    // const [template, setTemplate] = useState(null);
     const [variableInputs, setVariableInputs] = useState({});
+
+
+    console.log(template);
 
 
     const replaceVariables = (text, component, parameterFormat) => {
@@ -37,60 +40,59 @@ function TemplatesPreview({ templateId, onClose, onBack, selectedUser }) {
 
 
     useEffect(() => {
-        const storedTemplates = localStorage.getItem('whatsappTemplates');
-        if (storedTemplates && templateId) {
-            const templates = JSON.parse(storedTemplates);
-            const matched = templates.find((t) => t.id === templateId);
-            setTemplate(matched || null);
 
-            if (matched) {
-                const inputFields = {};
+        if (template) {
 
-                matched.components.forEach(component => {
-                    if (component.type === "HEADER" || component.type === "BODY") {
-                        if (matched.parameter_format === "POSITIONAL") {
-                            const text = component.text || '';
-                            const matches = [...text.matchAll(/{{(\d+)}}/g)];
 
-                            let values = [];
+            const inputFields = {};
 
-                            if (component.type === 'HEADER') {
-                                const headerValues = component.example?.header_text;
-                                values = Array.isArray(headerValues[0]) ? headerValues[0] : headerValues;
-                            } else if (component.type === 'BODY') {
-                                const bodyValues = component.example?.body_text;
-                                values = Array.isArray(bodyValues[0]) ? bodyValues[0] : bodyValues;
-                            }
+            template.components.forEach(component => {
+                console.log(component.type);
+                if (component.type === "HEADER" || component.type === "BODY") {
+                    if (template.parameter_format === "POSITIONAL") {
+                        const text = component.text || '';
+                        const matches = [...text.matchAll(/{{(\d+)}}/g)];
 
-                            matches.forEach((match) => {
-                                const index = parseInt(match[1], 10);
-                                inputFields[`${component.type}-${index}`] = values?.[index - 1] || '';
-                            });
-                        } else if (matched.parameter_format === "NAMED") {
-                            const text = component.text || '';
-                            const matches = [...text.matchAll(/{{(\w+)}}/g)];
+                        let values = [];
 
-                            let namedValues = [];
-
-                            if (component.type === 'HEADER') {
-                                namedValues = component.example?.header_text_named_params || [];
-                            } else if (component.type === 'BODY') {
-                                namedValues = component.example?.body_text_named_params || [];
-                            }
-
-                            matches.forEach((match) => {
-                                const paramName = match[1];
-                                const param = namedValues.find(p => p.param_name === paramName);
-                                inputFields[`${component.type}-${paramName}`] = param?.example || '';
-                            });
+                        if (component.type === 'HEADER') {
+                            const headerValues = component.example?.header_text;
+                            values = Array.isArray(headerValues[0]) ? headerValues[0] : headerValues;
+                        } else if (component.type === 'BODY') {
+                            const bodyValues = component.example?.body_text;
+                            values = Array.isArray(bodyValues[0]) ? bodyValues[0] : bodyValues;
                         }
-                    }
-                });
 
-                setVariableInputs(inputFields);
-            }
+                        matches.forEach((match) => {
+                            const index = parseInt(match[1], 10);
+                            inputFields[`${component.type}-${index}`] = values?.[index - 1] || '';
+                        });
+                    } else if (template.parameter_format === "NAMED") {
+                        const text = component.text || '';
+                        const matches = [...text.matchAll(/{{(\w+)}}/g)];
+
+                        let namedValues = [];
+
+                        if (component.type === 'HEADER') {
+                            namedValues = component.example?.header_text_named_params || [];
+                        } else if (component.type === 'BODY') {
+                            namedValues = component.example?.body_text_named_params || [];
+                        }
+
+                        matches.forEach((match) => {
+                            const paramName = match[1];
+                            const param = namedValues.find(p => p.param_name === paramName);
+                            inputFields[`${component.type}-${paramName}`] = param?.example || '';
+                        });
+                    }
+                }
+            });
+
+            console.log(inputFields);
+            setVariableInputs(inputFields);
+
         }
-    }, [templateId]);
+    }, [template]);
 
     const header = template?.components.find((comp) => comp.type === 'HEADER');
     const body = template?.components.find((comp) => comp.type === 'BODY');
@@ -219,7 +221,7 @@ function TemplatesPreview({ templateId, onClose, onBack, selectedUser }) {
 
 
 
-    
+
     return (
         <>
             <div ref={modalRef}>

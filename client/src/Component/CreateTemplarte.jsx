@@ -581,10 +581,10 @@ function CreateTemplate({ onSuccess, templateData, onTemplateChange }) {
         try {
             if (templateData) {
                 await dispatch(editTemplate({ id: templateData.id, payload })).unwrap();
-                toast.success("Template updated successfully!");
+               
             } else {
                 await dispatch(createTemplate(payload)).unwrap();
-                toast.success("Template created successfully!");
+                
             }
 
             onSuccess();

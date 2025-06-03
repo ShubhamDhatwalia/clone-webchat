@@ -89,7 +89,7 @@ function templates({ onClose, selectedUser }) {
                         </div>
 
 
-                        <div className='mt-4 max-h-[300px] min-h-[300px] overflow-y-auto'>
+                        <div className='mt-4 max-h-[300px] min-h-[100px] overflow-y-auto'>
 
                             <ul>
                                 {loading ? (
@@ -98,7 +98,7 @@ function templates({ onClose, selectedUser }) {
                                     </div>
                                 ) : (
                                     filteredTemplates.map((template) => (
-                                        <li key={template.id} className='flex items-center justify-between px-2 py-3  hover:bg-green-50 cursor-pointer' onClick={() => setSelectedTemplateId(template.id)}>
+                                        <li key={template.id} className='flex items-center justify-between px-2 py-3  hover:bg-green-50 cursor-pointer' onClick={() => setSelectedTemplateId(template)}>
                                             <div className='flex items-center gap-4'>
                                                 <h4 className='font-semibold'>{template.name}</h4>
                                             </div>
@@ -118,7 +118,7 @@ function templates({ onClose, selectedUser }) {
 
             {selectedTemplateId && (
                 <TemplatePreview
-                    templateId={selectedTemplateId}
+                    template={selectedTemplateId}
                     onClose={onClose}
                     onBack={(setSelectedTemplateId)}
                     selectedUser={selectedUser}

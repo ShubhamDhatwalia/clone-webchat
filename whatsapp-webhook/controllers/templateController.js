@@ -25,6 +25,7 @@ export const fetchTemplates = async (req, res) => {
         // Step 1: Fetch from WhatsApp API
         const response = await axios.get(`${baseURL}?access_token=${accessToken}&limit=1000`);
         const templates = response.data.data;
+        console.log(JSON.stringify(templates));
 
         // Step 2: Create upsert operations for all templates
         const operations = templates.map(t => ({

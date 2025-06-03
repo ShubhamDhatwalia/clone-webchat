@@ -4,60 +4,80 @@ import { toast } from 'react-toastify';
 
 
 
+
+
+// CREATE TEMPLATE
 export const createTemplate = createAsyncThunk(
   'templates/createTemplate',
   async (payload, { rejectWithValue }) => {
-    console.log("creating template: " + JSON.stringify(payload));
     try {
-      const response = await axios.post(`/createTemplate`, payload);
-      // toast.success('Template created successfully!');
+      const response = await toast.promise(
+        axios.post(`/createTemplate`, payload),
+        {
+          pending: 'Creating template...',
+          success: 'Template created successfully!',
+          error: 'Failed to create template.',
+        }
+      );
       return response.data;
     } catch (error) {
-      toast.error('Failed to create template.');
       return rejectWithValue(error.response?.data?.error || error.message);
     }
   }
 );
 
+// EDIT TEMPLATE
 export const editTemplate = createAsyncThunk(
   'templates/editTemplate',
   async ({ id, payload }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`/editTemplate/${id}`, payload);
-      toast.success('Template updated successfully!');
+      const response = await toast.promise(
+        axios.post(`/editTemplate/${id}`, payload),
+        {
+          pending: 'Updating template...',
+          success: 'Template updated successfully!',
+          error: 'Failed to update template.',
+        }
+      );
       return response.data;
     } catch (error) {
-      toast.error('Failed to update template.');
       return rejectWithValue(error.response?.data?.error || error.message);
     }
   }
 );
 
+// FETCH TEMPLATES
 export const fetchTemplates = createAsyncThunk(
   'templates/fetchTemplates',
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get('/templates');
+      const response = await
+        axios.get('/templates')
+
+
       return response.data;
-      console.log(response.data);
     } catch (error) {
-      toast.error('Failed to fetch templates.');
       return rejectWithValue(error.response?.data?.error || error.message);
     }
   }
 );
 
+// DELETE TEMPLATE
 export const deleteTemplate = createAsyncThunk(
   'templates/deleteTemplate',
   async ({ id, name }, { rejectWithValue }) => {
     try {
-      const response = await axios.delete(`/deleteTemplate?id=${id}&name=${encodeURIComponent(name)}`);
-      toast.success('Template deleted successfully!');
+      await toast.promise(
+        axios.delete(`/deleteTemplate?id=${id}&name=${encodeURIComponent(name)}`),
+        {
+          pending: 'Deleting template...',
+          success: 'Template deleted successfully!',
+          error: 'Failed to delete template.',
+        }
+      );
       return id;
     } catch (error) {
-      toast.error('Failed to delete template.');
       return rejectWithValue(error.response?.data?.error || error.message);
     }
   }
 );
-

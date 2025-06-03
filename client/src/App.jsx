@@ -12,8 +12,12 @@ import ReplyMaterial from './Component/Pages/ReplyMaterial';
 import Chatbot from './Component/Pages/Chatbot';
 import Rules from './Component/Pages/Rules';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import Flowbuilder from './Component/Flowbuilder/Flowbuilder';
 import Contact from './Component/Pages/Contact';
+
+
 
 
 function App() {
@@ -22,7 +26,7 @@ function App() {
   return (
     <>
 
-      <ToastContainer position="top-right" autoClose={1000} />
+      <ToastContainer position="top-right" autoClose={1000} stacked theme="colored"/>
 
       <BrowserRouter>
         <Routes>
