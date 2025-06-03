@@ -57,7 +57,7 @@ export const addTags = createAsyncThunk('contacts/tags/add', async ({ id, tags }
     try {
         console.log(tags)
         const res = await axios.patch(`/contacts/${id}/addTags`, { tags });
-        toast.success('Tags updated');
+       
         return res.data;
     } catch (err) {
         toast.error('Failed to update tags');
@@ -68,7 +68,7 @@ export const addTags = createAsyncThunk('contacts/tags/add', async ({ id, tags }
 export const removeTags = createAsyncThunk('contacts/tags/remove', async ({ id, tag }, { rejectWithValue }) => {
     try {
         const res = await axios.patch(`/contacts/${id}/tags/remove`, { tag });
-        toast.success('Tag removed');
+        
         return res.data;
     } catch (err) {
         toast.error('Failed to remove tag');

@@ -28,13 +28,39 @@ function Tags({ selectedUser }) {
                 return;
             }
 
-            dispatch(addTags({ id: selectedUser._id, tags: [newTag] }));
+            toast.promise(
+                dispatch(addTags({ id: selectedUser._id, tags: [newTag] })),
+                {
+                    pending: 'adding tag...',
+                    success: 'Tag added successfully!',
+                    error: {
+                        render({ data }) {
+                            return typeof data === 'string' ? data : 'Failed to update';
+                        }
+                    }
+                }
+            );
+
+
             setInputValue('');
         }
     };
 
     const handleRemoveTag = (tagToRemove) => {
-        dispatch(removeTags({ id: selectedUser._id, tag: tagToRemove }));
+
+        toast.promise(
+            dispatch(removeTags({ id: selectedUser._id, tag: tagToRemove })),
+            {
+                pending: 'deleting tag...',
+                success: 'Tag deleted successfully!',
+                error: {
+                    render({ data }) {
+                        return typeof data === 'string' ? data : 'Failed to update';
+                    }
+                }
+            }
+        );
+
     };
 
 
