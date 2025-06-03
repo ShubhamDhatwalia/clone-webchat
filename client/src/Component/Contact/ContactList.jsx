@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteContact } from '../../redux/contacts/contactThunk';
 import { toast } from 'react-toastify';
+import { fetchContacts } from '../../redux/contacts/contactThunk';
+
+
 
 
 
@@ -34,6 +37,13 @@ function ContactList({ onSearch, setSelectedContact }) {
 
     //     fetchContacts();
     // }, []);
+
+
+    useEffect(() => {
+        if (contacts.length === 0) {
+            dispatch(fetchContacts());
+        }
+    }, []);
 
 
 
@@ -79,8 +89,9 @@ function ContactList({ onSearch, setSelectedContact }) {
                     </thead>
                     <tbody>
                         {currentData && currentData.length > 0 ? (
-                            currentData.map((contact, index) => (
-                                <tr key={index} className=" text-center font-semibold  text-gray-500">
+                            currentData.map((contact) => (
+                                console.log(contact),
+                                <tr key={contact._id} className=" text-center font-semibold  text-gray-500">
                                     <td className=" py-4 text-left">{contact.name}</td>
                                     <td className=" py-4">{contact.phone}</td>
                                     <td className="py-4  " >
@@ -110,7 +121,7 @@ function ContactList({ onSearch, setSelectedContact }) {
                                     <td className="py-4 text-right">
                                         <div className="flex gap-4 justify-end">
                                             <i className="fa-solid fa-pen-to-square bg-gray-100 p-2 rounded-lg text-blue-500 hover:text-blue-600 hover:bg-blue-100 cursor-pointer" onClick={() => handleEdit(contact)} ></i>
-                                            <i className="fa-solid fa-trash bg-gray-100 text-sm p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => handleDelete(contact.phone)}></i>
+                                            <i className="fa-solid fa-trash bg-gray-100 text-sm p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => handleDelete(contact._id)}></i>
                                         </div>
                                     </td>
                                 </tr>

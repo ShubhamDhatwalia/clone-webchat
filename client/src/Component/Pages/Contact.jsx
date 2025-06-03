@@ -17,6 +17,7 @@ function Contact() {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedContact, setSelectedContact] = useState(null);
     const location = useLocation();
+    console.log(selectedContact);
 
     const dispatch = useDispatch();
     const contacts = useSelector((state) => state.contact.contacts);

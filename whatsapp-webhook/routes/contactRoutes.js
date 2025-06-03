@@ -7,7 +7,7 @@ import { createContact, fetchContacts, updateContact, deleteContact, addTags } f
 router.get('/contacts', fetchContacts)
 router.post('/addContacts', createContact);
 router.put('/updateContact', updateContact)
-router.delete('/deleteContact', deleteContact)
+router.delete('/deleteContact/:id', deleteContact)
 router.patch('/contacts/${id}/tags', addTags)
 // router.patch('/contacts/${id}/tags/remove')
 // router.patch('/contacts/${id}/notes')
