@@ -10,7 +10,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { createCampaign } from '../../redux/Campaign/campaignThunks';
+import { createCampaign, updateCampaign } from '../../redux/Campaign/campaignThunks';
 
 
 
@@ -58,7 +58,7 @@ function BroadCast() {
 
 
 
-  const campaigns = useSelector((state) => state.campaign.campaign);
+  const campaigns = useSelector((state) => state.campaign.campaigns);
 
 
   const { templates, loading, error } = useSelector((state) => state.templates);
@@ -97,7 +97,7 @@ function BroadCast() {
     if (e) e.preventDefault();
 
     const selectedTemplate = templates.find(t => t.id === broadcast?.template);
-    console.log(selectedTemplate);
+
 
     if (!selectedTemplate) {
       return;
@@ -234,7 +234,7 @@ function BroadCast() {
 
 
     if (name === 'template') {
-      console.log(value);
+
       setFormInput((prev) => ({
         ...prev,
         [name]: value,
@@ -277,42 +277,53 @@ function BroadCast() {
       return;
     }
 
-    // const exists = campaigns.some(c =>
-    //   c.campaignName === campaignName &&
-    //   JSON.stringify(c) === JSON.stringify(formInput)
-    // );
-
-    // if (exists) {
-    //   toast.warning("Campaign with identical data already exists");
-    //   return;
-
-    // }
-
-    console.log(formInput);
-
-    toast.promise(
-      dispatch(createCampaign(formInput)),
-      {
-        pending: 'Creating campaign...',
-        success: 'Campaign created!',
-        error: {
-          render({ data }) {
-            return typeof data === 'string' ? data : 'Failed to create';
+    // If editing
+    if (editData) {
+      console.log(editData)
+      toast.promise(
+        dispatch(updateCampaign({ id: editData._id, updatedCampaign: formInput })),
+        {
+          pending: 'Updating campaign...',
+          success: 'Campaign updated!',
+          error: {
+            render({ data }) {
+              return typeof data === 'string' ? data : 'Failed to update';
+            }
           }
         }
+      );
+    } else {
+      const exists = campaigns.some(c => c.campaignName === campaignName);
+      if (exists) {
+        toast.warning("Campaign with this name already exists");
+        return;
       }
-    );
 
+      toast.promise(
+        dispatch(createCampaign(formInput)),
+        {
+          pending: 'Creating campaign...',
+          success: 'Campaign created!',
+          error: {
+            render({ data }) {
+              return typeof data === 'string' ? data : 'Failed to create';
+            }
+          }
+        }
+      );
+    }
 
-
-
+    // Reset form after save or update
     setFormInput({
       campaignName: '',
       whatsappNumber: '',
       template: '',
       contactList: [],
     });
+    setFileName('No file chosen');
+    setEditData(null); // Exit edit mode
   };
+
 
 
 
@@ -628,8 +639,11 @@ function BroadCast() {
                   type='button'
                   className='font-semibold mr-[20px] text-nowrap bg-green-50 hover:bg-green-100 text-green-600 border border-green-600 cursor-pointer px-[12px] py-[5px] rounded-md' onClick={handleSave}
                 >
-                  Save
+                  {editData ? 'Update' : 'Save'}
+
                 </button>
+
+
 
 
                 <div>

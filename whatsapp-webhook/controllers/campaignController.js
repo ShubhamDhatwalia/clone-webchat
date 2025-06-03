@@ -1,6 +1,7 @@
 import Campaign from "../models/campaign.js";
 
-// Get all campaigns
+
+
 export const fetchCampaigns = async (req, res) => {
     try {
         const campaigns = await Campaign.find();
@@ -10,7 +11,7 @@ export const fetchCampaigns = async (req, res) => {
     }
 };
 
-// Create a new campaign
+
 export const createCampaign = async (req, res) => {
     try {
         const campaign = new Campaign(req.body);
@@ -21,18 +22,20 @@ export const createCampaign = async (req, res) => {
     }
 };
 
-// Update a campaign (assume id is in req.body._id or you can change to req.params.id)
+
 export const updateCampaign = async (req, res) => {
     try {
-        const { _id, ...updateData } = req.body;
+        const { id, ...updatedCampaign } = req.body;
+        console.log(id)
+        console.log(updatedCampaign)
         if (!_id) {
             return res.status(400).json({ error: "Campaign id is required" });
         }
-        const updatedCampaign = await Campaign.findByIdAndUpdate(_id, updateData, { new: true });
-        if (!updatedCampaign) {
+        const updatedData = await Campaign.findByIdAndUpdate(_id, updatedCampaign, { new: true });
+        if (!updatedData) {
             return res.status(404).json({ error: "Campaign not found" });
         }
-        res.json(updatedCampaign);
+        res.json(updatedData);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
@@ -41,7 +44,7 @@ export const updateCampaign = async (req, res) => {
 export const deleteCampaign = async (req, res) => {
     try {
         const { id } = req.params;
-        console.log(req.params)
+    
         if (!id) {
             return res.status(400).json({ error: "Campaign id is required" });
         }

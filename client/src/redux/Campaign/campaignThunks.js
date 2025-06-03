@@ -31,7 +31,9 @@ export const createCampaign = createAsyncThunk(
 // Update existing campaign
 export const updateCampaign = createAsyncThunk(
     'campaign/updateCampaign',
-    async ({ id, updatedData }, { rejectWithValue }) => {
+    async ({ id, updatedCampaign }, { rejectWithValue }) => {
+        console.log(updatedCampaign);
+        console.log(id)
         try {
             const response = await axios.put(`/campaign/${id}`, updatedData);
             return response.data;
