@@ -38,19 +38,22 @@ export const updateCampaign = async (req, res) => {
     }
 };
 
-// Delete a campaign (assume campaignId is sent in req.body.campaignId or use req.params.id)
 export const deleteCampaign = async (req, res) => {
     try {
-        const { campaignId } = req.body;
-        if (!campaignId) {
+        const { _id } = req.params;
+        console.log(req.params)
+        if (!_id) {
             return res.status(400).json({ error: "Campaign id is required" });
         }
-        const deleted = await Campaign.findByIdAndDelete(campaignId);
+
+        const deleted = await Campaign.findByIdAndDelete(_id);
         if (!deleted) {
             return res.status(404).json({ error: "Campaign not found" });
         }
+
         res.json({ message: "Campaign deleted successfully" });
     } catch (err) {
         res.status(400).json({ error: err.message });
     }
 };
+
