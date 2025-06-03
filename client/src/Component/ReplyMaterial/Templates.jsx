@@ -29,11 +29,13 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
     const { keywords } = useSelector((state) => state.keyword);
 
 
-    useEffect(() => {
-        dispatch(fetchTemplates());
-    }, []);
-
     const { templates, loading } = useSelector((state) => state.templates);
+    useEffect(() => {
+        if (templates.length === 0) {
+            dispatch(fetchTemplates());
+        }
+
+    }, []);
 
 
 
@@ -43,21 +45,21 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
         en: 'English',
         en_US: 'English (US)',
         hi: 'Hindi',
-      };
+    };
 
-      const filteredTemplates = [...templates].reverse().filter((template) => {
+    const filteredTemplates = [...templates].reverse().filter((template) => {
         const search = searchTerm.toLowerCase();
         return (
-          template.status !== 'REJECTED' && (
-            template.name?.toLowerCase().includes(search) ||
-            template.category?.toLowerCase().includes(search) ||
-            template.status?.toLowerCase().includes(search) ||
-            languageMap[template.language]?.toLowerCase().includes(search) ||
-            template.id?.toLowerCase().includes(search)
-          )
+            template.status !== 'REJECTED' && (
+                template.name?.toLowerCase().includes(search) ||
+                template.category?.toLowerCase().includes(search) ||
+                template.status?.toLowerCase().includes(search) ||
+                languageMap[template.language]?.toLowerCase().includes(search) ||
+                template.id?.toLowerCase().includes(search)
+            )
         );
-      });
-      
+    });
+
 
 
 

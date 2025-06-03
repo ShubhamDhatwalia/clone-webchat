@@ -38,7 +38,9 @@ function templates({ onClose, selectedUser }) {
 
 
     useEffect(() => {
-        dispatch(fetchTemplates());
+        if (templates.length === 0) {
+            dispatch(fetchTemplates());
+        }
     }, []);
 
 

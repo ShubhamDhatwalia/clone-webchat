@@ -18,14 +18,16 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
 
 
 
-  // useEffect(() => {
-  //   dispatch(fetchTemplates());
-  // }, []);
+  useEffect(() => {
+
+    dispatch(fetchTemplates());
+
+  }, []);
 
 
   const { templates, loading, deleteStatus } = useSelector((state) => state.templates);
 
-  
+
   useEffect(() => {
     setCurrentPage(1);
   }, [limit, searchTerm]);

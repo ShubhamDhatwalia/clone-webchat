@@ -4,7 +4,7 @@ import webhookRoutes from './routes/webhookRoutes.js';
 import cors from 'cors';
 import connect from './database/connection.js';
 import templateRoutes from './routes/templateRoutes.js';
-import mongoose from 'mongoose';
+import campaignRoutes from './routes/campaignRoutes.js';
 
 dotenv.config();
 
@@ -29,6 +29,9 @@ app.use(express.json());
 
 app.use('/', webhookRoutes);
 app.use('/', templateRoutes);
+app.use('/', campaignRoutes);
+
+
 
 console.log(process.env.ATLAS_URI);
 

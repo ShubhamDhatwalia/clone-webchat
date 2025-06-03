@@ -9,8 +9,8 @@ import { fetchPhoneNumbers } from '../../redux/phoneNumberThunks';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { addCampaign } from '../../redux/Campaign/campaignSlice';
 
+import { createCampaign } from '../../redux/Campaign/campaignThunks';
 
 
 
@@ -62,13 +62,15 @@ function BroadCast() {
 
 
   const { templates, loading, error } = useSelector((state) => state.templates);
-  
 
 
 
-  // useEffect(() => {
-  //   dispatch(fetchTemplates());
-  // }, [dispatch]);
+
+  useEffect(() => {
+    if (templates.length === 0) {
+      dispatch(fetchTemplates());
+    }
+  }, [dispatch]);
 
 
   const [contacts, setContacts] = useState([
@@ -103,7 +105,6 @@ function BroadCast() {
 
     toast.success("Broadcast started");
 
-    // Prepare an array to hold all send message promises
     const sendPromises = broadcast.contactList.map(async number => {
       const payload = {
         messaging_product: "whatsapp",
@@ -119,7 +120,6 @@ function BroadCast() {
         }
       };
 
-      // Dynamically add components based on selectedTemplate
       if (selectedTemplate?.components) {
         selectedTemplate.components.forEach(component => {
           // HEADER
@@ -287,7 +287,7 @@ function BroadCast() {
       return;
     }
 
-    dispatch(addCampaign(formInput));
+    dispatch(createCampaign(formInput));
     toast.success("Campaign saved successfully");
 
     setFormInput({
@@ -326,14 +326,14 @@ function BroadCast() {
                 variant="outlined"
                 sx={{
                   '& label.Mui-focused': {
-                    color: '#00A63E', 
+                    color: '#00A63E',
                   },
                   '& .MuiOutlinedInput-root': {
                     '&:hover .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#00A63E', 
+                      borderColor: '#00A63E',
                     },
                     '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                      borderColor: '#00A63E', 
+                      borderColor: '#00A63E',
                     },
                     borderRadius: '10px',
                   },
@@ -342,20 +342,20 @@ function BroadCast() {
 
               <FormControl fullWidth required size='small' sx={{
                 '& label.Mui-focused': {
-                  color: '#00A63E', 
+                  color: '#00A63E',
                 },
                 '& .MuiOutlinedInput-root': {
                   '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#00A63E', 
+                    borderColor: '#00A63E',
                   },
                   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                    borderColor: '#00A63E', 
+                    borderColor: '#00A63E',
                   },
                   borderRadius: '10px',
                 },
                 '& .MuiSelect-select': {
                   '&:focus': {
-                    backgroundColor: 'transparent', 
+                    backgroundColor: 'transparent',
                   },
                 },
               }}>
@@ -491,20 +491,20 @@ function BroadCast() {
                   size="small"
                   sx={{
                     '& label.Mui-focused': {
-                      color: '#00A63E', 
+                      color: '#00A63E',
                     },
                     '& .MuiOutlinedInput-root': {
                       '&:hover .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#00A63E', 
+                        borderColor: '#00A63E',
                       },
                       '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                        borderColor: '#00A63E', 
+                        borderColor: '#00A63E',
                       },
                       borderRadius: '10px',
                     },
                     '& .MuiSelect-select': {
                       '&:focus': {
-                        backgroundColor: 'transparent', 
+                        backgroundColor: 'transparent',
                       },
                     },
                   }}
@@ -550,7 +550,7 @@ function BroadCast() {
                             checked={formInput.contactList.length === contacts.length}
                             onChange={handleSelectAll}
                             sx={{
-                              color: '#00A63E', 
+                              color: '#00A63E',
                               '&.Mui-checked': {
                                 color: '#00A63E',
                               },

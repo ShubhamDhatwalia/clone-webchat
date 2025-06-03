@@ -1,48 +1,86 @@
 import { createSlice } from '@reduxjs/toolkit';
-
-const storedCampaigns = JSON.parse(localStorage.getItem('Campaign'));
+import {
+    fetchCampaigns,
+    createCampaign,
+    updateCampaign,
+    deleteCampaign,
+} from './campaignThunks';
 
 const initialState = {
-    campaign: Array.isArray(storedCampaigns) ? storedCampaigns : [],
+    campaigns: [],
+    loading: false,
+    error: null,
 };
-
-
-console.log(initialState.campaign)
 
 const campaignSlice = createSlice({
     name: 'campaign',
     initialState,
     reducers: {
-        addCampaign: (state, action) => {
-            const index = state.campaign.findIndex(c => c.campaignName === action.payload.campaignName);
 
-            if (index !== -1) {
-                const existingCampaign = state.campaign[index];
+    },
+    extraReducers: (builder) => {
+        builder
+            // fetch campaigns
+            .addCase(fetchCampaigns.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchCampaigns.fulfilled, (state, action) => {
+                state.campaigns = action.payload;
+                state.loading = false;
+            })
+            .addCase(fetchCampaigns.rejected, (state, action) => {
+                state.error = action.payload;
+                state.loading = false;
+            })
 
-                const hasChanges = Object.keys(action.payload).some(
-                    key => key !== 'campaignName' && existingCampaign[key] !== action.payload[key]
+            // create campaign
+            .addCase(createCampaign.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(createCampaign.fulfilled, (state, action) => {
+                state.campaigns.push(action.payload);
+                state.loading = false;
+            })
+            .addCase(createCampaign.rejected, (state, action) => {
+                state.error = action.payload;
+                state.loading = false;
+            })
+
+            // update campaign
+            .addCase(updateCampaign.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(updateCampaign.fulfilled, (state, action) => {
+                const index = state.campaigns.findIndex(
+                    (c) => c._id === action.payload._id
                 );
-
-                if (hasChanges) {
-                    state.campaign[index] = action.payload;
-                    localStorage.setItem('Campaign', JSON.stringify(state.campaign));
+                if (index !== -1) {
+                    state.campaigns[index] = action.payload;
                 }
-            } else {
-                state.campaign.push(action.payload);
-                localStorage.setItem('Campaign', JSON.stringify(state.campaign));
-            }
-        },
+                state.loading = false;
+            })
+            .addCase(updateCampaign.rejected, (state, action) => {
+                state.error = action.payload;
+                state.loading = false;
+            })
 
+            // delete campaign
+            .addCase(deleteCampaign.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(deleteCampaign.fulfilled, (state, action) => {
+                state.campaigns = state.campaigns.filter(c => c._id !== action.payload);
+                state.loading = false;
+            })
+            .addCase(deleteCampaign.rejected, (state, action) => {
+                state.error = action.payload;
+                state.loading = false;
+            });
+    },
+});
 
-
-        removeCampaign: (state, action) => {
-            state.campaign.splice(action.payload, 1);
-            localStorage.setItem('Campaign', JSON.stringify(state.campaign));
-        },
-
-    }
-
-})
-
-export const { addCampaign, removeCampaign } = campaignSlice.actions;
 export default campaignSlice.reducer;

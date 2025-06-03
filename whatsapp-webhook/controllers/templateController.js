@@ -24,7 +24,7 @@ export const fetchTemplates = async (req, res) => {
     try {
         const response = await axios.get(`${baseURL}?access_token=${accessToken}&limit=1000`);
         const templates = response.data.data;
-        console.log(JSON.stringify(templates));
+        
 
         const operations = templates.map(t => ({
             updateOne: {

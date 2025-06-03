@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { TextField } from '@mui/material';
 
 
 
@@ -44,31 +45,33 @@ function TemplatesPreview({ template, onClose, onBack, selectedUser }) {
         if (template) {
 
 
+
+
             const inputFields = {};
 
-            template.components.forEach(component => {
-                console.log(component.type);
+            template.components.forEach((component) => {
                 if (component.type === "HEADER" || component.type === "BODY") {
+                    const text = component.text || '';
+
                     if (template.parameter_format === "POSITIONAL") {
-                        const text = component.text || '';
                         const matches = [...text.matchAll(/{{(\d+)}}/g)];
 
                         let values = [];
 
                         if (component.type === 'HEADER') {
-                            const headerValues = component.example?.header_text;
+                            const headerValues = component.example?.header_text || [];
                             values = Array.isArray(headerValues[0]) ? headerValues[0] : headerValues;
                         } else if (component.type === 'BODY') {
-                            const bodyValues = component.example?.body_text;
+                            const bodyValues = component.example?.body_text || [];
                             values = Array.isArray(bodyValues[0]) ? bodyValues[0] : bodyValues;
                         }
 
                         matches.forEach((match) => {
-                            const index = parseInt(match[1], 10);
+                            const index = parseInt(match[1], 10); // {{1}} becomes index 1
                             inputFields[`${component.type}-${index}`] = values?.[index - 1] || '';
                         });
+
                     } else if (template.parameter_format === "NAMED") {
-                        const text = component.text || '';
                         const matches = [...text.matchAll(/{{(\w+)}}/g)];
 
                         let namedValues = [];
@@ -88,8 +91,8 @@ function TemplatesPreview({ template, onClose, onBack, selectedUser }) {
                 }
             });
 
-            console.log(inputFields);
             setVariableInputs(inputFields);
+
 
         }
     }, [template]);
@@ -313,15 +316,40 @@ function TemplatesPreview({ template, onClose, onBack, selectedUser }) {
                         )}
 
                         {/* Inputs */}
-                        <div className='mt-4'>
+                        <div className="mt-10">
                             {Object.entries(variableInputs).map(([key, value]) => (
-                                <div key={key} className="mb-2">
-                                    <label className="block text-xs text-gray-900 font-semibold mb-1">{key.replace(/^(HEADER|BODY)-/, '')}</label>
-                                    <input
-                                        type="text"
-                                        className="border border-gray-300 p-1 w-full rounded focus:outline-1 focus:outline-green"
+                                <div key={key} className="mb-6">
+                                    <TextField
+                                        fullWidth
+                                        label={key}
+                                        variant="outlined"
                                         value={value}
-                                        onChange={(e) => setVariableInputs(prev => ({ ...prev, [key]: e.target.value }))}
+                                        size="small"
+                                        onChange={(e) =>
+                                            setVariableInputs((prev) => ({ ...prev, [key]: e.target.value }))
+                                        }
+                                        sx={{
+                                            '& .MuiOutlinedInput-root': {
+                                                height: 32,
+                                                fontSize: '0.75rem',
+                                                '& fieldset': {
+                                                    borderColor: '#00A63E',
+                                                },
+                                                '&:hover fieldset': {
+                                                    borderColor: '#00A63E',
+                                                },
+                                                '&.Mui-focused fieldset': {
+                                                    borderColor: '#00A63E',
+                                                },
+                                            },
+                                            '& .MuiInputLabel-root': {
+                                                color: '#00A63E',
+                                                fontSize: '0.75rem',
+                                            },
+                                            '& .MuiInputLabel-root.Mui-focused': {
+                                                color: '#00A63E',
+                                            },
+                                        }}
                                     />
                                 </div>
                             ))}
