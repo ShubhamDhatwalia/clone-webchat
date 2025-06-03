@@ -5,6 +5,9 @@ import cors from 'cors';
 import connect from './database/connection.js';
 import templateRoutes from './routes/templateRoutes.js';
 import campaignRoutes from './routes/campaignRoutes.js';
+import contactRoutes from './routes/contactRoutes.js';
+
+
 
 dotenv.config();
 
@@ -30,7 +33,7 @@ app.use(express.json());
 app.use('/', webhookRoutes);
 app.use('/', templateRoutes);
 app.use('/', campaignRoutes);
-
+app.use('/', contactRoutes);
 
 
 console.log(process.env.ATLAS_URI);
