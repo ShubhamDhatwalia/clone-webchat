@@ -17,7 +17,7 @@ const allowedOrigins = ['http://localhost:5173', 'https://clone-webchat.onrender
 
 app.use(cors({
   origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   credentials: true,
 }));
 

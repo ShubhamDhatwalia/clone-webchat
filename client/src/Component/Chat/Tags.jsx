@@ -28,7 +28,7 @@ function Tags({ selectedUser }) {
                 return;
             }
 
-            dispatch(addTags({ phone: selectedUser._id, tags: [newTag] }));
+            dispatch(addTags({ id: selectedUser._id, tags: [newTag] }));
             setInputValue('');
         }
     };
