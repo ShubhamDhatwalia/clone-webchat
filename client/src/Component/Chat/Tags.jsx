@@ -34,7 +34,7 @@ function Tags({ selectedUser }) {
     };
 
     const handleRemoveTag = (tagToRemove) => {
-        dispatch(removeTags({ phone: selectedUser.phone, tag: tagToRemove }));
+        dispatch(removeTags({ id: selectedUser._id, tag: tagToRemove }));
     };
 
 

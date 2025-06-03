@@ -61,3 +61,17 @@ export const addTags = async (req, res) => {
         res.status(500).json({ message: "Failed to add tags" });
     }
 };
+
+export const removeTags = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { tag } = req.body;
+        const contactData = await Contacts.findByIdAndUpdate(id, { $pull: { tags: tag } }, { new: true });
+        res.status(200).json(contactData);
+    } catch (error) {
+        console.error("Error removing tags:", error);
+        res.status(500).json({ message: "Failed to remove tags" });
+    }
+};
+
+
