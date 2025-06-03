@@ -49,8 +49,19 @@ function ContactList({ onSearch, setSelectedContact }) {
 
 
     const handleDelete = (phone) => {
-        dispatch(deleteContact(phone));
-        toast.success("Contact removed successfully!");
+       
+        toast.promise(
+           dispatch(deleteContact(phone)),
+            {
+                pending: 'deleting contact...',
+                success: 'Contact deleted successfully!',
+                error: {
+                    render({ data }) {
+                        return typeof data === 'string' ? data : 'Failed to update';
+                    }
+                }
+            }
+        );
     }
 
 

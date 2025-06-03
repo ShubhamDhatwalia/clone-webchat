@@ -92,10 +92,22 @@ function Contact() {
         }
 
         if (isNew) {
-            dispatch(addContact(contactData));
+
+            toast.promise(
+                dispatch(addContact(contactData)),
+                {
+                    pending: 'adding contact...',
+                    success: 'Contact added successfully!',
+                    error: {
+                        render({ data }) {
+                            return typeof data === 'string' ? data : 'Failed to update';
+                        }
+                    }
+                }
+            );
         } else {
             console.log(contactData);
-            dispatch(updateContact({ phone: selectedContact.phone, updatedData: contactData }));
+            dispatch(updateContact({ phone: selectedContact._id, updatedData: contactData }));
         }
 
         setFormData({ name: '', phone: '' });
