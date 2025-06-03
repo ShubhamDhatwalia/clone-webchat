@@ -28,10 +28,10 @@ export const updateCampaign = async (req, res) => {
         const { id, ...updatedCampaign } = req.body;
         console.log(id)
         console.log(updatedCampaign)
-        if (!_id) {
+        if (!id) {
             return res.status(400).json({ error: "Campaign id is required" });
         }
-        const updatedData = await Campaign.findByIdAndUpdate(_id, updatedCampaign, { new: true });
+        const updatedData = await Campaign.findByIdAndUpdate(id, updatedCampaign, { new: true });
         if (!updatedData) {
             return res.status(404).json({ error: "Campaign not found" });
         }

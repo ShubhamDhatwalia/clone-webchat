@@ -277,7 +277,6 @@ function BroadCast() {
       return;
     }
 
-    // If editing
     if (editData) {
       console.log(editData)
       toast.promise(
