@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TextField, FormControl, Select, InputLabel, MenuItem, Checkbox, ListItemText, FormControlLabel, Autocomplete, Button } from '@mui/material';
 import TemplatePreview from '../TemplatePreview';
-import CampaignList from '../CampaignList';
+// import CampaignList from '../CampaignList';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchTemplates } from '../../redux/templateThunks';
 import { fetchPhoneNumbers } from '../../redux/phoneNumberThunks';
@@ -645,7 +645,7 @@ function BroadCast() {
           </form>
 
           <div className='mt-20'>
-            <CampaignList onEdit={handleEditCampaign} broadcast={handleBroadCast} />
+            {/* <CampaignList onEdit={handleEditCampaign} broadcast={handleBroadCast} /> */}
           </div>
 
         </div>
