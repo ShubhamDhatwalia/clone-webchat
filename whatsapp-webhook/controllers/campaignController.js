@@ -40,13 +40,13 @@ export const updateCampaign = async (req, res) => {
 
 export const deleteCampaign = async (req, res) => {
     try {
-        const { _id } = req.params;
+        const { id } = req.params;
         console.log(req.params)
-        if (!_id) {
+        if (!id) {
             return res.status(400).json({ error: "Campaign id is required" });
         }
 
-        const deleted = await Campaign.findByIdAndDelete(_id);
+        const deleted = await Campaign.findByIdAndDelete(id);
         if (!deleted) {
             return res.status(404).json({ error: "Campaign not found" });
         }
