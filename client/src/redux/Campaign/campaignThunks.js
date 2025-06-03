@@ -32,18 +32,21 @@ export const createCampaign = createAsyncThunk(
 export const updateCampaign = createAsyncThunk(
     'campaign/updateCampaign',
     async ({ id, updatedCampaign }, { rejectWithValue }) => {
-        console.log(updatedCampaign);
-        console.log(id)
+        console.log("Updated Campaign:", updatedCampaign);
+        console.log("Campaign ID:", id);
+
         try {
-            console.log("start api")
-            const response = await axios.put(`/editCampaign/${id}`, updatedData);
-            console.log(response.data)
+            console.log("Start API call...");
+            const response = await axios.put(`/editCampaign/${id}`, updatedCampaign);
+            console.log("API Response:", response.data);
             return response.data;
         } catch (error) {
+            console.error("Update Campaign Error:", error);
             return rejectWithValue(error.response?.data || error.message);
         }
     }
 );
+
 
 // Delete campaign
 export const deleteCampaign = createAsyncThunk(

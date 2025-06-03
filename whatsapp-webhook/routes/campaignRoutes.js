@@ -6,7 +6,7 @@ import { fetchCampaigns, createCampaign, updateCampaign, deleteCampaign } from '
 
 router.get('/campaign', fetchCampaigns)
 router.post('/campaign', createCampaign)
-router.put('/editCampaign', updateCampaign)
+router.put('/editCampaign/:id', updateCampaign)
 router.delete('/campaign/:id', deleteCampaign)
 
 
