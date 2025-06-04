@@ -11,7 +11,7 @@ import { updateKeyword } from '..//../redux/Keywords/keywordSlice.js'
 import { toast } from 'react-toastify';
 
 
-
+import { addReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
 
 
 
@@ -108,7 +108,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
             toast.success("Reply material updated successfully");
 
         } else {
-            dispatch(addTextReply(textMaterial));
+            dispatch(addReplyMaterial(textMaterial));
             toast.success("Reply material added successfully");
 
         }

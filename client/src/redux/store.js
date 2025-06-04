@@ -6,7 +6,7 @@ import textReplyReducer from './textReply/textReplySlice.js';
 import campaignReducer from './Campaign/campaignSlice.js';
 import ChatbotReducer from './Chatbot/ChatbotSlice..js';
 import ContactReducer from './contacts/contactSlice.js';
-
+import ReplyMaterialSlice from './ReplyMaterial/ReplyMaterialSlice.js';
 
 
 export const store = configureStore({
@@ -18,6 +18,7 @@ export const store = configureStore({
     campaign: campaignReducer,
     chatbot: ChatbotReducer,
     contact: ContactReducer,
+    replyMaterial: ReplyMaterialSlice,
   },
 });
 

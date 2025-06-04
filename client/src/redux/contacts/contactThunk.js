@@ -82,7 +82,7 @@ export const addNotes = createAsyncThunk('contacts/notes/add', async ({ id, note
         console.log(notes)
         console.log(id)
         const res = await axios.patch(`/contacts/${id}/addNotes`, { notes });
-        toast.success('Note added');
+     
         return res.data;
     } catch (err) {
         toast.error('Failed to add note');
@@ -93,7 +93,7 @@ export const addNotes = createAsyncThunk('contacts/notes/add', async ({ id, note
 export const removeNotes = createAsyncThunk('contacts/notes/remove', async ({ id, time }, { rejectWithValue }) => {
     try {
         const res = await axios.patch(`/contacts/${id}/notes/remove`, { time });
-        toast.success('Note removed');
+      
         return res.data;
     } catch (err) {
         toast.error('Failed to remove note');
@@ -104,7 +104,7 @@ export const removeNotes = createAsyncThunk('contacts/notes/remove', async ({ id
 export const updateNote = createAsyncThunk('contacts/notes/update', async ({ id, updatedNote }, { rejectWithValue }) => {
     try {
         const res = await axios.patch(`/contacts/${id}/notes/update`, { updatedNote });
-        toast.success('Note updated');
+        
         return res.data;
     } catch (err) {
         toast.error('Failed to update note');

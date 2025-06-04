@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { createCampaign, updateCampaign } from '../../redux/Campaign/campaignThunks';
+import { fetchContacts } from '../../redux/contacts/contactThunk';
 
 
 
@@ -73,10 +74,22 @@ function BroadCast() {
   }, [dispatch]);
 
 
-  const [contacts, setContacts] = useState([
-    { id: '1', name: 'John Doe', number: '+917876054918' },
-    { id: '2', name: 'Jane Smith', number: '+919876543210' },
-  ]);
+  const contacts = useSelector((state) => state.contact.contacts);
+  console.log(contacts)
+
+  useEffect(() => {
+    if (contacts.length === 0) {
+      dispatch(fetchContacts());
+    }
+  }, []);
+
+
+
+
+  // const [contacts, setContacts] = useState([
+  //   { id: '1', name: 'John Doe', number: '+917876054918' },
+  //   { id: '2', name: 'Jane Smith', number: '+919876543210' },
+  // ]);
 
 
 
@@ -546,7 +559,7 @@ function BroadCast() {
                     label="Select Contacts"
                     renderValue={(selected) =>
                       contacts
-                        .filter((c) => selected.includes(c.number))
+                        .filter((c) => selected.includes(c.phone))
                         .map((c) => c.name)
                         .join(', ')
                     }
@@ -589,9 +602,9 @@ function BroadCast() {
 
                     {/* Contacts List */}
                     {contacts.map((contact) => (
-                      <MenuItem key={contact.id} value={contact.number}>
+                      <MenuItem key={contact._id} value={contact.phone}>
                         <Checkbox
-                          checked={formInput.contactList.includes(contact.number)}
+                          checked={formInput.contactList.includes(contact.phone)}
                           sx={{
                             color: '#00A63E',
                             '&.Mui-checked': {
@@ -599,7 +612,7 @@ function BroadCast() {
                             },
                           }}
                         />
-                        <ListItemText primary={contact.name} secondary={contact.number} />
+                        <ListItemText primary={contact.name} secondary={contact.phone} />
                       </MenuItem>
                     ))}
                   </Select>

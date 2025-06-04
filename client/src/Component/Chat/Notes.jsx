@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import React, { useState } from 'react'
 import { addNotes, removeNotes, updateNote } from '../../redux/contacts/contactThunk';
+import { toast } from 'react-toastify';
 
 
 
@@ -26,20 +27,62 @@ function Notes({ selectedUser }) {
 
         const noteObject = {
             text: input.trim(),
-            time: editingTime || new Date().toISOString(),
+            time: new Date().toISOString(),
         };
 
         if (editingTime) {
-            console.log(selectedUser._id);
-            console.log(noteObject);
-            dispatch(updateNote({ id: selectedUser._id, updatedNote: noteObject }));
+
+            toast.promise(
+                dispatch(updateNote({ id: selectedUser._id, updatedNote: noteObject })),
+                {
+                    pending: 'updating notes...',
+                    success: 'Notes updated successfully!',
+                    error: {
+                        render({ data }) {
+                            return typeof data === 'string' ? data : 'Failed to update';
+                        }
+                    }
+                }
+            );
+
         } else {
-            dispatch(addNotes({ id: selectedUser._id, notes: [noteObject] }));
+            toast.promise(
+                dispatch(addNotes({ id: selectedUser._id, notes: [noteObject] })),
+                {
+                    pending: 'adding notes...',
+                    success: 'Notes added successfully!',
+                    error: {
+                        render({ data }) {
+                            return typeof data === 'string' ? data : 'Failed to update';
+                        }
+                    }
+                }
+            );
+
         }
 
         setTextArea(false);
         setInput('');
         setEditingTime(null);
+    };
+
+
+    const handleNotesDelete = (id, time) => {
+        toast.promise(
+            dispatch(removeNotes({ id: id, time: time })),
+
+            {
+                pending: 'removing notes...',
+                success: 'Notes removed successfully!',
+                error: {
+                    render({ data }) {
+                        return typeof data === 'string' ? data : 'Failed to update';
+                    }
+                }
+            }
+        );
+
+
     };
 
 
@@ -119,7 +162,7 @@ function Notes({ selectedUser }) {
 
                                     <i
                                         className="fa-solid fa-xmark text-red-600 bg-gray-100 p-1 rounded-full cursor-pointer hover:bg-red-100 "
-                                        onClick={() => dispatch(removeNotes({ id: selectedUser._id, time: note.time }))}
+                                        onClick={() => handleNotesDelete(selectedUser._id, note.time)}
                                     ></i>
                                 </div>
 
