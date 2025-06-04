@@ -117,7 +117,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
         if (editIndex !== null) {
             dispatch(updateReplyMaterial({
                 id: editIndex,
-                updatedDta: textMaterial
+                updatedData: textMaterial
             }));
 
             toast.success("Reply material updated successfully");

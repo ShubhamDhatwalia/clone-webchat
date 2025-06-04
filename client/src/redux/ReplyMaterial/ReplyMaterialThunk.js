@@ -14,6 +14,7 @@ export const addReplyMaterial = createAsyncThunk('replyMaterial/add', async (rep
 
 export const updateReplyMaterial = createAsyncThunk('replyMaterial/update', async ({ id, updatedData }, { rejectWithValue }) => {
     try {
+        console.log(updatedData)
         const res = await axios.put(`/updateReplyMaterial/${id}`, updatedData);
         toast.success('Reply material updated');
         return res.data;
