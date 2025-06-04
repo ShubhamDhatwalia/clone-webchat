@@ -10,7 +10,7 @@ import { fetchKeywords, deleteKeywords } from '../redux/Keywords/keywordThunk';
 
 
 function KeywordsList({ onOpen, onEdit, onSearch }) {
-    // const keywords = useSelector(state => state.keyword.keywords);
+    
     const dispatch = useDispatch();
     const [limit, setLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);

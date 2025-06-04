@@ -1,18 +1,21 @@
 import mongoose from 'mongoose';
 
-
 const ReplySchema = new mongoose.Schema({
     replyType: {
         type: String,
         required: true,
-        enum: ['Text', 'Image', 'Document', 'Video'], // Extend as needed
+        enum: ['Text', 'Image', 'Document', 'Video'], 
     },
     name: {
         type: String,
         required: true,
     },
     content: {
-        type: mongoose.Schema.Types.Mixed, // Flexible field
+        type: new mongoose.Schema({
+            text: { type: String },
+            url: { type: String },
+            materialId: { type: mongoose.Schema.Types.ObjectId, ref: 'templates' },
+        }, { _id: false }),
         required: true,
     },
 }, { timestamps: true });

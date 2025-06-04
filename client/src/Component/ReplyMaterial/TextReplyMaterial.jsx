@@ -23,7 +23,11 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
     const [textMaterial, setTextMaterial] = useState({
         replyType: "Text",
         name: "",
-        content: ""
+        content: {
+            text: "",
+            url: "",
+            materialId: ""
+        }
     })
     const [editIndex, setEditIndex] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -73,11 +77,25 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setTextMaterial((prev) => ({
-            ...prev,
-            [name]: value
-        }));
-    }
+
+        // Handle top-level fields (e.g., name, replyType)
+        if (['name', 'replyType'].includes(name)) {
+            setTextMaterial((prev) => ({
+                ...prev,
+                [name]: value
+            }));
+        }
+        // Handle nested content fields
+        else {
+            setTextMaterial((prev) => ({
+                ...prev,
+                content: {
+                    ...prev.content,
+                    [name]: value
+                }
+            }));
+        }
+    };
 
 
     const handleEdit = (editData) => {
@@ -90,7 +108,16 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
     const handleClose = () => {
         setIsOpen(false);
-        setTextMaterial({ replyType: "Text", name: "", content: "" });
+        setTextMaterial({
+            replyType: "Text",
+            name: "",
+            content: {
+                text: "",
+                url: "",
+                materialId: ""
+            }
+        });
+
     }
 
 
@@ -154,7 +181,16 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
         }
 
         setIsOpen(false);
-        setTextMaterial({ replyType: "Text", name: "", content: "" });
+        setTextMaterial({
+            replyType: "Text",
+            name: "",
+            content: {
+                text: "",
+                url: "",
+                materialId: ""
+            }
+        });
+
         setEditIndex(null);
 
 
@@ -197,7 +233,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
                         error: 'Failed to add keywords',
                     }
                 );
-               
+
 
                 onClose(true);
 
@@ -233,7 +269,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
                                 Selected Material:
                                 {selectedReplies?.map((selectedId, i) => {
                                     const reply = replyMaterial.find((r) => r._id === selectedId);
-                                    if (!reply) return null; 
+                                    if (!reply) return null;
 
                                     return (
                                         <div

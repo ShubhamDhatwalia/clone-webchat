@@ -10,8 +10,8 @@ import { updateKeyword } from '..//../redux/Keywords/keywordSlice.js'
 import { toast } from 'react-toastify';
 import Checkbox from '@mui/material/Checkbox';
 import { grey } from '@mui/material/colors';
-
-
+import mongoose from 'mongoose';
+import { fetchReplyMaterial, addReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
 
 
 
@@ -41,7 +41,40 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
 
 
+
+    const replyMaterial = useSelector((state) => state.replyMaterial.replyMaterial);
+    useEffect(() => {
+        if (replyMaterial.length === 0) {
+            dispatch(fetchReplyMaterial());
+        }
+    }, [dispatch])
+
+
+
+    useEffect(() => {
+        if (templates.length > 0) {
+
+            const newTemplateReplies = templates
+                .filter(template => !replyMaterial.some(r => r._id === template._id))
+                .map(template => ({
+                    name: template.name,
+                    content: new mongoose.Types.ObjectId(template._id),
+                    replyType: 'Template'
+                }));
+
+                console.log(newTemplateReplies)
+
+            if (newTemplateReplies.length > 0) {
+                dispatch(addReplyMaterial(newTemplateReplies));
+            }
+        }
+    }, [templates, replyMaterial, dispatch]);
+
+
+
+
     const languageMap = {
+
         en: 'English',
         en_US: 'English (US)',
         hi: 'Hindi',
@@ -118,6 +151,8 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
     };
 
+    console.log(selectedReplies)
+
 
 
 
@@ -140,21 +175,29 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
                         </form>
 
-                        {path == '/keywordAction' && (<div className='text-gray-500 font-semibold flex items-center flex-wrap gap-2'>
-                            Selected Material:
-                            {selectedReplies?.map((reply, i) => (
-                                <div
-                                    key={i}
-                                    className='text-xs border text-nowrap border-[#FF9933] bg-[#FFFAF5] rounded-md p-2 text-[#FF9933] max-w-[150px]  overflow-hidden'
-                                >
-                                    <span>{reply.replyType}</span>:{" "}
-                                    <span className='truncate inline-block overflow-hidden whitespace-nowrap text-ellipsis max-w-[70px] align-bottom'>
-                                        {reply.name || reply.currentReply.name}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
+                        {path === '/keywordAction' && (
+                            <div className="text-gray-500 font-semibold flex items-center flex-wrap gap-2">
+                                Selected Material:
+                                {selectedReplies?.map((selectedId, i) => {
+                                    const reply = replyMaterial.find(r => r._id === selectedId);
+
+                                    if (!reply) return null;
+
+                                    return (
+                                        <div
+                                            key={i}
+                                            className="text-xs border text-nowrap border-[#FF9933] bg-[#FFFAF5] rounded-md p-2 text-[#FF9933] max-w-[150px] overflow-hidden"
+                                        >
+                                            <span>{reply.replyType}</span>:{" "}
+                                            <span className="truncate inline-block overflow-hidden whitespace-nowrap text-ellipsis max-w-[70px] align-bottom">
+                                                {reply.name}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         )}
+
 
 
 
@@ -226,12 +269,12 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
 
                                 (filteredTemplates.map((template) => (
-                                    <tr key={template.id} className="text-center hover:bg-green-50 font-semibold cursor-pointer text-sm">
+                                    <tr key={template._id} className="text-center hover:bg-green-50 font-semibold cursor-pointer text-sm">
                                         <td className="px-[10px] py-4 text-left text-blue-600 flex gap-2 items-center">
                                             {path === '/keywordAction' && (
                                                 <Checkbox
                                                     color="success"
-                                                    checked={selectedReplies.some(item => item.currentReply?.name === template.name)}
+                                                    checked={selectedReplies.some(item => item === template._id)}
                                                     onChange={(e) => {
                                                         const isChecked = e.target.checked;
                                                         const currentReply = template;
@@ -241,7 +284,7 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
                                                             setSelectedReplies(prev => [...prev, { replyType, currentReply }]);
 
                                                         } else {
-                                                            setSelectedReplies(prev => prev.filter(item => item.currentReply?.name !== currentReply.name));
+                                                            setSelectedReplies(prev => prev.filter(item => item !== currentReply));
                                                         }
                                                     }}
 

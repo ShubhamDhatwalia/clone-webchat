@@ -26,6 +26,7 @@
     "lamejs": "^1.2.1",
     "lodash.isequal": "^4.5.0",
     "mic-recorder-to-mp3": "^2.2.2",
+    "mongoose": "^8.15.1",
     "npm": "^11.2.0",
     "react": "^19.1.0",
     "react-audio-voice-recorder": "^2.2.0",
