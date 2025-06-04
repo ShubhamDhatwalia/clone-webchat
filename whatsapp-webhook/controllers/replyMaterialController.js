@@ -21,3 +21,26 @@ export const fetchTextReply = async (req, res) => {
         res.status(500).json({ message: 'Server error', error });
     }
 };
+
+
+export const updateReplyMaterial = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { ...updatedData } = req.body;
+        const updated = await ReplyMaterial.findByIdAndUpdate(id, updatedData, { new: true });
+        res.status(200).json(updated);
+    } catch (error) {
+        console.error('Error updating reply material:', error);
+        res.status(500).json({ message: 'Server error', error });
+    }
+}
+export const deleteReplyMaterial = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleted = await ReplyMaterial.findByIdAndDelete(id);
+        res.status(200).json(deleted);
+    } catch (error) {
+        console.error('Error deleting reply material:', error);
+        res.status(500).json({ message: 'Server error', error });
+    }
+}

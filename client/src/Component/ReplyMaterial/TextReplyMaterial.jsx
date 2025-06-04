@@ -11,7 +11,7 @@ import { updateKeyword } from '..//../redux/Keywords/keywordSlice.js'
 import { toast } from 'react-toastify';
 
 
-import { addReplyMaterial, fetchTextReply } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
+import { addReplyMaterial, fetchTextReply, updateReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
 
 
 
@@ -39,13 +39,19 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
     const { keywords } = useSelector((state) => state.keyword);
 
-    const textReply = useSelector((state) => state);
-    console.log(textReply);
+
+
+    const textReplys  = useSelector((state) => state.replyMaterial.replyMaterial);
+    console.log(textReplys);
+
+    useEffect(() => {
+        if (textReplys.length === 0) {
+            dispatch(fetchTextReply());
+        }
+    }, [dispatch]);
 
 
 
-
-    const { textReplys } = useSelector((state) => state.textReplys);
 
 
     const location = useLocation();
@@ -70,9 +76,12 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
     }
 
 
-    const handleEdit = (index) => {
-        setTextMaterial(textReplys[index]);
-        setEditIndex(index);
+    const handleEdit = (editData) => {
+        console.log(editData);
+
+        setTextMaterial(editData);
+        console.log(textMaterial);
+        setEditIndex(editData._id);
         setIsOpen(true);
 
     };
@@ -106,9 +115,9 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
         e.preventDefault();
 
         if (editIndex !== null) {
-            dispatch(editTextReply({
-                oldReply: textReplys[editIndex],
-                newReply: textMaterial
+            dispatch(updateReplyMaterial({
+                id: editIndex,
+                updatedDta: textMaterial
             }));
 
             toast.success("Reply material updated successfully");
@@ -265,8 +274,9 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
                 )}
 
                 <div className='mt-6 mb-4 grid gap-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] items-start max-h-[70vh] px-4 overflow-auto'>
-                    {filteredReplies.map((reply, index) => (
-                        <div key={index} className='bg-white rounded-lg p-4 max-w-[100%] h-[200px]  w-full hover:drop-shadow-xl'>
+                    {filteredReplies.map((reply) => (
+                        console.log(reply),
+                        <div key={reply._id} className='bg-white rounded-lg p-4 max-w-[100%] h-[200px]  w-full hover:drop-shadow-xl'>
                             <div className='flex items-center justify-between gap-4'>
 
                                 {path == '/keywordAction' && (
@@ -303,14 +313,14 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
                                     <div
                                         className='w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 bg-gray-100 cursor-pointer hover:border-green-500'
                                         onClick={() => {
-                                            handleEdit(index)
+                                            handleEdit(reply)
                                         }}
                                     >
                                         <img src={edit_icon} alt="edit" />
                                     </div>
                                     <div
                                         className='w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 bg-gray-100 cursor-pointer hover:border-red-500'
-                                        onClick={() => { handleDelete(index) }}
+                                        onClick={() => { handleDelete(reply._id) }}
                                     >
                                         <img src={delete_icon} alt="delete" />
                                     </div>
