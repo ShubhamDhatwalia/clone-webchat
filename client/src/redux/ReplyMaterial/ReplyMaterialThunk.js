@@ -32,3 +32,14 @@ export const deleteReplyMaterial = createAsyncThunk('replyMaterial/delete', asyn
         return rejectWithValue(err.response?.data || err.message);
     }
 });
+
+
+export const fetchTextReply = createAsyncThunk('replyMaterial/fetchTextReply', async (_, { rejectWithValue }) => {
+    try {
+        const res = await axios.get('/replyMaterial/textReply');
+        return res.data;
+    } catch (err) {
+        toast.error('Failed to get')
+        return rejectWithValue(err.response?.data || err.message);
+    }
+});

@@ -11,7 +11,7 @@ import { updateKeyword } from '..//../redux/Keywords/keywordSlice.js'
 import { toast } from 'react-toastify';
 
 
-import { addReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
+import { addReplyMaterial, fetchTextReply } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
 
 
 
@@ -39,6 +39,12 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
     const { keywords } = useSelector((state) => state.keyword);
 
+    const textReply = useSelector((state) => state);
+    console.log(textReply);
+
+
+
+
     const { textReplys } = useSelector((state) => state.textReplys);
 
 
@@ -49,8 +55,8 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
 
     const filteredReplies = textReplys.filter((reply) =>
-        reply.name.toLowerCase().includes(searchTerm.toLowerCase()) 
-        
+        reply.name.toLowerCase().includes(searchTerm.toLowerCase())
+
     );
 
 
@@ -108,15 +114,21 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
             toast.success("Reply material updated successfully");
 
         } else {
-            dispatch(addReplyMaterial(textMaterial));
-            toast.success("Reply material added successfully");
+
+            toast.promise(
+                dispatch(addReplyMaterial(textMaterial)),
+                {
+                    pending: 'reply material adding ...',
+                    success: 'Campaign added!',
+                    error: 'Failed to add campaign',
+                }
+            );
 
         }
 
         setIsOpen(false);
         setTextMaterial({ replyType: "Text", name: "", content: "" });
         setEditIndex(null);
-
 
 
     };

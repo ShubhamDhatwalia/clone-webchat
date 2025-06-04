@@ -1,6 +1,6 @@
 // features/textReply/textReplySlice.js
 import { createSlice } from '@reduxjs/toolkit';
-import { addReplyMaterial, updateReplyMaterial, deleteReplyMaterial } from './ReplyMaterialThunk.js';
+import { addReplyMaterial, updateReplyMaterial, deleteReplyMaterial, fetchTextReply } from './ReplyMaterialThunk.js';
 
 const initialState = {
     replyMaterial: [],
@@ -17,6 +17,24 @@ const replyMaterialSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+
+        //fetch text reply
+
+
+        builder.addCase(fetchTextReply.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(fetchTextReply.fulfilled, (state, action) =>{
+            state.loading = false;
+            state.replyMaterial = action.payload;   
+        });
+        builder.addCase(fetchTextReply.rejected, (state, action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+
         // Add
         builder.addCase(addReplyMaterial.pending, (state) => {
             state.loading = true;
