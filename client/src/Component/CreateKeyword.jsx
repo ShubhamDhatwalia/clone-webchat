@@ -19,7 +19,7 @@ function CreateKeyword({ onClose, editData }) {
     const [newKeyword, setNewKeyword] = useState('');
     const modalRef = useRef(null);
     const [keywordConfig, setKeywordConfigState] = useState({
-        id: uuidv4(),
+        
         keywords: [],
         triggered: 0,
         matchingMethod: "fuzzy",

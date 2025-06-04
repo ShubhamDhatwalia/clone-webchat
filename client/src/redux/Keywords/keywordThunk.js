@@ -22,3 +22,14 @@ export const fetchKeywords = createAsyncThunk('fetchKeywords', async (_, { rejec
         return rejectWithValue(err.response?.data || err.message);
     }
 });
+
+
+export const deleteKeywords = createAsyncThunk('deleteKeywords', async (id, { rejectWithValue }) => {
+    try {
+        const res = await axios.delete(`/deleteKeyword/${id}`);
+        return res.data;
+    } catch (error) {
+        toast.error('Failed to delete')
+        return rejectWithValue(err.response?.data || err.message);
+    }
+});

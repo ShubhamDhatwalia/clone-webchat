@@ -18,3 +18,13 @@ export const fetchKeywords = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+export const deleteKeywords = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deleted = await keywords.findByIdAndDelete(id);
+        res.status(200).json(deleted);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}

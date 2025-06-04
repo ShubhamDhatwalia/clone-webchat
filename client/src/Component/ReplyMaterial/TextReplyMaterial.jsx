@@ -233,7 +233,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
                                 Selected Material:
                                 {selectedReplies?.map((selectedId, i) => {
                                     const reply = replyMaterial.find((r) => r._id === selectedId);
-                                    if (!reply) return null; // skip if not found
+                                    if (!reply) return null; 
 
                                     return (
                                         <div

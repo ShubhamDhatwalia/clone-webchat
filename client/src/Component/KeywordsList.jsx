@@ -4,24 +4,24 @@ import { useDispatch } from 'react-redux';
 import { removeKeyword } from '../redux/Keywords/keywordSlice';
 import { toast } from 'react-toastify';
 
-import { fetchKeywords } from '../redux/Keywords/keywordThunk';
+import { fetchKeywords, deleteKeywords } from '../redux/Keywords/keywordThunk';
 
 
 
 
 function KeywordsList({ onOpen, onEdit, onSearch }) {
-    const keywords = useSelector(state => state.keyword.keywords);
+    // const keywords = useSelector(state => state.keyword.keywords);
     const dispatch = useDispatch();
     const [limit, setLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
 
 
 
-    const keyword = useSelector(state => state.keywords.keywords)
-    console.log(keyword)
+    const keywords = useSelector(state => state.keywords.keywords)
+    console.log(keywords)
 
     useEffect(() => {
-        if (keyword.length === 0) {
+        if (keywords.length === 0) {
             dispatch(fetchKeywords());
         }
     })
@@ -69,8 +69,8 @@ function KeywordsList({ onOpen, onEdit, onSearch }) {
 
     }
 
-    const handleDelete = (index) => {
-        dispatch(removeKeyword(index));
+    const handleDelete = (id) => {
+        dispatch(deleteKeywords(id));
         toast.success("Keyword deleted successfully!");
     };
 
@@ -93,8 +93,8 @@ function KeywordsList({ onOpen, onEdit, onSearch }) {
 
                     <tbody>
                         {currentData.length > 0 ? (
-                            currentData.map((kw, index) => (
-                                <tr key={index} className=' text-center text-lg'>
+                            currentData.map((kw) => (
+                                <tr key={kw._id} className=' text-center text-lg'>
                                     <td className='py-6 pr-1 text-left max-w-[400px]'>
                                         {Array.isArray(kw.keywords) && kw.keywords.length > 0 ? (
                                             <div className="flex flex-wrap  gap-2">
@@ -137,7 +137,7 @@ function KeywordsList({ onOpen, onEdit, onSearch }) {
                                     <td className='py-6 text-right'>
                                         <div className='flex gap-4 justify-end'>
                                             <i className="fa-solid fa-pen-to-square bg-gray-100 p-2 rounded-lg text-blue-500 hover:text-blue-600 hover:bg-blue-100 cursor-pointer" onClick={() => handleEdit(index)} ></i>
-                                            <i className="fa-solid fa-trash bg-gray-100 p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => handleDelete(index)}></i>
+                                            <i className="fa-solid fa-trash bg-gray-100 p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => handleDelete(kw._id)}></i>
                                         </div>
                                     </td>
                                 </tr>
