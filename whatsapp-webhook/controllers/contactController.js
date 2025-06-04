@@ -74,4 +74,39 @@ export const removeTags = async (req, res) => {
     }
 };
 
+export const addNotes = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { note } = req.body;
+        const notesData = await Contacts.findByIdAndUpdate(id, { $push: { notes: note } }, { new: true });
+        res.status(200).json(notesData);
+    } catch (error) {
+        console.error("Error adding notes:", error);
+        res.status(500).json({ message: "Failed to add notes   " });
+    }
 
+}
+export const updateNote = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { updatedNote } = req.body;
+        const notesData = await Contacts.findByIdAndUpdate(id, { $set: { notes: updatedNote } }, { new: true });
+        res.status(200).json(notesData);
+    } catch (error) {
+        console.error("Error updating notes:", error);
+        res.status(500).json({ message: "Failed to update notes" });
+    }
+}
+
+
+export const removeNotes = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { time } = req.body;
+        const notesData = await Contacts.findByIdAndUpdate(id, { $pull: { notes: { time } } }, { new: true });
+        res.status(200).json(notesData);
+    } catch (error) {
+        console.error("Error removing notes:", error);
+        res.status(500).json({ message: "Failed to remove notes" });
+    }
+};

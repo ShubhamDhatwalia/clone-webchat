@@ -10,9 +10,9 @@ router.put('/updateContact/:id', updateContact)
 router.delete('/deleteContact/:id', deleteContact)
 router.patch('/contacts/:id/addTags', addTags)
 router.patch('/contacts/:id/tags/remove', removeTags)
-// router.patch('/contacts/${id}/notes')
-// router.patch('/contacts/${id}/notes/remove')
-// router.patch('/contacts/${id}/notes/update')
+router.patch('/contacts/:id/addNotes')
+router.patch('/contacts/:id/notes/remove')
+router.patch('/contacts/:id/notes/update')
 
 
 

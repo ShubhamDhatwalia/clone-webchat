@@ -79,7 +79,7 @@ export const removeTags = createAsyncThunk('contacts/tags/remove', async ({ id, 
 // NOTES
 export const addNotes = createAsyncThunk('contacts/notes/add', async ({ id, note }, { rejectWithValue }) => {
     try {
-        const res = await axios.patch(`/contacts/${id}/notes`, { note });
+        const res = await axios.patch(`/contacts/${id}/addNotes`, { note });
         toast.success('Note added');
         return res.data;
     } catch (err) {

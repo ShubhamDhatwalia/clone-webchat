@@ -30,9 +30,9 @@ function Notes({ selectedUser }) {
         };
 
         if (editingTime) {
-            dispatch(updateNote({ phone: selectedUser.phone, updatedNote: noteObject }));
+            dispatch(updateNote({ id: selectedUser._id, updatedNote: noteObject }));
         } else {
-            dispatch(addNotes({ phone: selectedUser.phone, notes: [noteObject] }));
+            dispatch(addNotes({ id: selectedUser._id, notes: [noteObject] }));
         }
 
         setTextArea(false);
@@ -117,7 +117,7 @@ function Notes({ selectedUser }) {
 
                                     <i
                                         className="fa-solid fa-xmark text-red-600 bg-gray-100 p-1 rounded-full cursor-pointer hover:bg-red-100 "
-                                        onClick={() => dispatch(removeNotes({ phone: selectedUser.phone, time: note.time }))}
+                                        onClick={() => dispatch(removeNotes({ id: selectedUser._id, time: note.time }))}
                                     ></i>
                                 </div>
 
@@ -139,3 +139,5 @@ function Notes({ selectedUser }) {
 }
 
 export default Notes
+
+
