@@ -16,6 +16,7 @@ export const fetchTextReply = async (req, res) => {
     try {
         const textReplies = await ReplyMaterial.find({ replyType: 'Text' });
         res.status(200).json(textReplies);
+        console.log(textReplies);
     } catch (error) {
         console.error('Error fetching text replies:', error);
         res.status(500).json({ message: 'Server error', error });

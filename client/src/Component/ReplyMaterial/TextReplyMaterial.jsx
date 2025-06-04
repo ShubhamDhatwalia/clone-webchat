@@ -57,6 +57,9 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
             dispatch(fetchTextReply());
         }
     }, [dispatch]);
+    console.log(textReplys)
+
+
 
 
 
@@ -78,14 +81,12 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        // Handle top-level fields (e.g., name, replyType)
         if (['name', 'replyType'].includes(name)) {
             setTextMaterial((prev) => ({
                 ...prev,
                 [name]: value
             }));
         }
-        // Handle nested content fields
         else {
             setTextMaterial((prev) => ({
                 ...prev,

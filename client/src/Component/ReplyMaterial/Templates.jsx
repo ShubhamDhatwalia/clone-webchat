@@ -48,14 +48,14 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
             dispatch(fetchReplyMaterial());
         }
     }, [dispatch])
-    console.log(replyMaterial)
+    
 
 
 
     useEffect(() => {
         if (templates.length > 0) {
             const newTemplateReplies = templates
-                .filter(template => !replyMaterial.some(r => r._id === template._id)) 
+                .filter(template => !replyMaterial.some(r => r?.content?.materialId === template._id)) 
                 .map(template => ({
                     name: template.name,
                     replyType: 'Template',
