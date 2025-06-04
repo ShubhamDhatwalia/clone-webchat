@@ -73,7 +73,7 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
                 dispatch(addReplyMaterial(newTemplateReplies));
             }
         }
-    }, [templates, replyMaterial, dispatch]);
+    }, [templates]);
 
 
 
