@@ -189,8 +189,16 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
             } else {
 
-                dispatch(addKeyword(updatedKeywords));
-                toast.success("Keywords created successfully");
+                toast.promise(
+                    dispatch(addKeyword(updatedKeywords)),
+                    {
+                        pending: 'adding keywords...',
+                        success: 'Keywords added!',
+                        error: 'Failed to add keywords',
+                    }
+                );
+               
+
                 onClose(true);
 
             }
