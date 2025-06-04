@@ -5,6 +5,6 @@ import { addKeyword, fetchKeywords, deleteKeywords } from '../controllers/keywor
 
 router.post('/addKeyword', addKeyword);
 router.get('/keywords', fetchKeywords)
-router.delete('/deleteKeyword', deleteKeywords)
+router.delete('/deleteKeyword/:id', deleteKeywords)
 
 export default router
