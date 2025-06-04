@@ -5,7 +5,7 @@ import { addReplyMaterial, fetchTextReply, updateReplyMaterial, deleteReplyMater
 // router.get('/replyMaterial/textReply')
 router.post('/addReplyMaterial', addReplyMaterial)
 router.get('/replyMaterial/textReply', fetchTextReply)
-router.put('.updateReplyMaterial/:id', updateReplyMaterial)
+router.put('updateReplyMaterial/:id', updateReplyMaterial)
 router.delete('/deleteReplyMaterial/:id', deleteReplyMaterial)
 
 
