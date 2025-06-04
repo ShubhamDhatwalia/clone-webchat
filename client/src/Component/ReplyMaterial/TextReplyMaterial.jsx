@@ -72,7 +72,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
 
     const filteredReplies = textReplys.filter((reply) =>
-        reply.name.toLowerCase().includes(searchTerm.toLowerCase()) && reply.replyType === "Text"
+        reply?.name.toLowerCase().includes(searchTerm.toLowerCase()) && reply.replyType === "Text"
     );
 
 
