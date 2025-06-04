@@ -150,34 +150,36 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (editIndex !== null) {
 
+        const sanitizedMaterial = {
+            ...textMaterial,
+            content: {
+                ...textMaterial.content,
+                materialId: textMaterial.content.materialId === "" ? null : textMaterial.content.materialId,
+            },
+        };
+
+        if (editIndex !== null) {
             toast.promise(
                 dispatch(updateReplyMaterial({
                     id: editIndex,
-                    updatedData: textMaterial
+                    updatedData: sanitizedMaterial
                 })),
                 {
-                    pending: 'Reply  updating ...',
-                    success: 'Reply Updated!',
+                    pending: 'Reply updating ...',
+                    success: 'Reply updated!',
+                    error: 'Failed to update reply',
+                }
+            );
+        } else {
+            toast.promise(
+                dispatch(addReplyMaterial(sanitizedMaterial)),
+                {
+                    pending: 'Reply adding ...',
+                    success: 'Reply added!',
                     error: 'Failed to add reply',
                 }
             );
-
-
-
-
-        } else {
-
-            toast.promise(
-                dispatch(addReplyMaterial(textMaterial)),
-                {
-                    pending: 'Reply adding ...',
-                    success: 'Reply  added!',
-                    error: 'Failed to add Reply ',
-                }
-            );
-
         }
 
         setIsOpen(false);
@@ -192,9 +194,8 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
         });
 
         setEditIndex(null);
-
-
     };
+
 
 
     const handleFinalSubmit = () => {
@@ -331,7 +332,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
                                 <div className='flex flex-col gap-2 mt-8'>
                                     <label htmlFor="" className='font-semibold text-gray-700 text-sm'>Material Content</label>
-                                    <textarea id="" required className='bg-gray-100 rounded-lg p-2 text-sm focus:outline-none' rows={5} placeholder='Please input' name='content' value={textMaterial.content} onChange={handleChange}></textarea>
+                                    <textarea id="" required className='bg-gray-100 rounded-lg p-2 text-sm focus:outline-none' rows={5} placeholder='Please input' name='text' value={textMaterial.content.text} onChange={handleChange}></textarea>
                                 </div>
 
 
@@ -401,7 +402,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
                                 <h4 className={` ${path == '/keywordAction' ? 'text-green-600 truncate font-semibold text-[16px] mt-2' : 'hidden'}`}>{reply.name}</h4>
 
                                 <div className=' max-h-[100px] leading-4.5 overflow-auto'>
-                                    <p className='break-words mt-2   whitespace-pre-wrap'>{reply.content}</p>
+                                    <p className='break-words mt-2   whitespace-pre-wrap'>{reply.content.text}</p>
 
                                 </div>
                             </div>

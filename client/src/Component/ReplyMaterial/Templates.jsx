@@ -48,22 +48,27 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
             dispatch(fetchReplyMaterial());
         }
     }, [dispatch])
+    console.log(replyMaterial)
 
 
 
     useEffect(() => {
         if (templates.length > 0) {
-
             const newTemplateReplies = templates
-                .filter(template => !replyMaterial.some(r => r._id === template._id))
+                .filter(template => !replyMaterial.some(r => r._id === template._id)) 
                 .map(template => ({
                     name: template.name,
-                    content: new mongoose.Types.ObjectId(template._id),
-                    replyType: 'Template'
+                    replyType: 'Template',
+                    content: {
+                        text: null,   
+                        url: null,   
+                        materialId: template._id, 
+                    }
                 }));
 
-                console.log(newTemplateReplies)
+            console.log(newTemplateReplies);
 
+            
             if (newTemplateReplies.length > 0) {
                 dispatch(addReplyMaterial(newTemplateReplies));
             }

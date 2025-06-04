@@ -4,7 +4,7 @@ const ReplySchema = new mongoose.Schema({
     replyType: {
         type: String,
         required: true,
-        enum: ['Text', 'Image', 'Document', 'Video'], 
+        enum: ['Text', 'Image', 'Document', 'Video', 'Template'], 
     },
     name: {
         type: String,
