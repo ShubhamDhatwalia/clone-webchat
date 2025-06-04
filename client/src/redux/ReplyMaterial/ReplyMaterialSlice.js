@@ -1,6 +1,6 @@
 // features/textReply/textReplySlice.js
 import { createSlice } from '@reduxjs/toolkit';
-import { addReplyMaterial, updateReplyMaterial, deleteReplyMaterial, fetchTextReply } from './ReplyMaterialThunk.js';
+import { addReplyMaterial, updateReplyMaterial, deleteReplyMaterial, fetchTextReply, fetchReplyMaterial } from './ReplyMaterialThunk.js';
 
 const initialState = {
     replyMaterial: [],
@@ -18,18 +18,33 @@ const replyMaterialSlice = createSlice({
     },
     extraReducers: (builder) => {
 
+        // fetch ReplyMaterial
+        builder.addCase(fetchReplyMaterial.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+
+        builder.addCase(fetchReplyMaterial.fulfilled, (state, action) => {
+            state.loading = false;
+            state.replyMaterial = action.payload;
+        });
+
+        builder.addCase(fetchReplyMaterial.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        });
+
+
         //fetch text reply
-
-
         builder.addCase(fetchTextReply.pending, (state) => {
             state.loading = true;
             state.error = null;
         });
-        builder.addCase(fetchTextReply.fulfilled, (state, action) =>{
+        builder.addCase(fetchTextReply.fulfilled, (state, action) => {
             state.loading = false;
-            state.replyMaterial = action.payload;   
+            state.replyMaterial = action.payload;
         });
-        builder.addCase(fetchTextReply.rejected, (state, action)=>{
+        builder.addCase(fetchTextReply.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
         })

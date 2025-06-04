@@ -7,6 +7,7 @@ import templateRoutes from './routes/templateRoutes.js';
 import campaignRoutes from './routes/campaignRoutes.js';
 import contactRoutes from './routes/contactRoutes.js'
 import replyMaterialRoutes from './routes/replyMaterialRoutes.js'
+import keywordRoutes from './routes/keywordRoutes.js'
 
 
 
@@ -37,7 +38,7 @@ app.use('/', templateRoutes);
 app.use('/', campaignRoutes);
 app.use('/', contactRoutes);
 app.use('/', replyMaterialRoutes);
-
+app.use('/', keywordRoutes)
 
 console.log(process.env.ATLAS_URI);
 

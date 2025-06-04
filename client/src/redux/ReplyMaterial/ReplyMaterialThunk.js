@@ -16,7 +16,7 @@ export const updateReplyMaterial = createAsyncThunk('replyMaterial/update', asyn
     try {
         console.log(updatedData)
         const res = await axios.put(`/updateReplyMaterial/${id}`, updatedData);
-        toast.success('Reply material updated');
+
         return res.data;
     } catch (err) {
         toast.error('Failed to update ')
@@ -26,7 +26,6 @@ export const updateReplyMaterial = createAsyncThunk('replyMaterial/update', asyn
 export const deleteReplyMaterial = createAsyncThunk('replyMaterial/delete', async (id, { rejectWithValue }) => {
     try {
         await axios.delete(`/deleteReplyMaterial/${id}`);
-
         return id;
     } catch (err) {
         toast.error('Failed to delete')
@@ -44,3 +43,16 @@ export const fetchTextReply = createAsyncThunk('replyMaterial/fetchTextReply', a
         return rejectWithValue(err.response?.data || err.message);
     }
 });
+
+export const fetchReplyMaterial = createAsyncThunk('replyMaterial/fetchReplyMaterial', async (_, { rejectWithValue }) => {
+    try {
+        const res = await axios.get('/replyMaterial');
+        return res.data;
+    } catch (err) {
+        toast.error('Failed to get')
+        return rejectWithValue(err.response?.data || err.message);
+    }
+});
+
+
+//  

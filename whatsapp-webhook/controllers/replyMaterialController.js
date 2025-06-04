@@ -22,6 +22,16 @@ export const fetchTextReply = async (req, res) => {
     }
 };
 
+export const fetchReplyMaterial = async (req, res) => {
+    try {
+        const replyMaterial = await ReplyMaterial.find();
+        res.status(200).json(replyMaterial);
+    } catch (error) {
+        console.error('Error fetching reply material')
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
 
 export const updateReplyMaterial = async (req, res) => {
     try {

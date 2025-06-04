@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { addTextReply, removeTextReply, editTextReply } from '../../redux/textReply/textReplySlice.js';
+
 import edit_icon from '../../assets/edit_icon.svg';
 import delete_icon from '../../assets/delete_icon.svg';
 import { useLocation } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
 import { grey } from '@mui/material/colors';
-import { addKeyword } from '../../redux/Keywords/keywordSlice.js';
+
 import { updateKeyword } from '..//../redux/Keywords/keywordSlice.js'
 import { toast } from 'react-toastify';
 
 
-import { addReplyMaterial, fetchTextReply, updateReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
-
+import { addReplyMaterial, fetchTextReply, updateReplyMaterial, deleteReplyMaterial, fetchReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
+import { addKeyword } from '../../redux/Keywords/keywordThunk.js';
 
 
 
@@ -32,17 +32,21 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
 
 
-
     const allKeywords = useSelector((state) => state.keyword.keywords);
-
-
 
     const { keywords } = useSelector((state) => state.keyword);
 
 
+    const replyMaterial = useSelector((state) => state.replyMaterial.replyMaterial);
+    useEffect(() => {
+        if (replyMaterial.length === 0) {
+            dispatch(fetchReplyMaterial());
+        }
+    }, [dispatch])
 
-    const textReplys  = useSelector((state) => state.replyMaterial.replyMaterial);
-    console.log(textReplys);
+
+    const textReplys = useSelector((state) => state.replyMaterial.replyMaterial);
+
 
     useEffect(() => {
         if (textReplys.length === 0) {
@@ -77,10 +81,8 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
 
     const handleEdit = (editData) => {
-        console.log(editData);
 
         setTextMaterial(editData);
-        console.log(textMaterial);
         setEditIndex(editData._id);
         setIsOpen(true);
 
@@ -93,8 +95,8 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
 
 
-    const handleDelete = (index) => {
-        const replyToDelete = textReplys[index];
+    const handleDelete = (deleteReply) => {
+        const replyToDelete = deleteReply;
 
         const isUsedInKeywords = allKeywords.some(keyword =>
             keyword.replyMaterial?.some(material => material.name === replyToDelete.name)
@@ -105,8 +107,15 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
             return;
         }
 
-        dispatch(removeTextReply(index));
-        toast.success("Reply material deleted successfully");
+
+        toast.promise(
+            dispatch(deleteReplyMaterial(deleteReply._id)),
+            {
+                pending: 'deleting reply...',
+                success: 'Reply deleted!',
+                error: 'Failed to delete reply',
+            }
+        );
     };
 
 
@@ -115,21 +124,30 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
         e.preventDefault();
 
         if (editIndex !== null) {
-            dispatch(updateReplyMaterial({
-                id: editIndex,
-                updatedData: textMaterial
-            }));
 
-            toast.success("Reply material updated successfully");
+            toast.promise(
+                dispatch(updateReplyMaterial({
+                    id: editIndex,
+                    updatedData: textMaterial
+                })),
+                {
+                    pending: 'Reply  updating ...',
+                    success: 'Reply Updated!',
+                    error: 'Failed to add reply',
+                }
+            );
+
+
+
 
         } else {
 
             toast.promise(
                 dispatch(addReplyMaterial(textMaterial)),
                 {
-                    pending: 'reply material adding ...',
-                    success: 'Campaign added!',
-                    error: 'Failed to add campaign',
+                    pending: 'Reply adding ...',
+                    success: 'Reply  added!',
+                    error: 'Failed to add Reply ',
                 }
             );
 
@@ -144,6 +162,8 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
 
     const handleFinalSubmit = () => {
+        console.log(selectedReplies)
+
 
         const updatedKeywords = {
             ...Keywords,
@@ -168,7 +188,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
                 onClose(true);
 
             } else {
-                // Add if it's new
+
                 dispatch(addKeyword(updatedKeywords));
                 toast.success("Keywords created successfully");
                 onClose(true);
@@ -200,21 +220,28 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
                         </form>
 
-                        {path == '/keywordAction' && (<div className='text-gray-500 font-semibold flex items-center flex-wrap gap-2'>
-                            Selected Material:
-                            {selectedReplies?.map((reply, i) => (
-                                <div
-                                    key={i}
-                                    className='text-xs border text-nowrap border-[#FF9933] bg-[#FFFAF5] rounded-md p-2 text-[#FF9933] max-w-[150px]  overflow-hidden'
-                                >
-                                    <span>{reply.replyType}</span>:{" "}
-                                    <span className='truncate inline-block overflow-hidden whitespace-nowrap text-ellipsis max-w-[60px] align-bottom'>
-                                        {reply.name || reply.currentReply.name}
-                                    </span>
-                                </div>
-                            ))}
-                        </div>
+                        {path === '/keywordAction' && (
+                            <div className='text-gray-500 font-semibold flex items-center flex-wrap gap-2'>
+                                Selected Material:
+                                {selectedReplies?.map((selectedId, i) => {
+                                    const reply = replyMaterial.find((r) => r._id === selectedId);
+                                    if (!reply) return null; // skip if not found
+
+                                    return (
+                                        <div
+                                            key={i}
+                                            className='text-xs border text-nowrap border-[#FF9933] bg-[#FFFAF5] rounded-md p-2 text-[#FF9933] max-w-[150px] overflow-hidden'
+                                        >
+                                            <span>{reply.replyType}</span>:{" "}
+                                            <span className='truncate inline-block overflow-hidden whitespace-nowrap text-ellipsis max-w-[60px] align-bottom'>
+                                                {reply.name}
+                                            </span>
+                                        </div>
+                                    );
+                                })}
+                            </div>
                         )}
+
 
 
 
@@ -275,24 +302,24 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
                 <div className='mt-6 mb-4 grid gap-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] items-start max-h-[70vh] px-4 overflow-auto'>
                     {filteredReplies.map((reply) => (
-                        console.log(reply),
+
                         <div key={reply._id} className='bg-white rounded-lg p-4 max-w-[100%] h-[200px]  w-full hover:drop-shadow-xl'>
                             <div className='flex items-center justify-between gap-4'>
 
                                 {path == '/keywordAction' && (
                                     <Checkbox
                                         color="success"
-                                        checked={selectedReplies?.some(item => item.name === reply.name)}
+                                        checked={selectedReplies?.some(item => item === reply._id)}
                                         onChange={(e) => {
                                             const isChecked = e.target.checked;
-                                            const currentReply = textReplys[index];
+                                            const currentReply = reply;
 
                                             if (isChecked) {
 
-                                                setSelectedReplies(prev => [...prev, currentReply]);
+                                                setSelectedReplies(prev => [...prev, currentReply._id]);
                                             } else {
 
-                                                setSelectedReplies(prev => prev.filter(item => item.name !== currentReply.name));
+                                                setSelectedReplies(prev => prev.filter(item => item !== currentReply._id));
                                             }
                                         }}
                                         sx={{
@@ -320,7 +347,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
                                     </div>
                                     <div
                                         className='w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 bg-gray-100 cursor-pointer hover:border-red-500'
-                                        onClick={() => { handleDelete(reply._id) }}
+                                        onClick={() => { handleDelete(reply) }}
                                     >
                                         <img src={delete_icon} alt="delete" />
                                     </div>
