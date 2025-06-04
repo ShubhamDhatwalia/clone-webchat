@@ -30,6 +30,8 @@ function Notes({ selectedUser }) {
         };
 
         if (editingTime) {
+            console.log(selectedUser._id);
+            console.log(noteObject);
             dispatch(updateNote({ id: selectedUser._id, updatedNote: noteObject }));
         } else {
             dispatch(addNotes({ id: selectedUser._id, notes: [noteObject] }));

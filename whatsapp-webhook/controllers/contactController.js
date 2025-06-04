@@ -77,8 +77,8 @@ export const removeTags = async (req, res) => {
 export const addNotes = async (req, res) => {
     try {
         const { id } = req.params;
-        const { note } = req.body;
-        const notesData = await Contacts.findByIdAndUpdate(id, { $push: { notes: note } }, { new: true });
+        const { notes } = req.body;
+        const notesData = await Contacts.findByIdAndUpdate(id, { $push: { notes: notes } }, { new: true });
         res.status(200).json(notesData);
     } catch (error) {
         console.error("Error adding notes:", error);
