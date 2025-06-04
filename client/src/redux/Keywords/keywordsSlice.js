@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { addKeyword } from './keywordThunk.js';
+import { addKeyword, fetchKeywords } from './keywordThunk.js';
 
 const initialState = {
     keywords: [],
@@ -17,6 +17,22 @@ const keywordSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+
+        //fetch keywords
+
+        builder.addCase(fetchKeywords.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(fetchKeywords.fulfilled, (state, action) => {
+            state.loading = false;
+            state.keywords = action.payload;
+        });
+        builder.addCase(fetchKeywords.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
+
 
 
         // Add Keyword

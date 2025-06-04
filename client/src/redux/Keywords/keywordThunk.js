@@ -13,3 +13,12 @@ export const addKeyword = createAsyncThunk('addKeyword', async (keyword, { rejec
     }
 
 });
+
+export const fetchKeywords = createAsyncThunk('fetchKeywords', async (_, { rejectWithValue }) => {
+    try {
+        const res = await axios.get('/keywords');
+        return res.data;
+    } catch (error) {
+        return rejectWithValue(err.response?.data || err.message);
+    }
+});

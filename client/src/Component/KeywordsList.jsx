@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { removeKeyword } from '../redux/Keywords/keywordSlice';
 import { toast } from 'react-toastify';
+
+import { fetchKeywords } from '../redux/Keywords/keywordThunk';
 
 
 
@@ -14,14 +16,23 @@ function KeywordsList({ onOpen, onEdit, onSearch }) {
     const [currentPage, setCurrentPage] = useState(1);
 
 
-    
+
+    const keyword = useSelector(state => state.keywords.keywords)
+    console.log(keyword)
+
+    useEffect(() => {
+        if (keyword.length === 0) {
+            dispatch(fetchKeywords());
+        }
+    })
+
 
 
     const filteredKeywords = keywords.filter((keyword) => {
         if (!onSearch) return true;
-    
+
         const search = onSearch.toLowerCase();
-    
+
         const replyMaterialText = keyword.replyMaterial
             .map((item) =>
                 Object.values(item)
@@ -39,8 +50,8 @@ function KeywordsList({ onOpen, onEdit, onSearch }) {
             keyword.fuzzyThreshold.toString().includes(search)
         );
     });
-    
-    
+
+
 
     const totalPages = Math.ceil(filteredKeywords.length / limit);
     const currentData = filteredKeywords.slice((currentPage - 1) * limit, currentPage * limit);
@@ -114,7 +125,7 @@ function KeywordsList({ onOpen, onEdit, onSearch }) {
                                         {Array.isArray(kw.replyMaterial) && kw.replyMaterial.length > 0 ? (
                                             kw.replyMaterial.map((item, index) => (
                                                 <div key={index} className='border border-[FF9933] bg-[#FFFAF5] text-nowrap rounded-md inline p-2 text-[#FF9933]'>
-                                                    <strong>{item.replyType }</strong>: <span className='truncate inline-block overflow-hidden whitespace-nowrap text-ellipsis max-w-[60px] align-bottom'>{item.name || item.currentReply?.name}</span>
+                                                    <strong>{item.replyType}</strong>: <span className='truncate inline-block overflow-hidden whitespace-nowrap text-ellipsis max-w-[60px] align-bottom'>{item.name || item.currentReply?.name}</span>
                                                 </div>
                                             ))
                                         ) : (
