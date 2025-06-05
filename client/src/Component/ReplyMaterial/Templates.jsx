@@ -10,7 +10,6 @@ import { updateKeyword } from '..//../redux/Keywords/keywordSlice.js'
 import { toast } from 'react-toastify';
 import Checkbox from '@mui/material/Checkbox';
 import { grey } from '@mui/material/colors';
-import mongoose from 'mongoose';
 import { fetchReplyMaterial, addReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
 
 
@@ -52,11 +51,26 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
     console.log(replyMaterial)
 
 
-
     useEffect(() => {
         if (templates.length > 0) {
+            console.log("Templates:", templates);
+            console.log("Existing Reply Material:", replyMaterial);
+
             const newTemplateReplies = templates
-                .filter(template => !replyMaterial.some(r => r?.content?.materialId === template._id))
+                .filter(template => {
+                    const isAlreadyAdded = replyMaterial.some(r => {
+                        const match = r?.content?.materialId === template._id;
+                        console.log(
+                            `Checking template ${template._id} against replyMaterial:`,
+                            r?.content?.materialId,
+                            '=> Match:', match
+                        );
+                        return match;
+                    });
+
+                    console.log(`Template ${template._id} (${template.name}) is ${isAlreadyAdded ? "already added" : "new"}`);
+                    return !isAlreadyAdded;
+                })
                 .map(template => ({
                     name: template.name,
                     replyType: 'Template',
@@ -67,14 +81,14 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
                     }
                 }));
 
-            console.log(newTemplateReplies);
+            console.log("New Template Replies (filtered):", newTemplateReplies);
 
             if (newTemplateReplies.length > 0) {
-                // Ensure you're adding all replies as a flat array
                 dispatch(addReplyMaterial([...replyMaterial, ...newTemplateReplies]));
             }
         }
     }, [templates]);
+
 
 
 
