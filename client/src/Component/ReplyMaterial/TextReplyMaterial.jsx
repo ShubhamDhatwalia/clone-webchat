@@ -35,12 +35,14 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
     const dispatch = useDispatch();
 
-    console.log(selectedReplies)
+  
 
 
-    // const allKeywords = useSelector((state) => state.keyword.keywords);
+    const allKeywords = useSelector((state) => state.keywords.keywords);
+    console.log(allKeywords)
 
-    // const { keywords } = useSelector((state) => state.keyword);
+
+    const { keywords } = useSelector((state) => state.keywords);
 
 
     const replyMaterial = useSelector((state) => state.replyMaterial.replyMaterial);
@@ -49,7 +51,10 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
             dispatch(fetchReplyMaterial());
         }
     }, [])
+
     console.log(replyMaterial)
+
+
 
 
 
@@ -214,10 +219,16 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
 
 
+        console.log("finalsubmit")
+
+
         const updatedKeywords = {
             ...Keywords,
             replyMaterial: selectedReplies,
         };
+
+        console.log(updatedKeywords)
+
 
 
         if (selectedReplies.length === 0) {
@@ -225,18 +236,23 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
         }
         else {
             const existingKeywordIndex = keywords.findIndex(
-                (kw) => kw.id === Keywords.id
+                (kw) => kw._id === Keywords._id
             );
+
+            console.log(existingKeywordIndex)
+
 
             if (existingKeywordIndex !== -1) {
 
-                dispatch(updateKeyword({ index: existingKeywordIndex, updatedKeyword: updatedKeywords }));
-                toast.success("Keyword updated successfully");
+                // dispatch(updateKeyword({ index: existingKeywordIndex, updatedKeyword: updatedKeywords }));
+                // toast.success("Keyword updated successfully");
 
 
-                onClose(true);
+                // onClose(true);
 
             } else {
+
+                console.log(updatedKeywords);
 
                 toast.promise(
                     dispatch(addKeyword(updatedKeywords)),

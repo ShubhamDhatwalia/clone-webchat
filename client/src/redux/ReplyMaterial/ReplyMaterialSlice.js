@@ -30,7 +30,7 @@ const replyMaterialSlice = createSlice({
             state.error = null;
         });
 
-        builder.addCase(fetchTemplateReply.fulfilled, (state, action) => {      
+        builder.addCase(fetchTemplateReply.fulfilled, (state, action) => {
             state.loading = false;
             state.templateReplyMaterial = action.payload;
         });
@@ -51,6 +51,7 @@ const replyMaterialSlice = createSlice({
         builder.addCase(fetchReplyMaterial.fulfilled, (state, action) => {
             state.loading = false;
             state.replyMaterial = action.payload;
+            
         });
 
         builder.addCase(fetchReplyMaterial.rejected, (state, action) => {
@@ -81,6 +82,7 @@ const replyMaterialSlice = createSlice({
         });
         builder.addCase(addReplyMaterial.fulfilled, (state, action) => {
             state.loading = false;
+            console.log(state.replyMaterial)
             state.replyMaterial.push(action.payload);
         });
         builder.addCase(addReplyMaterial.rejected, (state, action) => {

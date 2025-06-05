@@ -26,6 +26,8 @@ function KeywordsList({ onOpen, onEdit, onSearch }) {
         }
     })
 
+    console.log(keywords);
+
 
 
     const filteredKeywords = keywords.filter((keyword) => {

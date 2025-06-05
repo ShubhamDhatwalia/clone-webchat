@@ -13,6 +13,7 @@ export const addKeyword = async (req, res) => {
 export const fetchKeywords = async (req, res) => {
     try {
         const keywordsData = await keywords.find().populate('replyMaterial');
+        console.log("keywordList : " + JSON.stringify(keywordsData))
         res.status(200).json(keywordsData);
     } catch (error) {
         res.status(500).json({ error: error.message });
