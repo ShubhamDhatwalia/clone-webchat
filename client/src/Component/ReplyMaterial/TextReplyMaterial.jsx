@@ -6,8 +6,6 @@ import delete_icon from '../../assets/delete_icon.svg';
 import { useLocation } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
 import { grey } from '@mui/material/colors';
-
-// import { updateKeyword } from '..//../redux/Keywords/keywordsSlice.js'
 import { toast } from 'react-toastify';
 
 

@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import Checkbox from '@mui/material/Checkbox';
 import { grey } from '@mui/material/colors';
 import { fetchReplyMaterial, addReplyMaterial, fetchTemplateReply } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
-
+import { addKeyword } from '../../redux/Keywords/keywordThunk.js';
 
 
 
@@ -25,7 +25,7 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
     const [searchTerm, setSearchTerm] = useState('');
 
-    // const { keywords } = useSelector((state) => state.keyword);
+    const { keywords } = useSelector((state) => state.keywords);
 
 
     const { templates, loading } = useSelector((state) => state.templates);
@@ -106,19 +106,23 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
         hi: 'Hindi',
     };
 
-    const filteredTemplates = [...templates].reverse().filter((template) => {
+    const filteredTemplates = [...templateReplys].reverse().filter((template) => {
         const search = searchTerm.toLowerCase();
         return (
             template.status !== 'REJECTED' && (
                 template.name?.toLowerCase().includes(search) ||
-                template.category?.toLowerCase().includes(search) ||
+                template.content?.category?.toLowerCase().includes(search) ||
                 template.status?.toLowerCase().includes(search) ||
                 languageMap[template.language]?.toLowerCase().includes(search) ||
-                template.id?.toLowerCase().includes(search)
+                template.id?.toLowerCase().includes(search) ||
+                template._id?.toLowerCase().includes(search)
             )
         );
     });
 
+
+
+    console.log(filteredTemplates)
 
 
 
@@ -156,14 +160,14 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
         }
         else {
             const existingKeywordIndex = keywords.findIndex(
-                (kw) => kw.id === Keywords.id
+                (kw) => kw._id === Keywords._id
             );
 
             if (existingKeywordIndex !== -1) {
 
-                dispatch(updateKeyword({ index: existingKeywordIndex, updatedKeyword: updatedKeywords }));
-                toast.success("Keyword updated successfully");
-                onClose(true);
+                // dispatch(updateKeyword({ index: existingKeywordIndex, updatedKeyword: updatedKeywords }));
+                // toast.success("Keyword updated successfully");
+                // onClose(true);
 
             } else {
 
@@ -294,24 +298,24 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
 
 
-                                (filteredTemplates.map((template) => (
-                                    console.log(template),
-                                    <tr key={template._id} className="text-center hover:bg-green-50 font-semibold cursor-pointer text-sm">
+                                (filteredTemplates.map((reply) => (
+                                    console.log(reply),
+                                    <tr key={reply._id} className="text-center hover:bg-green-50 font-semibold cursor-pointer text-sm">
                                         <td className="px-[10px] py-4 text-left text-blue-600 flex gap-2 items-center">
                                             {path === '/keywordAction' && (
                                                 <Checkbox
                                                     color="success"
-                                                    checked={selectedReplies.some(item => item === template._id)}
+                                                    checked={selectedReplies.some(item => item === reply._id)}
                                                     onChange={(e) => {
                                                         const isChecked = e.target.checked;
-                                                        const currentReply = template;
-                                                        const replyType = 'Template';
+                                                        const currentReply = reply;
+
 
                                                         if (isChecked) {
-                                                            setSelectedReplies(prev => [...prev, { replyType, currentReply }]);
+                                                            setSelectedReplies(prev => [...prev, currentReply._id]);
 
                                                         } else {
-                                                            setSelectedReplies(prev => prev.filter(item => item !== currentReply));
+                                                            setSelectedReplies(prev => prev.filter(item => item !== currentReply._id));
                                                         }
                                                     }}
 
@@ -325,27 +329,27 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
                                                 />
 
                                             )}
-                                            {template.name}
+                                            {reply.name}
                                         </td>
 
-                                        <td className="px-[10px]  py-4 text-center">{template.category}</td>
-                                        <td className="px-[10px] py-4 text-center">{languageMap[template.language] || template.language}</td>
+                                        <td className="px-[10px]  py-4 text-center">{reply.content?.materialId.category}</td>
+                                        <td className="px-[10px] py-4 text-center">{languageMap[reply.content?.materialId.language] || reply.content?.materialId.language}</td>
                                         <td className="px-[10px] py-4 text-center"> <span
                                             className={`rounded-2xl py-1 text-white text-center w-[95px] inline-block
-                                                ${template.status === 'APPROVED'
+                                                ${reply.content.materialId.status === 'APPROVED'
                                                     ? 'bg-green-100 !text-green-700'
-                                                    : template.status === 'PENDING'
+                                                    : reply.content.materialId.status === 'PENDING'
                                                         ? 'bg-orange-100 !text-orange-500'
                                                         : 'bg-red-100 !text-red-700'
                                                 }`}
                                         >
-                                            {template.status}
+                                            {reply.content.materialId.status}
                                         </span></td>
                                         <td className="px-[10px] py-3 text-gray-400 italic ">
 
-                                            {template.createdAt
+                                            {reply.content?.materialId?.createdAt
                                                 ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(
-                                                    new Date(template.createdAt)
+                                                    new Date(reply.content?.materialId?.createdAt)
                                                 )
                                                 : 'N/A'}
 
@@ -354,7 +358,7 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
                                             <button className='text-blue-500 hover:text-blue-700'>Edit</button>
                                             <i
                                                 className="fa-solid fa-trash text-red-400 bg-white ml-2 p-2 rounded-full text-lg cursor-pointer hover:scale-105"
-                                                onClick={(e) => handleDelete(e, template)}
+                                                onClick={(e) => handleDelete(e, reply)}
                                             />
                                         </td>
                                     </tr>

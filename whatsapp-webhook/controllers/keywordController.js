@@ -3,12 +3,18 @@ import keywords from "../models/keywords.js";
 
 export const addKeyword = async (req, res) => {
     try {
+        // Create the keyword first
         const keywordData = await keywords.create(req.body);
-        res.status(201).json(keywordData);
+
+        // Find it again and populate replyMaterial before sending response
+        const populatedKeyword = await keywords.findById(keywordData._id).populate('replyMaterial');
+
+        res.status(201).json(populatedKeyword);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 export const fetchKeywords = async (req, res) => {
     try {
