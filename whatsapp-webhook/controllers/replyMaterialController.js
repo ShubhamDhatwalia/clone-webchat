@@ -16,7 +16,7 @@ export const fetchTextReply = async (req, res) => {
     try {
         const textReplies = await ReplyMaterial.find({ replyType: 'Text' });
         res.status(200).json(textReplies);
-        console.log(textReplies);
+        console.log("text reply:" + textReplies);
     } catch (error) {
         console.error('Error fetching text replies:', error);
         res.status(500).json({ message: 'Server error', error });
@@ -26,7 +26,7 @@ export const fetchTextReply = async (req, res) => {
 export const fetchReplyMaterial = async (req, res) => {
     try {
         const replyMaterial = await ReplyMaterial.find();
-        
+
         res.status(200).json(replyMaterial);
     } catch (error) {
         console.error('Error fetching reply material')
