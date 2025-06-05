@@ -26,7 +26,7 @@ export const fetchTextReply = async (req, res) => {
 export const fetchReplyMaterial = async (req, res) => {
     try {
         const replyMaterial = await ReplyMaterial.find();
-        console.log(replyMaterial);
+        
         res.status(200).json(replyMaterial);
     } catch (error) {
         console.error('Error fetching reply material')
