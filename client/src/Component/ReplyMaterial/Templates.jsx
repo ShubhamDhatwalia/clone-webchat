@@ -47,12 +47,11 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
 
     const templateReplys = useSelector((state) => state.replyMaterial.templateReplyMaterial);
+    console.log(templateReplys)
 
 
     useEffect(() => {
-        if (templateReplys.length === 0) {
-            dispatch(fetchTemplateReply());
-        }
+        dispatch(fetchTemplateReply());
     }, [replyMaterial])
 
 

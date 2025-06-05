@@ -6,7 +6,7 @@ import { addReplyMaterial, updateReplyMaterial, deleteReplyMaterial, fetchTextRe
 const initialState = {
     replyMaterial: [],
     textReplyMaterial: [],
-    templatReplyMaterial: [],
+    templateReplyMaterial: [],
     loading: false,
     error: null,
 };
@@ -32,7 +32,7 @@ const replyMaterialSlice = createSlice({
 
         builder.addCase(fetchTemplateReply.fulfilled, (state, action) => {      
             state.loading = false;
-            state.templatReplyMaterial = action.payload;
+            state.templateReplyMaterial = action.payload;
         });
 
         builder.addCase(fetchTemplateReply.rejected, (state, action) => {

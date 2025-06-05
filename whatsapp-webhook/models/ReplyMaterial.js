@@ -4,7 +4,7 @@ const ReplySchema = new mongoose.Schema({
     replyType: {
         type: String,
         required: true,
-        enum: ['Text', 'Image', 'Document', 'Video', 'Template'], 
+        enum: ['Text', 'Image', 'Document', 'Video', 'Template', 'Chatbot'], // add more as needed
     },
     name: {
         type: String,
@@ -14,11 +14,25 @@ const ReplySchema = new mongoose.Schema({
         type: new mongoose.Schema({
             text: { type: String },
             url: { type: String },
-            materialId: { type: mongoose.Schema.Types.ObjectId },
+
+            materialModel: {
+                type: String,
+                enum: ['Text', 'Image', 'Document', 'Video', 'Template', 'Chatbot'],
+            },
+            materialId: {
+                type: mongoose.Schema.Types.ObjectId,
+                refPath: 'content.materialModel',
+            },
         }, { _id: false }),
-        
     },
 }, { timestamps: true });
 
+
+ReplySchema.pre('save', function (next) {
+    if (this.replyType && this.content) {
+        this.content.materialModel = this.replyType;
+    }
+    next();
+});
 
 export default mongoose.model('ReplyMaterial', ReplySchema);
