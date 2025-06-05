@@ -54,7 +54,6 @@ function templates({ onClose, selectedUser }) {
     });
 
 
-    console.log(selectedTemplateId);
 
     return (
         <>

@@ -18,7 +18,6 @@ function KeywordsList({ onOpen, onEdit, onSearch }) {
 
 
     const keywords = useSelector(state => state.keywords.keywords)
-    console.log(keywords)
 
     useEffect(() => {
         if (keywords.length === 0) {
@@ -26,7 +25,6 @@ function KeywordsList({ onOpen, onEdit, onSearch }) {
         }
     })
 
-    console.log(keywords);
 
 
 

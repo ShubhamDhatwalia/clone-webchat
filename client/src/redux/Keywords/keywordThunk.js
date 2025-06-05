@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 
 export const addKeyword = createAsyncThunk('addKeyword', async (keyword, { rejectWithValue }) => {
     try {
-        console.log(keyword)
         const res = await axios.post('/addKeyword', keyword)
         return res.data;
     } catch (error) {
@@ -35,8 +34,7 @@ export const deleteKeywords = createAsyncThunk('deleteKeywords', async (id, { re
 });
 export const updateKeyword = createAsyncThunk('updateKeyword', async ({ id, updatedKeyword }, { rejectWithValue }) => {
     try {
-        console.log(updatedKeyword)
-        console.log(id)
+        
         const res = await axios.put(`/updateKeyword/${id}`, updatedKeyword);
         return res.data;
     } catch (error) {

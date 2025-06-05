@@ -101,7 +101,6 @@ function ContactList({ onSearch, setSelectedContact }) {
                     <tbody>
                         {currentData && currentData.length > 0 ? (
                             currentData.map((contact) => (
-                                console.log(contact),
                                 <tr key={contact._id} className=" text-center font-semibold  text-gray-500">
                                     <td className=" py-4 text-left">{contact.name}</td>
                                     <td className=" py-4">{contact.phone}</td>

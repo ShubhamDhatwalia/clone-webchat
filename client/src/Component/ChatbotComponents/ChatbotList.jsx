@@ -31,7 +31,6 @@ function ChatbotList({ onSearch }) {
         )
     });
 
-    console.log(filteredChatbots)
 
 
 

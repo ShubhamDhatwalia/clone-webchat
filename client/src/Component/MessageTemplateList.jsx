@@ -67,7 +67,6 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
 
   const handleDelete = (e, template) => {
     e.stopPropagation();
-    console.log(template.name);
     dispatch(deleteTemplate({ id: template.id, name: template.name }));
 
   };
@@ -126,7 +125,7 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
                 currentData.map((template) => (
                   <tr
                     key={template.id}
-                    onClick={() => { onSelectTemplateId?.(template.id); console.log(template.id) }}
+                    onClick={() => { onSelectTemplateId?.(template.id); }}
                     className={`group text-nowrap text-center hover:bg-green-50 font-semibold cursor-pointer text-sm ${selectedTemplateId === template.id ? 'bg-green-50' : ''
                       }`}
                   >

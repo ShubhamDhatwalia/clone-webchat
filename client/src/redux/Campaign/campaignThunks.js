@@ -32,13 +32,9 @@ export const createCampaign = createAsyncThunk(
 export const updateCampaign = createAsyncThunk(
     'campaign/updateCampaign',
     async ({ id, updatedCampaign }, { rejectWithValue }) => {
-        console.log("Updated Campaign:", updatedCampaign);
-        console.log("Campaign ID:", id);
 
         try {
-            console.log("Start API call...");
             const response = await axios.put(`/editCampaign/${id}`, updatedCampaign);
-            console.log("API Response:", response.data);
             return response.data;
         } catch (error) {
             console.error("Update Campaign Error:", error);

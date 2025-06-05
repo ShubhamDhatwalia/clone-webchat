@@ -12,8 +12,6 @@ function ManageTemplates() {
   const location = useLocation();
 
 
-  console.log(selectedTemplateId);
-  console.log(liveTemplateData);
 
 
   const handleFormModel = () => {

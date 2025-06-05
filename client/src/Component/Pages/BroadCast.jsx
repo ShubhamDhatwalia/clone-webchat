@@ -75,7 +75,6 @@ function BroadCast() {
 
 
   const contacts = useSelector((state) => state.contact.contacts);
-  console.log(contacts)
 
   useEffect(() => {
     if (contacts.length === 0) {
@@ -203,7 +202,6 @@ function BroadCast() {
         });
       }
 
-      console.log(payload);
 
       try {
         await axios.post(`/sendTemplateMessages`, payload);
@@ -291,7 +289,6 @@ function BroadCast() {
     }
 
     if (editData) {
-      console.log(editData)
       toast.promise(
         dispatch(updateCampaign({ id: editData._id, updatedCampaign: formInput })),
         {

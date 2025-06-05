@@ -40,17 +40,16 @@ app.use('/', contactRoutes);
 app.use('/', replyMaterialRoutes);
 app.use('/', keywordRoutes)
 
-console.log(process.env.ATLAS_URI);
 
 
 const start = async () => {
   try {
     await connect(process.env.ATLAS_URI);
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(`Server running on http://localhost:${PORT}`);
     });
   } catch (err) {
-    console.error('❌ Failed to start server:', err.message);
+    console.error(' Failed to start server:', err.message);
   }
 };
 

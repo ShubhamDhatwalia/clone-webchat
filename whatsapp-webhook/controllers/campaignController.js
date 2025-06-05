@@ -27,8 +27,7 @@ export const updateCampaign = async (req, res) => {
     try {
         const { ...updatedCampaign } = req.body;
         const { id } = req.params;
-        console.log(id)
-        console.log(updatedCampaign)
+        
         if (!id) {
             return res.status(400).json({ error: "Campaign id is required" });
         }

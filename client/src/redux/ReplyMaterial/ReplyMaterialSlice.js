@@ -82,7 +82,6 @@ const replyMaterialSlice = createSlice({
         });
         builder.addCase(addReplyMaterial.fulfilled, (state, action) => {
             state.loading = false;
-            console.log(state.replyMaterial)
             state.replyMaterial.push(action.payload);
         });
         builder.addCase(addReplyMaterial.rejected, (state, action) => {

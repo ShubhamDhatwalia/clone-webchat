@@ -56,7 +56,6 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
     );
   });
 
-  console.log('Filtered Chat Data:', chatData);
 
   useEffect(() => {
     if (!selectedUser && filteredChatData.length > 0) {

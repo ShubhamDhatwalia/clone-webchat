@@ -21,7 +21,6 @@ function FilePreview({ files, setFiles, onClose, selectedUser }) {
     const businessId = import.meta.env.VITE_WHATSAPP_BUSINESS_ID;
     const PHONE_NUMBER_ID = import.meta.env.VITE_PHONE_NUMBER_ID;
 
-    console.log(selectedUser);
 
 
 
@@ -200,12 +199,6 @@ function FilePreview({ files, setFiles, onClose, selectedUser }) {
                 formData.append('file', selectedFile);
                 formData.append('messaging_product', 'whatsapp');
 
-                console.log('Uploading file:', {
-                    fileName: selectedFile.name,
-                    fileSize: selectedFile.size,
-                    fileType: selectedFile.type
-                });
-
                 const uploadRes = await fetch(`https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/media`, {
                     method: 'POST',
                     headers: {
@@ -223,11 +216,9 @@ function FilePreview({ files, setFiles, onClose, selectedUser }) {
                 }
 
                 const mediaId = uploadData.id;
-                console.log('Media uploaded successfully:', mediaId);
 
                 // Step 2: Send message with uploaded media
                 const mediaType = getFileType(selectedFile.type, selectedFile.name);
-                console.log('Media type determined:', mediaType);
                 if (!['image', 'video', 'audio', 'document'].includes(mediaType)) {
                     console.warn('Unsupported file type for sending message:', selectedFile.name);
                     alert(`Unsupported file type for ${selectedFile.name}. Skipping.`);
@@ -263,7 +254,6 @@ function FilePreview({ files, setFiles, onClose, selectedUser }) {
                     continue;
                 }
 
-                console.log(`${selectedFile.name} sent successfully!`);
             }
 
             toast.success("Sent successfully!");

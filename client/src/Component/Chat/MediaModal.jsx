@@ -19,7 +19,6 @@ function MediaModal({ onClose, selectedUser }) {
 
 
 
-    console.log(' files:', files);
 
 
 

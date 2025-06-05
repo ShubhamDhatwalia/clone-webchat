@@ -37,7 +37,6 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
 
     const allKeywords = useSelector((state) => state.keywords.keywords);
-    console.log(allKeywords)
 
 
     const { keywords } = useSelector((state) => state.keywords);
@@ -50,7 +49,6 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
         }
     }, [])
 
-    console.log(replyMaterial)
 
 
 
@@ -213,20 +211,13 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
 
 
+    
     const handleFinalSubmit = () => {
-
-
-
-        console.log("finalsubmit")
-
 
         const updatedKeywords = {
             ...Keywords,
             replyMaterial: selectedReplies,
         };
-
-        console.log(updatedKeywords)
-
 
 
         if (selectedReplies.length === 0) {
@@ -273,7 +264,6 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
         }
 
     };
-    console.log(selectedReplies)
 
 
 

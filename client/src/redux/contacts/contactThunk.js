@@ -30,8 +30,7 @@ export const addContact = createAsyncThunk('contacts/add', async (contact, { rej
 
 export const updateContact = createAsyncThunk('contacts/update', async ({ id, updatedData }, { rejectWithValue }) => {
     try {
-        console.log(id);
-        console.log(updatedData);
+       
         const res = await axios.put(`/updateContact/${id}`, updatedData);
         toast.success('Contact updated');
         return res.data;
@@ -55,7 +54,6 @@ export const deleteContact = createAsyncThunk('contacts/delete', async (id, { re
 // TAGS
 export const addTags = createAsyncThunk('contacts/tags/add', async ({ id, tags }, { rejectWithValue }) => {
     try {
-        console.log(tags)
         const res = await axios.patch(`/contacts/${id}/addTags`, { tags });
        
         return res.data;
@@ -79,8 +77,7 @@ export const removeTags = createAsyncThunk('contacts/tags/remove', async ({ id, 
 // NOTES
 export const addNotes = createAsyncThunk('contacts/notes/add', async ({ id, notes }, { rejectWithValue }) => {
     try {
-        console.log(notes)
-        console.log(id)
+       
         const res = await axios.patch(`/contacts/${id}/addNotes`, { notes });
      
         return res.data;

@@ -9,11 +9,6 @@ const accessToken = process.env.WHATSAPP_API_TOKEN;
 const businessId = process.env.WHATSAPP_BUSINESS_ID;
 const baseURL = `https://graph.facebook.com/v22.0/${businessId}/message_templates`;
 
-console.log(baseURL);
-console.log(accessToken);
-console.log(businessId);
-
-
 
 
 
@@ -57,7 +52,6 @@ export const fetchTemplates = async (req, res) => {
 export const createTemplate = async (req, res) => {
     try {
         const payload = req.body;
-        console.log("Creating template:", payload.name);
 
         await axios.post(baseURL, payload, {
             headers: {
@@ -98,13 +92,7 @@ export const editTemplate = async (req, res) => {
     try {
         const { id } = req.params;
         const payload = req.body;
-
-        console.log("id: " + id)
-        console.log("payload: " + JSON.stringify(payload));
-
-
-        console.log("backend editing template: " + JSON.stringify(payload))
-        console.log("id: " + id);
+      
 
         const response = await axios.post(`https://graph.facebook.com/v22.0/${id}`, payload, {
             headers: {
@@ -135,7 +123,6 @@ export const editTemplate = async (req, res) => {
 export const deleteTemplate = async (req, res) => {
     try {
         const { id, name } = req.query;
-        console.log(id, name);
 
         if (!id || !name) {
             return res.status(400).json({ message: 'Missing template id or name' });

@@ -45,10 +45,7 @@ function CreateKeyword({ onClose, editData }) {
             return;
         }
 
-        console.log(keywordConfig)
-        console.log(editData._id)
-
-
+        
         toast.promise(
             dispatch(updateKeyword({ id: editData._id, updatedKeyword: keywordConfig })),
             {

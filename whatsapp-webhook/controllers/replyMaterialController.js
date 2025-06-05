@@ -5,10 +5,8 @@ import ReplyMaterial from "../models/ReplyMaterial.js";
 export const addReplyMaterial = async (req, res) => {
     try {
         const replyMaterial = await ReplyMaterial.create(req.body);
-        console.log(replyMaterial)
         res.status(200).json(replyMaterial)
     } catch (error) {
-        console.log(error)
         res.status(500).json(error)
     }
 
@@ -17,7 +15,6 @@ export const fetchTextReply = async (req, res) => {
     try {
         const textReplies = await ReplyMaterial.find({ replyType: 'Text' });
         res.status(200).json(textReplies);
-        console.log("text reply: " + JSON.stringify(textReplies));
 
     } catch (error) {
         console.error('Error fetching text replies:', error);
@@ -31,7 +28,6 @@ export const fetchTemplateReply = async (req, res) => {
             .populate('content.materialId'); 
 
         res.status(200).json(templateReplies);
-        console.log("template reply: " + JSON.stringify(templateReplies));
 
     } catch (error) {
         console.error('Error fetching template replies', error);
@@ -43,7 +39,6 @@ export const fetchTemplateReply = async (req, res) => {
 export const fetchReplyMaterial = async (req, res) => {
     try {
         const replyMaterial = await ReplyMaterial.find();
-        console.log("replyMaterial :" + JSON.stringify(replyMaterial))
 
         res.status(200).json(replyMaterial);
     } catch (error) {

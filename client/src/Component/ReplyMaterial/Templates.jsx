@@ -42,19 +42,15 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
             dispatch(fetchReplyMaterial());
         }
     }, [])
-    console.log(replyMaterial)
 
 
 
     const templateReplys = useSelector((state) => state.replyMaterial.templateReplyMaterial);
-    console.log(templateReplys)
 
 
     useEffect(() => {
         dispatch(fetchTemplateReply());
     }, [templates])
-
-
 
 
 
@@ -65,8 +61,8 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
             const newTemplateReplies = templates
                 .filter(template => {
-                    const isAlreadyAdded = replyMaterial.some(r => {
-                        const match = r?.content?.materialId === template._id;
+                    const isAlreadyAdded = templateReplys.some(r => {
+                        const match = r?.content?.materialId.id === template.id;
 
                         return match;
                     });
@@ -120,7 +116,6 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
 
 
-    console.log(filteredTemplates)
 
 
 
@@ -319,7 +314,6 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
 
                                 (filteredTemplates.map((reply) => (
-                                    console.log(reply),
                                     <tr key={reply._id} className="text-center hover:bg-green-50 font-semibold cursor-pointer text-sm">
                                         <td className="px-[10px] py-4 text-left text-blue-600 flex gap-2 items-center">
                                             {path === '/keywordAction' && (

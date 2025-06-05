@@ -16,7 +16,6 @@ function TemplatesPreview({ template, onClose, onBack, selectedUser }) {
     const [variableInputs, setVariableInputs] = useState({});
 
 
-    console.log(template);
 
 
     const replaceVariables = (text, component, parameterFormat) => {

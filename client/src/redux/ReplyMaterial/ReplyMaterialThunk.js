@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 
 export const addReplyMaterial = createAsyncThunk('replyMaterial/add', async (replyMaterial, { rejectWithValue }) => {
     try {
-        console.log(replyMaterial)
         const res = await axios.post('/addReplyMaterial', replyMaterial);
         return res.data;
     } catch (err) {
@@ -15,7 +14,6 @@ export const addReplyMaterial = createAsyncThunk('replyMaterial/add', async (rep
 
 export const updateReplyMaterial = createAsyncThunk('replyMaterial/update', async ({ id, updatedData }, { rejectWithValue }) => {
     try {
-        console.log(updatedData)
         const res = await axios.put(`/updateReplyMaterial/${id}`, updatedData);
 
         return res.data;
