@@ -46,7 +46,7 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
         if (replyMaterial.length === 0) {
             dispatch(fetchReplyMaterial());
         }
-    }, [dispatch])
+    }, [])
 
     console.log(replyMaterial)
 

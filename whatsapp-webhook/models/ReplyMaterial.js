@@ -16,7 +16,7 @@ const ReplySchema = new mongoose.Schema({
             url: { type: String },
             materialId: { type: mongoose.Schema.Types.ObjectId },
         }, { _id: false }),
-        required: true,
+        
     },
 }, { timestamps: true });
 
