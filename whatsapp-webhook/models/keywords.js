@@ -22,7 +22,7 @@ const keywordActionSchema = new mongoose.Schema({
 
     replyMaterial: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'replyMaterials',
+        ref: 'ReplyMaterial',
     }],
 
     triggered: {
