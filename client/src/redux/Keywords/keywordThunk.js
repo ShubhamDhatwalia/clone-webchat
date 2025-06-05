@@ -33,13 +33,15 @@ export const deleteKeywords = createAsyncThunk('deleteKeywords', async (id, { re
         return rejectWithValue(err.response?.data || err.message);
     }
 });
-
-export const updateKeyword = createAsyncThunk('updateKeyword', async (id, { rejectWithValue }) => {
+export const updateKeyword = createAsyncThunk('updateKeyword', async ({ id, updatedKeyword }, { rejectWithValue }) => {
     try {
-        const res = await axios.put(`/updateKeyword/${id}`, id);
+        console.log(updatedKeyword)
+        console.log(id)
+        const res = await axios.put(`/updateKeyword/${id}`, updatedKeyword);
         return res.data;
     } catch (error) {
-        toast.error('Failed to delete');
-        return rejectWithValue(err.response?.data || err.message);
+        toast.error('Failed to update');
+        return rejectWithValue(error.response?.data || error.message);
     }
-});
+}
+);

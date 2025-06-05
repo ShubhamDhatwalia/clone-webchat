@@ -33,7 +33,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
     const dispatch = useDispatch();
 
-  
+
 
 
     const allKeywords = useSelector((state) => state.keywords.keywords);
@@ -237,212 +237,207 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
                 (kw) => kw._id === Keywords._id
             );
 
-            console.log(existingKeywordIndex)
-
-
             if (existingKeywordIndex !== -1) {
-                console.log(updatedKeywords);
-
-
-                dispatch(updateKeyword({ index: existingKeywordIndex, updatedKeyword: updatedKeywords }));
+                const id = keywords[existingKeywordIndex]._id; // <-- this is the actual id you need
+                dispatch(updateKeyword({ id, updatedKeyword: updatedKeywords }));
                 toast.success("Keyword updated successfully");
+            
+
+            // onClose(true);
+
+        } else {
+
+            console.log(updatedKeywords);
+
+            toast.promise(
+                dispatch(addKeyword(updatedKeywords)),
+                {
+                    pending: 'adding keywords...',
+                    success: 'Keywords added!',
+                    error: 'Failed to add keywords',
+                }
+            );
 
 
-                // onClose(true);
+            onClose(true);
 
-            } else {
-
-                console.log(updatedKeywords);
-
-                toast.promise(
-                    dispatch(addKeyword(updatedKeywords)),
-                    {
-                        pending: 'adding keywords...',
-                        success: 'Keywords added!',
-                        error: 'Failed to add keywords',
-                    }
-                );
-
-
-                onClose(true);
-
-            }
         }
+    }
 
-    };
-    console.log(selectedReplies)
-
-
-
+};
+console.log(selectedReplies)
 
 
 
-    return (
-        <>
 
-            <div className='h-full '>
-                <div className='flex px-4 mt-4 items-center  justify-between'>
-                    <div className='flex items-center gap-6'>
-                        <form action="" className='min-w-[150px]'>
-                            <div className='search-bar w-full flex items-center max-w-[500px]  relative'>
 
-                                <i className="fa-solid fa-magnifying-glass absolute right-4 text-gray-400"></i>
-                                <input type="text" className='w-full bg-white rounded-md pl-[10px] pr-[40px] py-[10px] focus:outline-none !font-medium' placeholder='Search here ... ' value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
 
+return (
+    <>
+
+        <div className='h-full '>
+            <div className='flex px-4 mt-4 items-center  justify-between'>
+                <div className='flex items-center gap-6'>
+                    <form action="" className='min-w-[150px]'>
+                        <div className='search-bar w-full flex items-center max-w-[500px]  relative'>
+
+                            <i className="fa-solid fa-magnifying-glass absolute right-4 text-gray-400"></i>
+                            <input type="text" className='w-full bg-white rounded-md pl-[10px] pr-[40px] py-[10px] focus:outline-none !font-medium' placeholder='Search here ... ' value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+
+                        </div>
+
+                    </form>
+
+                    {path === '/keywordAction' && (
+                        <div className='text-gray-500 font-semibold flex items-center flex-wrap gap-2'>
+                            Selected Material:
+                            {selectedReplies?.map((selectedId, i) => {
+                                const reply = replyMaterial.find((r) => r._id === selectedId);
+                                if (!reply) return null;
+
+                                return (
+                                    <div
+                                        key={i}
+                                        className='text-xs border text-nowrap border-[#FF9933] bg-[#FFFAF5] rounded-md p-2 text-[#FF9933] max-w-[150px] overflow-hidden'
+                                    >
+                                        <span>{reply.replyType}</span>:{" "}
+                                        <span className='truncate inline-block overflow-hidden whitespace-nowrap text-ellipsis max-w-[60px] align-bottom'>
+                                            {reply.name}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+
+
+
+
+                </div>
+
+
+                <div className='flex gap-4'>
+                    {path == '/keywordAction' && (<>
+                        <button type='button ' className='bg-red-50 border border-red-600 cursor-pointer text-red-600  px-4 py-1 rounded-md hover:bg-red-100 transition duration-200' onClick={onClose}>
+                            Cancel
+                        </button>
+                        <button type='button ' className='bg-green-50 border border-green-600 cursor-pointer text-green-600  px-4 py-1 rounded-md hover:bg-green-100 transition duration-200' onClick={handleFinalSubmit}>
+                            Save
+                        </button></>)}
+                    <button type='button ' className='bg-green-600 cursor-pointer text-white  px-4 py-2 rounded-md hover:bg-green-700 transition duration-200' onClick={() => setIsOpen(true)}>
+                        Add
+                    </button>
+                </div>
+            </div>
+
+
+
+
+            {isOpen && (
+                <div className='fixed bg-black/80 inset-0 z-50 flex items-center justify-center'>
+
+
+                    <div className='bg-white rounded-lg p-4 max-w-[600px] w-full '>
+
+                        <div className='flex items-center justify-between border-b border-gray-300 pb-2'>
+                            <h4 className='text-lg font-semibold'>New Text Material</h4>
+                            <i className="fa-solid fa-xmark text-2xl cursor-pointer hover:scale-110 text-red-600" onClick={handleClose}></i>
+                        </div>
+
+
+                        <form onSubmit={handleSubmit}>
+                            <div className='flex flex-col gap-2 mt-8'>
+                                <label htmlFor="" className='font-semibold text-gray-700 text-sm'>Material Name</label>
+                                <input type="text" required placeholder='Please input' className=' focus:outline-none text-sm bg-gray-100 rounded-lg p-2' name='name' value={textMaterial.name} onChange={handleChange} />
                             </div>
 
+
+
+                            <div className='flex flex-col gap-2 mt-8'>
+                                <label htmlFor="" className='font-semibold text-gray-700 text-sm'>Material Content</label>
+                                <textarea id="" required className='bg-gray-100 rounded-lg p-2 text-sm focus:outline-none' rows={5} placeholder='Please input' name='text' value={textMaterial.content.text} onChange={handleChange}></textarea>
+                            </div>
+
+
+
+                            <button type='submit' className='bg-green-600 hover:bg-green-700 cursor-pointer rounded-lg px-4 py-2 text-white mt-6 float-right' >Save</button>
                         </form>
 
-                        {path === '/keywordAction' && (
-                            <div className='text-gray-500 font-semibold flex items-center flex-wrap gap-2'>
-                                Selected Material:
-                                {selectedReplies?.map((selectedId, i) => {
-                                    const reply = replyMaterial.find((r) => r._id === selectedId);
-                                    if (!reply) return null;
-
-                                    return (
-                                        <div
-                                            key={i}
-                                            className='text-xs border text-nowrap border-[#FF9933] bg-[#FFFAF5] rounded-md p-2 text-[#FF9933] max-w-[150px] overflow-hidden'
-                                        >
-                                            <span>{reply.replyType}</span>:{" "}
-                                            <span className='truncate inline-block overflow-hidden whitespace-nowrap text-ellipsis max-w-[60px] align-bottom'>
-                                                {reply.name}
-                                            </span>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        )}
-
-
-
-
                     </div>
 
-
-                    <div className='flex gap-4'>
-                        {path == '/keywordAction' && (<>
-                            <button type='button ' className='bg-red-50 border border-red-600 cursor-pointer text-red-600  px-4 py-1 rounded-md hover:bg-red-100 transition duration-200' onClick={onClose}>
-                                Cancel
-                            </button>
-                            <button type='button ' className='bg-green-50 border border-green-600 cursor-pointer text-green-600  px-4 py-1 rounded-md hover:bg-green-100 transition duration-200' onClick={handleFinalSubmit}>
-                                Save
-                            </button></>)}
-                        <button type='button ' className='bg-green-600 cursor-pointer text-white  px-4 py-2 rounded-md hover:bg-green-700 transition duration-200' onClick={() => setIsOpen(true)}>
-                            Add
-                        </button>
-                    </div>
                 </div>
+            )}
+
+            <div className='mt-6 mb-4 grid gap-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] items-start max-h-[70vh] px-4 overflow-auto'>
+                {filteredReplies.map((reply) => (
+
+                    <div key={reply._id} className='bg-white rounded-lg p-4 max-w-[100%] h-[200px]  w-full hover:drop-shadow-xl'>
+                        <div className='flex items-center justify-between gap-4'>
+
+                            {path == '/keywordAction' && (
+                                <Checkbox
+                                    color="success"
+                                    checked={selectedReplies?.some(item => item === reply._id)}
+                                    onChange={(e) => {
+                                        const isChecked = e.target.checked;
+                                        const currentReply = reply;
+
+                                        if (isChecked) {
+
+                                            setSelectedReplies(prev => [...prev, currentReply._id]);
+                                        } else {
+
+                                            setSelectedReplies(prev => prev.filter(item => item !== currentReply._id));
+                                        }
+                                    }}
+                                    sx={{
+                                        padding: 0,
+                                        '& svg': {
+                                            fontSize: 32,
+                                        },
+                                        color: grey[500],
+                                    }}
+                                />
+
+                            )}
 
 
+                            <h4 className={` ${path == '/keywordAction' ? 'hidden' : ' truncate font-semibold text-green-600'}`}>{reply.name}</h4>
 
-
-                {isOpen && (
-                    <div className='fixed bg-black/80 inset-0 z-50 flex items-center justify-center'>
-
-
-                        <div className='bg-white rounded-lg p-4 max-w-[600px] w-full '>
-
-                            <div className='flex items-center justify-between border-b border-gray-300 pb-2'>
-                                <h4 className='text-lg font-semibold'>New Text Material</h4>
-                                <i className="fa-solid fa-xmark text-2xl cursor-pointer hover:scale-110 text-red-600" onClick={handleClose}></i>
-                            </div>
-
-
-                            <form onSubmit={handleSubmit}>
-                                <div className='flex flex-col gap-2 mt-8'>
-                                    <label htmlFor="" className='font-semibold text-gray-700 text-sm'>Material Name</label>
-                                    <input type="text" required placeholder='Please input' className=' focus:outline-none text-sm bg-gray-100 rounded-lg p-2' name='name' value={textMaterial.name} onChange={handleChange} />
+                            <div className='flex items-center gap-2'>
+                                <div
+                                    className='w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 bg-gray-100 cursor-pointer hover:border-green-500'
+                                    onClick={() => {
+                                        handleEdit(reply)
+                                    }}
+                                >
+                                    <img src={edit_icon} alt="edit" />
                                 </div>
-
-
-
-                                <div className='flex flex-col gap-2 mt-8'>
-                                    <label htmlFor="" className='font-semibold text-gray-700 text-sm'>Material Content</label>
-                                    <textarea id="" required className='bg-gray-100 rounded-lg p-2 text-sm focus:outline-none' rows={5} placeholder='Please input' name='text' value={textMaterial.content.text} onChange={handleChange}></textarea>
-                                </div>
-
-
-
-                                <button type='submit' className='bg-green-600 hover:bg-green-700 cursor-pointer rounded-lg px-4 py-2 text-white mt-6 float-right' >Save</button>
-                            </form>
-
-                        </div>
-
-                    </div>
-                )}
-
-                <div className='mt-6 mb-4 grid gap-4 grid-cols-[repeat(auto-fill,minmax(250px,1fr))] items-start max-h-[70vh] px-4 overflow-auto'>
-                    {filteredReplies.map((reply) => (
-
-                        <div key={reply._id} className='bg-white rounded-lg p-4 max-w-[100%] h-[200px]  w-full hover:drop-shadow-xl'>
-                            <div className='flex items-center justify-between gap-4'>
-
-                                {path == '/keywordAction' && (
-                                    <Checkbox
-                                        color="success"
-                                        checked={selectedReplies?.some(item => item === reply._id)}
-                                        onChange={(e) => {
-                                            const isChecked = e.target.checked;
-                                            const currentReply = reply;
-
-                                            if (isChecked) {
-
-                                                setSelectedReplies(prev => [...prev, currentReply._id]);
-                                            } else {
-
-                                                setSelectedReplies(prev => prev.filter(item => item !== currentReply._id));
-                                            }
-                                        }}
-                                        sx={{
-                                            padding: 0,
-                                            '& svg': {
-                                                fontSize: 32,
-                                            },
-                                            color: grey[500],
-                                        }}
-                                    />
-
-                                )}
-
-
-                                <h4 className={` ${path == '/keywordAction' ? 'hidden' : ' truncate font-semibold text-green-600'}`}>{reply.name}</h4>
-
-                                <div className='flex items-center gap-2'>
-                                    <div
-                                        className='w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 bg-gray-100 cursor-pointer hover:border-green-500'
-                                        onClick={() => {
-                                            handleEdit(reply)
-                                        }}
-                                    >
-                                        <img src={edit_icon} alt="edit" />
-                                    </div>
-                                    <div
-                                        className='w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 bg-gray-100 cursor-pointer hover:border-red-500'
-                                        onClick={() => { handleDelete(reply) }}
-                                    >
-                                        <img src={delete_icon} alt="delete" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='mt-4 text-sm '>
-                                <h4 className={` ${path == '/keywordAction' ? 'text-green-600 truncate font-semibold text-[16px] mt-2' : 'hidden'}`}>{reply.name}</h4>
-
-                                <div className=' max-h-[100px] leading-4.5 overflow-auto'>
-                                    <p className='break-words mt-2   whitespace-pre-wrap'>{reply.content.text}</p>
-
+                                <div
+                                    className='w-8 h-8 flex items-center justify-center rounded-md border border-gray-200 bg-gray-100 cursor-pointer hover:border-red-500'
+                                    onClick={() => { handleDelete(reply) }}
+                                >
+                                    <img src={delete_icon} alt="delete" />
                                 </div>
                             </div>
                         </div>
-                    ))}
-                </div>
+                        <div className='mt-4 text-sm '>
+                            <h4 className={` ${path == '/keywordAction' ? 'text-green-600 truncate font-semibold text-[16px] mt-2' : 'hidden'}`}>{reply.name}</h4>
 
+                            <div className=' max-h-[100px] leading-4.5 overflow-auto'>
+                                <p className='break-words mt-2   whitespace-pre-wrap'>{reply.content.text}</p>
+
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </div>
-        </>
-    )
+
+        </div>
+    </>
+)
 }
 
 export default TextReplyMaterial

@@ -41,7 +41,8 @@ export const updateKeyword = async (req, res) => {
         const { id } = req.params;
         const { ...updatedData } = req.body;
         const updated = await keywords.findByIdAndUpdate(id, updatedData, { new: true });
-        res.status(200).json(updated);
+        const populatedKeyword = await keywords.findById(keywordData._id).populate('replyMaterial');
+        res.status(200).json(populatedKeyword);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
