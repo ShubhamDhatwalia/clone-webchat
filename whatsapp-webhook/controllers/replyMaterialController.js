@@ -26,15 +26,18 @@ export const fetchTextReply = async (req, res) => {
 
 export const fetchTemplateReply = async (req, res) => {
     try {
-        const templateReplies = await ReplyMaterial.find({ replyType: 'Template' });
+        const templateReplies = await ReplyMaterial.find({ replyType: 'Template' })
+            .populate('content.materialId'); 
+
         res.status(200).json(templateReplies);
         console.log("template reply: " + JSON.stringify(templateReplies));
 
     } catch (error) {
-        console.error('Error fetching template replies')
+        console.error('Error fetching template replies', error);
         res.status(500).json({ message: 'Server error', error });
     }
 };
+
 
 export const fetchReplyMaterial = async (req, res) => {
     try {
