@@ -46,7 +46,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
         if (replyMaterial.length === 0) {
             dispatch(fetchReplyMaterial());
         }
-    }, [dispatch])
+    }, [])
 
 
     const textReplys = useSelector((state) => state.replyMaterial.replyMaterial);
@@ -56,7 +56,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
         if (textReplys.length === 0) {
             dispatch(fetchTextReply());
         }
-    }, [dispatch]);
+    }, []);
     console.log(textReplys)
 
 
