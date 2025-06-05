@@ -14,7 +14,7 @@ const ReplySchema = new mongoose.Schema({
         type: new mongoose.Schema({
             text: { type: String },
             url: { type: String },
-            materialId: { type: mongoose.Schema.Types.ObjectId, ref: 'templates' },
+            materialId: { type: mongoose.Schema.Types.ObjectId },
         }, { _id: false }),
         required: true,
     },
