@@ -33,9 +33,6 @@ function ReplyMaterial({ onClose, Keywords }) {
 
 
 
-
-
-
   return (
     <>
       <div className=' m-4 mt-14 bg-gray-100 rounded-lg flex min-h-[80vh] max-h-[80vh] '>

@@ -5,13 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTemplates } from '../../redux/templateThunks.js';
 import { deleteTemplate } from '../../redux/templateThunks.js';
 import Skeleton from '@mui/material/Skeleton';
-// import { addKeyword } from '../../redux/Keywords/keywordsSlice.js';
-// import { updateKeyword } from '..//../redux/Keywords/keywordsSlice.js'
 import { toast } from 'react-toastify';
 import Checkbox from '@mui/material/Checkbox';
 import { grey } from '@mui/material/colors';
 import { fetchReplyMaterial, addReplyMaterial, fetchTemplateReply } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
-import { addKeyword } from '../../redux/Keywords/keywordThunk.js';
+import { addKeyword, updateKeyword } from '../../redux/Keywords/keywordThunk.js';
 
 
 
@@ -159,20 +157,42 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
             toast.info("Please select at least one material")
         }
         else {
+
+
             const existingKeywordIndex = keywords.findIndex(
                 (kw) => kw._id === Keywords._id
             );
 
             if (existingKeywordIndex !== -1) {
+                const id = keywords[existingKeywordIndex]._id;
 
-                // dispatch(updateKeyword({ index: existingKeywordIndex, updatedKeyword: updatedKeywords }));
-                // toast.success("Keyword updated successfully");
-                // onClose(true);
+                toast.promise(
+                    dispatch(updateKeyword({ id, updatedKeyword: updatedKeywords })),
+
+                    {
+                        pending: 'updaing keywords...',
+                        success: 'keyword updated successfully!',
+                        error: {
+                            render({ data }) {
+                                return typeof data === 'string' ? data : 'Failed to update';
+                            }
+                        }
+                    }
+                );
+
+
+                onClose(true);
 
             } else {
 
-                dispatch(addKeyword(updatedKeywords));
-                toast.success("Keywords created successfully");
+                toast.promise(
+                    dispatch(addKeyword(updatedKeywords)),
+                    {
+                        pending: 'adding keywords...',
+                        success: 'Keywords added!',
+                        error: 'Failed to add keywords',
+                    }
+                );
                 onClose(true);
 
             }

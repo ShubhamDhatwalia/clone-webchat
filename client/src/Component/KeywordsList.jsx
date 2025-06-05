@@ -77,8 +77,18 @@ function KeywordsList({ onOpen, onEdit, onSearch }) {
 
 
     const handleDelete = (id) => {
-        dispatch(deleteKeywords(id));
-        toast.success("Keyword deleted successfully!");
+
+
+
+
+        toast.promise(
+            dispatch(deleteKeywords(id)),
+            {
+                pending: 'deleting keywords...',
+                success: 'Keywords deleted!',
+                error: 'Failed to add keywords',
+            }
+        );
     };
 
 

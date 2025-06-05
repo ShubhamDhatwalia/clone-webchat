@@ -5,6 +5,7 @@ import ReplyMaterial from "../models/ReplyMaterial.js";
 export const addReplyMaterial = async (req, res) => {
     try {
         const replyMaterial = await ReplyMaterial.create(req.body);
+        console.log(replyMaterial)
         res.status(200).json(replyMaterial)
     } catch (error) {
         console.log(error)

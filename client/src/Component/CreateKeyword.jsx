@@ -8,7 +8,7 @@ import Slider from '@mui/material/Slider';
 import { toast } from 'react-toastify';
 import ReplyMaterial from './Pages/ReplyMaterial.jsx';
 
-
+import { updateKeyword } from '../redux/Keywords/keywordThunk.js';
 
 
 
@@ -19,7 +19,7 @@ function CreateKeyword({ onClose, editData }) {
     const [newKeyword, setNewKeyword] = useState('');
     const modalRef = useRef(null);
     const [keywordConfig, setKeywordConfigState] = useState({
-        
+
         keywords: [],
         triggered: 0,
         matchingMethod: "fuzzy",
@@ -45,10 +45,22 @@ function CreateKeyword({ onClose, editData }) {
             return;
         }
 
-        dispatch(editKeyword({ oldKeyword: editData, newKeyword: keywordConfig }));
+        console.log(keywordConfig)
+        console.log(editData._id)
+
+
+        toast.promise(
+            dispatch(updateKeyword({ id: editData._id, updatedKeyword: keywordConfig })),
+            {
+                pending: 'updaing keywords...',
+                success: 'Keywords updated!',
+                error: 'Failed to update keywords',
+            }
+        );
+
         setActiveStep(prev => prev + 1);
         onClose();
-        toast.success("Keyword edited successfully!");
+
     };
 
 
@@ -72,7 +84,7 @@ function CreateKeyword({ onClose, editData }) {
         setNewKeyword('');
         setPopUp(false);
     };
-    
+
 
     const handleDelete = (kw) => {
         setKeywordConfigState(prev => ({
