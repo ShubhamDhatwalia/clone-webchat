@@ -5,12 +5,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchTemplates } from '../../redux/templateThunks.js';
 import { deleteTemplate } from '../../redux/templateThunks.js';
 import Skeleton from '@mui/material/Skeleton';
-import { addKeyword } from '../../redux/Keywords/keywordSlice.js';
-import { updateKeyword } from '..//../redux/Keywords/keywordSlice.js'
+// import { addKeyword } from '../../redux/Keywords/keywordsSlice.js';
+// import { updateKeyword } from '..//../redux/Keywords/keywordsSlice.js'
 import { toast } from 'react-toastify';
 import Checkbox from '@mui/material/Checkbox';
 import { grey } from '@mui/material/colors';
-import { fetchReplyMaterial, addReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
+import { fetchReplyMaterial, addReplyMaterial, fetchTemplateReply } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
 
 
 
@@ -25,7 +25,7 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
     const [searchTerm, setSearchTerm] = useState('');
 
-    const { keywords } = useSelector((state) => state.keyword);
+    // const { keywords } = useSelector((state) => state.keyword);
 
 
     const { templates, loading } = useSelector((state) => state.templates);
@@ -38,9 +38,6 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
 
 
-
-
-
     const replyMaterial = useSelector((state) => state.replyMaterial.replyMaterial);
     useEffect(() => {
         if (replyMaterial.length === 0) {
@@ -48,27 +45,34 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
         }
     }, [])
 
-    console.log(replyMaterial)
+
+    const templateReplys = useSelector((state) => state.replyMaterial.templateReplyMaterial);
+
+
+    useEffect(() => {
+        if (templateReplys.length === 0) {
+            dispatch(fetchTemplateReply());
+        }
+    }, [replyMaterial])
+
+
+
+
 
 
     useEffect(() => {
         if (templates.length > 0) {
-            console.log("Templates:", templates);
-            console.log("Existing Reply Material:", replyMaterial);
+
 
             const newTemplateReplies = templates
                 .filter(template => {
                     const isAlreadyAdded = replyMaterial.some(r => {
                         const match = r?.content?.materialId === template._id;
-                        console.log(
-                            `Checking template ${template._id} against replyMaterial:`,
-                            r?.content?.materialId,
-                            '=> Match:', match
-                        );
+
                         return match;
                     });
 
-                    console.log(`Template ${template._id} (${template.name}) is ${isAlreadyAdded ? "already added" : "new"}`);
+
                     return !isAlreadyAdded;
                 })
                 .map(template => ({
@@ -81,7 +85,7 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
                     }
                 }));
 
-            console.log("New Template Replies (filtered):", newTemplateReplies);
+
 
             if (newTemplateReplies.length > 0) {
                 dispatch(addReplyMaterial([...replyMaterial, ...newTemplateReplies]));
@@ -172,7 +176,7 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
     };
 
-    console.log(selectedReplies)
+
 
 
 
@@ -290,6 +294,7 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
 
                                 (filteredTemplates.map((template) => (
+                                    console.log(template),
                                     <tr key={template._id} className="text-center hover:bg-green-50 font-semibold cursor-pointer text-sm">
                                         <td className="px-[10px] py-4 text-left text-blue-600 flex gap-2 items-center">
                                             {path === '/keywordAction' && (

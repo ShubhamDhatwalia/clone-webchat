@@ -7,12 +7,13 @@ import { useLocation } from 'react-router-dom';
 import Checkbox from '@mui/material/Checkbox';
 import { grey } from '@mui/material/colors';
 
-import { updateKeyword } from '..//../redux/Keywords/keywordSlice.js'
+// import { updateKeyword } from '..//../redux/Keywords/keywordsSlice.js'
 import { toast } from 'react-toastify';
 
 
 import { addReplyMaterial, fetchTextReply, updateReplyMaterial, deleteReplyMaterial, fetchReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
 import { addKeyword } from '../../redux/Keywords/keywordThunk.js';
+
 
 
 
@@ -34,11 +35,12 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
     const dispatch = useDispatch();
 
+    console.log(selectedReplies)
 
 
-    const allKeywords = useSelector((state) => state.keyword.keywords);
+    // const allKeywords = useSelector((state) => state.keyword.keywords);
 
-    const { keywords } = useSelector((state) => state.keyword);
+    // const { keywords } = useSelector((state) => state.keyword);
 
 
     const replyMaterial = useSelector((state) => state.replyMaterial.replyMaterial);
@@ -49,15 +51,18 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
     }, [])
 
 
-    const textReplys = useSelector((state) => state.replyMaterial.replyMaterial);
+    const textReplys = useSelector((state) => state.replyMaterial.textReplyMaterial);
+
+
+
 
 
     useEffect(() => {
-        if (textReplys.length === 0) {
-            dispatch(fetchTextReply());
-        }
-    }, []);
-    console.log(textReplys)
+
+        dispatch(fetchTextReply());
+
+    }, [replyMaterial]);
+
 
 
 
@@ -74,6 +79,9 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
     const filteredReplies = textReplys.filter((reply) =>
         reply?.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+
+
 
 
 
@@ -200,7 +208,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
 
     const handleFinalSubmit = () => {
-        console.log(selectedReplies)
+
 
 
         const updatedKeywords = {

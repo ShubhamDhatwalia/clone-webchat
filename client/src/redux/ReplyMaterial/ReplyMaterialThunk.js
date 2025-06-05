@@ -55,5 +55,14 @@ export const fetchReplyMaterial = createAsyncThunk('replyMaterial/fetchReplyMate
     }
 });
 
+export const fetchTemplateReply = createAsyncThunk('replyMaterial/fetchTemplateReply', async (_, { rejectWithValue }) => {
+    try {
+        const res = await axios.get('/replyMaterial/templateReply');
+        return res.data;
+    } catch (err) {
+        toast.error('Failed to get')
+        res.rejectWithValue(err.response?.data || err.message);
+    }
+});
 
 //  

@@ -24,6 +24,7 @@ function ReplyMaterial({ onClose, Keywords }) {
 
   const selectedKeywordReplies = selectedKeyword?.replyMaterial;
 
+  
   useEffect(() => {
     if (selectedKeywordReplies) {
       setSelectedReplies(selectedKeywordReplies);

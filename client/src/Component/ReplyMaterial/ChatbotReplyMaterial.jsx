@@ -7,8 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { removeChatbot } from '../../redux/Chatbot/ChatbotSlice..js';
 import { toast } from 'react-toastify';
-import { addKeyword } from '../../redux/Keywords/keywordSlice.js';
-import { updateKeyword } from '..//../redux/Keywords/keywordSlice.js'
+// import { addKeyword } from '../../redux/Keywords/keywordsSlice.js';
+// import { updateKeyword } from '..//../redux/Keywords/keywordsSlice.js'
 
 
 
