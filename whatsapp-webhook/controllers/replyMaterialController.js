@@ -42,6 +42,7 @@ export const fetchTemplateReply = async (req, res) => {
 export const fetchReplyMaterial = async (req, res) => {
     try {
         const replyMaterial = await ReplyMaterial.find();
+        console.log("replyMaterial :" + JSON.stringify(replyMaterial))
 
         res.status(200).json(replyMaterial);
     } catch (error) {
