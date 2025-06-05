@@ -10,7 +10,7 @@ import { fetchKeywords, deleteKeywords } from '../redux/Keywords/keywordThunk';
 
 
 function KeywordsList({ onOpen, onEdit, onSearch }) {
-    
+
     const dispatch = useDispatch();
     const [limit, setLimit] = useState(20);
     const [currentPage, setCurrentPage] = useState(1);
@@ -65,11 +65,16 @@ function KeywordsList({ onOpen, onEdit, onSearch }) {
 
 
 
-    const handleEdit = (index) => {
+    const handleEdit = (id) => {
         onOpen(true);
-        onEdit(keywords[index]);
+        const keywordToEdit = keywords.find(k => k._id === id);
+        if (keywordToEdit) {
+            onEdit(keywordToEdit);
+        } else {
+            console.warn(`Keyword with id ${id} not found.`);
+        }
+    };
 
-    }
 
     const handleDelete = (id) => {
         dispatch(deleteKeywords(id));
@@ -138,7 +143,7 @@ function KeywordsList({ onOpen, onEdit, onSearch }) {
 
                                     <td className='py-6 text-right'>
                                         <div className='flex gap-4 justify-end'>
-                                            <i className="fa-solid fa-pen-to-square bg-gray-100 p-2 rounded-lg text-blue-500 hover:text-blue-600 hover:bg-blue-100 cursor-pointer" onClick={() => handleEdit(index)} ></i>
+                                            <i className="fa-solid fa-pen-to-square bg-gray-100 p-2 rounded-lg text-blue-500 hover:text-blue-600 hover:bg-blue-100 cursor-pointer" onClick={() => handleEdit(kw._id)} ></i>
                                             <i className="fa-solid fa-trash bg-gray-100 p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => handleDelete(kw._id)}></i>
                                         </div>
                                     </td>

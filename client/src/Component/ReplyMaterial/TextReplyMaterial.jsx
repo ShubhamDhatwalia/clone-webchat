@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 
 
 import { addReplyMaterial, fetchTextReply, updateReplyMaterial, deleteReplyMaterial, fetchReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
-import { addKeyword } from '../../redux/Keywords/keywordThunk.js';
+import { addKeyword, updateKeyword } from '../../redux/Keywords/keywordThunk.js';
 
 
 
@@ -241,9 +241,11 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
 
 
             if (existingKeywordIndex !== -1) {
+                console.log(updatedKeywords);
 
-                // dispatch(updateKeyword({ index: existingKeywordIndex, updatedKeyword: updatedKeywords }));
-                // toast.success("Keyword updated successfully");
+
+                dispatch(updateKeyword({ index: existingKeywordIndex, updatedKeyword: updatedKeywords }));
+                toast.success("Keyword updated successfully");
 
 
                 // onClose(true);
@@ -268,6 +270,8 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
         }
 
     };
+    console.log(selectedReplies)
+
 
 
 

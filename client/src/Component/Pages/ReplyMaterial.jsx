@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { use } from 'react';
 import SideBar from '../ReplyMaterial/Sidebar';
 import TextReplyMaterial from '../ReplyMaterial/TextReplyMaterial';
 import Templates from '../ReplyMaterial/Templates';
@@ -20,19 +20,17 @@ function ReplyMaterial({ onClose, Keywords }) {
 
 
 
-  const selectedKeyword = useSelector((state) => state.keyword?.keywords?.find(kw => kw?.id === Keywords?.id));
+  const selectedKeyword = useSelector((state) => state.keywords?.keywords?.find(kw => kw?._id === Keywords?._id));
 
-  const selectedKeywordReplies = selectedKeyword?.replyMaterial;
+  const selectedKeywordReplies = selectedKeyword?.replyMaterial.map(item => item._id);
 
-  
+
   useEffect(() => {
     if (selectedKeywordReplies) {
       setSelectedReplies(selectedKeywordReplies);
     }
-  }, [selectedKeywordReplies]);
+  }, []);
 
-
-  console.log(selected);
 
 
 

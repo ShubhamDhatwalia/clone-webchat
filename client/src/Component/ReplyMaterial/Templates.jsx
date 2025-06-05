@@ -111,8 +111,8 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
         return (
             template.status !== 'REJECTED' && (
                 template.name?.toLowerCase().includes(search) ||
-                template.content?.category?.toLowerCase().includes(search) ||
-                template.status?.toLowerCase().includes(search) ||
+                template.content?.materialId?.category?.toLowerCase().includes(search) ||
+                template.content?.materialId?.status?.toLowerCase().includes(search) ||
                 languageMap[template.language]?.toLowerCase().includes(search) ||
                 template.id?.toLowerCase().includes(search) ||
                 template._id?.toLowerCase().includes(search)

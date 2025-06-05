@@ -35,3 +35,14 @@ export const deleteKeywords = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
+
+export const updateKeyword = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { ...updatedData } = req.body;
+        const updated = await keywords.findByIdAndUpdate(id, updatedData, { new: true });
+        res.status(200).json(updated);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
