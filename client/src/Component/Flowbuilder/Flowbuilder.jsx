@@ -104,14 +104,15 @@ function FlowCanvas({ chatbot, nodes, setNodes, onNodesChange, edges, setEdges, 
     };
 
     const handleSaveChatbotFlow = () => {
-        dispatch(
-            updateChatbot({
-                id: chatbot._id,
-                flow: { nodes, edges },
-            })
+        toast.promise(
+            dispatch(updateChatbot({ id: chatbot._id, flow: { nodes, edges }, })),
+            {
+                pending: 'updating chatbot...',
+                success: 'Chatbot updated successfully!',
+                error: 'Failed to update chatbot',
+            }
         );
 
-        toast.success("Chatbot flow saved successfully!");
         navigate('/chatbot');
 
     };
@@ -215,7 +216,7 @@ function Flowbuilder() {
 
 
 
-    console.log(chatbot); 
+    console.log(chatbot);
 
 
 
@@ -287,15 +288,11 @@ function Flowbuilder() {
 
     const onFlowChange = React.useCallback(
         ({ nodes, edges }) => {
-            dispatch(
-                updateChatbot({
-                    id: chatbot._id,
-                    flow: { nodes, edges },
-                })
-            );
-        },
-        [dispatch, chatbot.id]
-    );
+
+            dispatch(updateChatbot({ id: chatbot._id, flow: { nodes, edges }, }))
+
+        }, [dispatch, chatbot.id]);
+
 
     const handleNodesChange = (changes) => {
         const updatedNodes = applyNodeChanges(changes, nodes);

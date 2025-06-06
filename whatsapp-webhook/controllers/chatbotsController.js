@@ -27,7 +27,7 @@ export const getChatbots = async (req, res) => {
 export const updateChatbot = async (req, res) => {
     try {
         const { id } = req.params;
-        const flow  = req.body;
+        const flow = req.body;
 
         const updatedChatbot = await chatbots.findByIdAndUpdate(
             id,
@@ -58,3 +58,17 @@ export const deleteChatbot = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 }
+
+
+export const updateChatbotName = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { newName } = req.body;
+        const updatedChatbot = await chatbots.findByIdAndUpdate(id, { name: newName }, { new: true });
+        res.json(updatedChatbot);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+}
+
+

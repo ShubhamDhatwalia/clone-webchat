@@ -5,14 +5,15 @@ import { Handle, Position } from 'reactflow';
 
 
 function TemplateNode({ data }) {
+  console.log(data);
 
-  const template = data.content.template;
+  const template = data?.content?.template || {};
 
 
-  const header = template?.components.find((comp) => comp.type === 'HEADER');
-  const body = template?.components.find((comp) => comp.type === 'BODY');
-  const footer = template?.components.find((comp) => comp.type === 'FOOTER');
-  const buttonComponent = template?.components.find((comp) => comp.type === 'BUTTONS');
+  const header = template?.components?.find((comp) => comp.type === 'HEADER');
+  const body = template?.components?.find((comp) => comp.type === 'BODY');
+  const footer = template?.components?.find((comp) => comp.type === 'FOOTER');
+  const buttonComponent = template?.components?.find((comp) => comp.type === 'BUTTONS');
   const buttons = buttonComponent?.buttons || [];
 
   const renderTextWithNewlines = (text) => {

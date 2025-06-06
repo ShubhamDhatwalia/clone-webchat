@@ -49,8 +49,8 @@ function CreateKeyword({ onClose, editData }) {
         toast.promise(
             dispatch(updateKeyword({ id: editData._id, updatedKeyword: keywordConfig })),
             {
-                pending: 'updaing keywords...',
-                success: 'Keywords updated!',
+                pending: 'updating keywords...',
+                success: 'Keywords updated successfully!',
                 error: 'Failed to update keywords',
             }
         );

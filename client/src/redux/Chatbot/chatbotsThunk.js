@@ -41,3 +41,12 @@ export const deleteChatbot = createAsyncThunk('deleteChatbot', async (id, { reje
         return rejectWithValue(error.response.data);
     }
 });
+
+export const updateChatbotName = createAsyncThunk('updateChatbotName', async ({ id, newName }, { rejectWithValue }) => {
+    try {
+        const res = await axios.put(`/updateChatbotName/${id}`, { newName });
+        return res.data;
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+});

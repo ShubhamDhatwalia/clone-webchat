@@ -1,6 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { updateChatbotName } from '../../redux/Chatbot/ChatbotSlice..js';
+// import { updateChatbotName } from '../../redux/Chatbot/ChatbotSlice..js';
+import { updateChatbotName } from '../../redux/Chatbot/chatbotsThunk.js';
+
+
+
+
+
+
 
 function ChatbotNamePopup({ onClose, chatbotId, initialName }) {
     const dispatch = useDispatch();
