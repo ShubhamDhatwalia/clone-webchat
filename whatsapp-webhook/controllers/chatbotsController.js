@@ -27,14 +27,30 @@ export const getChatbots = async (req, res) => {
 export const updateChatbot = async (req, res) => {
     try {
         const { id } = req.params;
-        const chatbot = await chatbots.findByIdAndUpdate(id, req.body);
-        if (!chatbot) return res.status(404).json({ message: 'Chatbot not found' });
-        const updatedChatbot = await chatbots.findById(id);
+        const { flow } = req.body;
+
+
+        if (!flow || !flow.nodes || !flow.edges) {
+            return res.status(400).json({ message: 'Invalid flow data' });
+        }
+
+        const updatedChatbot = await chatbots.findByIdAndUpdate(
+            id,
+            { $set: { flow } },
+            { new: true }
+        );
+
+        if (!updatedChatbot) {
+            return res.status(404).json({ message: 'Chatbot not found' });
+        }
+
         res.json(updatedChatbot);
     } catch (error) {
+        console.error(error);
         res.status(400).json({ message: error.message });
     }
-}
+};
+
 
 export const deleteChatbot = async (req, res) => {
     try {
