@@ -4,7 +4,8 @@ import { removeChatbot } from '../../redux/Chatbot/ChatbotSlice..js';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-
+import { deleteChatbot, getChatbots } from '../../redux/Chatbot/chatbotsThunk.js';
+import { useEffect } from 'react';
 
 
 
@@ -12,7 +13,24 @@ import { useNavigate } from 'react-router-dom';
 function ChatbotList({ onSearch }) {
 
     const dispatch = useDispatch();
-    const Chatbots = useSelector((state) => state.chatbot.Chatbots)
+
+
+
+
+
+    const Chatbots = useSelector((state) => state.chatbots.chatbots)
+
+
+    useEffect(() => {
+        if (Chatbots.length == 0) {
+            dispatch(getChatbots())
+        }
+    }, [])
+
+    console.log(Chatbots);
+
+
+
     const navigate = useNavigate();
 
 

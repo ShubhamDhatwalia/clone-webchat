@@ -29,25 +29,6 @@ export const updateChatbot = async (req, res) => {
         const { id } = req.params;
         const flow  = req.body;
 
-        console.log('Request Body:', JSON.stringify(req.body, null, 2));
-
-        if (!flow) {
-            return res.status(400).json({ message: 'Flow is missing in the request body.' });
-        }
-
-        console.log('Flow:', flow);
-
-        if (!Array.isArray(flow.nodes)) {
-            console.log('Invalid nodes:', flow.nodes);
-            return res.status(400).json({ message: 'Invalid flow data. "nodes" must be an array.' });
-        }
-
-        if (!Array.isArray(flow.edges)) {
-            console.log('Invalid edges:', flow.edges);
-            return res.status(400).json({ message: 'Invalid flow data. "edges" must be an array.' });
-        }
-
-
         const updatedChatbot = await chatbots.findByIdAndUpdate(
             id,
             { $set: { "flow.nodes": flow.nodes, "flow.edges": flow.edges } },

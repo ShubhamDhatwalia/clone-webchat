@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { addChatbot, getChatbots, updateChatbot } from './chatbotsThunk';
+import { addChatbot, getChatbots, updateChatbot, deleteChatbot } from './chatbotsThunk';
 
 
 
@@ -20,6 +20,25 @@ const chatbotsSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+
+
+        //deleteChatbot
+        builder.addCase(deleteChatbot.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(deleteChatbot.fulfilled, (state, action) => {
+            state.loading = false;
+            state.chatbots = state.chatbots.filter(bot => bot._id !== action.payload._id);
+        });
+        builder.addCase(deleteChatbot.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
+
+
+
+
         //updateChatbot
         builder.addCase(updateChatbot.pending, (state) => {
             state.loading = true;

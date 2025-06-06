@@ -32,3 +32,12 @@ export const updateChatbot = createAsyncThunk('updateChatbot', async ({ id, flow
         return rejectWithValue(error.response.data);
     }
 })
+
+export const deleteChatbot = createAsyncThunk('deleteChatbot', async (id, { rejectWithValue }) => {
+    try {
+        const res = await axios.delete(`/deleteChatbot/${id}`);
+        return res.data;
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+});
