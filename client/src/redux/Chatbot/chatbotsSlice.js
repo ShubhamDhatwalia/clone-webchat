@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-import { addChatbot, getChatbots } from './chatbotsThunk';
+import { addChatbot, getChatbots, updateChatbot } from './chatbotsThunk';
 
 
 
@@ -20,6 +20,25 @@ const chatbotsSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        //updateChatbot
+        builder.addCase(updateChatbot.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+        builder.addCase(updateChatbot.fulfilled, (state, action) => {
+            state.loading = false;
+            const index = state.chatbots.findIndex(bot => bot._id === action.payload._id);
+            if (index !== -1) {
+                state.chatbots[index] = action.payload;
+            }
+        });
+        builder.addCase(updateChatbot.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.error.message;
+        });
+
+
+
 
         //getChatbots
         builder.addCase(getChatbots.pending, (state) => {

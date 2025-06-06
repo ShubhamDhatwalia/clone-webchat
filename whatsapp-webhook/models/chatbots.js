@@ -6,9 +6,9 @@ const ChatbotSchema = new mongoose.Schema({
     finished: { type: Number, default: 0 },
     lastUpdated: { type: Date, default: Date.now },
     flow: {
-        nodes: { type: Array, default: [] },
-        edges: { type: Array, default: [] },
-    },
+        nodes: { type: Schema.Types.Mixed, default: [] },
+        edges: { type: Schema.Types.Mixed, default: [] }
+    }
 }, { timestamps: true });
 
 export default mongoose.model('Chatbot', ChatbotSchema);

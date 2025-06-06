@@ -22,3 +22,13 @@ export const getChatbots = createAsyncThunk('getChatbots', async (_, { rejectWit
         return rejectWithValue(error.response.data);
     }
 })
+
+export const updateChatbot = createAsyncThunk('updateChatbot', async ({ id, flow }, { rejectWithValue }) => {
+    try {
+        console.log(flow);
+        const res = await axios.put(`/updateChatbot/${id}`, flow);
+        return res.data;
+    } catch (error) {
+        return rejectWithValue(error.response.data);
+    }
+})

@@ -22,12 +22,13 @@ import TemplateNodeFrom from './Nodes/TemplateNodeFrom.jsx';
 import DeleteEdgeModel from './DeleteEdgeModel.jsx';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { updateChatbotFlow } from '../../redux/Chatbot/ChatbotSlice..js';
 import { toast } from 'react-toastify';
 import ChatbotNamePopup from './ChatbotNamePopup.jsx';
 
+import { getChatbots, updateChatbot } from '../../redux/Chatbot/chatbotsThunk.js';
 
-import { getChatbots } from '../../redux/Chatbot/chatbotsThunk.js';
+
+
 
 const nodeTypes = {
     custom: CustomNode,
@@ -104,8 +105,8 @@ function FlowCanvas({ chatbot, nodes, setNodes, onNodesChange, edges, setEdges, 
 
     const handleSaveChatbotFlow = () => {
         dispatch(
-            updateChatbotFlow({
-                id: chatbot.id,
+            updateChatbot({
+                id: chatbot._id,
                 flow: { nodes, edges },
             })
         );
@@ -209,16 +210,17 @@ function Flowbuilder() {
 
 
     const chatbot = useSelector((state) =>
-        state.chatbot.Chatbots.map((bot) => bot._id === chatbotId)
+        state.chatbots.chatbots.find((bot) => String(bot._id) === String(chatbotId))
     );
 
-    const chatbots = useSelector((state) => state.chatbots.chatbots);
 
-    console.log(chatbots)
+
+    console.log(chatbot); 
+
 
 
     useEffect(() => {
-        if (chatbots.length == 0) {
+        if (chatbot.length == 0) {
             dispatch(getChatbots())
         }
     }, [])
@@ -286,8 +288,8 @@ function Flowbuilder() {
     const onFlowChange = React.useCallback(
         ({ nodes, edges }) => {
             dispatch(
-                updateChatbotFlow({
-                    id: chatbot.id,
+                updateChatbot({
+                    id: chatbot._id,
                     flow: { nodes, edges },
                 })
             );
