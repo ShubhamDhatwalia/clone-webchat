@@ -1,4 +1,4 @@
-// import { json } from "body-parser";
+
 import chatbots from "../models/chatbots.js";
 
 
@@ -31,11 +31,26 @@ export const updateChatbot = async (req, res) => {
 
         console.log('Request Body:', JSON.stringify(req.body, null, 2));
 
-        // if (!flow || !Array.isArray(flow.nodes) || !Array.isArray(flow.edges)) {
-        //     return res.status(400).json({ message: 'Invalid flow data. "nodes" and "edges" must be arrays.' });
-        // }
+        // Check if flow is present
+        if (!flow) {
+            return res.status(400).json({ message: 'Flow is missing in the request body.' });
+        }
 
-       
+        // Log flow to ensure its structure
+        console.log('Flow:', flow);
+
+        // Check if nodes and edges are valid arrays
+        if (!Array.isArray(flow.nodes)) {
+            console.log('Invalid nodes:', flow.nodes);  // Log invalid nodes
+            return res.status(400).json({ message: 'Invalid flow data. "nodes" must be an array.' });
+        }
+
+        if (!Array.isArray(flow.edges)) {
+            console.log('Invalid edges:', flow.edges);  // Log invalid edges
+            return res.status(400).json({ message: 'Invalid flow data. "edges" must be an array.' });
+        }
+
+
         const updatedChatbot = await chatbots.findByIdAndUpdate(
             id,
             { $set: { "flow.nodes": flow.nodes, "flow.edges": flow.edges } },
