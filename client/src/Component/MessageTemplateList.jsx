@@ -4,6 +4,9 @@ import { fetchTemplates, deleteTemplate, } from '../redux/templateThunks.js';
 import { toast } from 'react-toastify';
 import Skeleton from '@mui/material/Skeleton';
 
+import { fetchKeywords } from '../redux/Keywords/keywordThunk';
+import { fetchReplyMaterial, addReplyMaterial, deleteReplyMaterial } from '../redux/ReplyMaterial/ReplyMaterialThunk.js';
+
 
 
 
@@ -15,6 +18,27 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
 
+
+
+
+  const replyMaterial = useSelector((state) => state.replyMaterial.replyMaterial);
+
+  useEffect(() => {
+    if (replyMaterial.length === 0) {
+      dispatch(fetchReplyMaterial());
+    }
+  }, []);
+
+
+  console.log(replyMaterial)
+
+  const keywords = useSelector(state => state.keywords.keywords)
+
+  useEffect(() => {
+    if (keywords.length === 0) {
+      dispatch(fetchKeywords());
+    }
+  })
 
 
 
@@ -65,11 +89,42 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
   }, [deleteStatus]);
 
 
+
+
   const handleDelete = (e, template) => {
     e.stopPropagation();
-    dispatch(deleteTemplate({ id: template.id, name: template.name }));
+    console.log("Deleting template: ", template);
 
+    const replyMaterialToDelete = replyMaterial
+      .filter(reply => reply.content.materialId === template._id)
+
+
+    console.log(replyMaterialToDelete);
+
+
+
+    const isUsedInKeywords = keywords.some(keyword =>
+      keyword.replyMaterial.some(material => material.name === template.name)
+    );
+
+    console.log(isUsedInKeywords);
+
+    if (isUsedInKeywords) {
+      toast.warning("Reply material is in use");
+      return;
+    }
+
+
+    dispatch(deleteTemplate({ id: template.id, name: template.name }))
+      .then(() => {
+        if (replyMaterialToDelete.length > 0) {
+          dispatch(deleteReplyMaterial(replyMaterialToDelete[0]._id));
+
+        }
+
+      });
   };
+
 
   const handleEdit = (e, template) => {
     e.stopPropagation();

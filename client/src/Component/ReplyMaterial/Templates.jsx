@@ -8,7 +8,7 @@ import Skeleton from '@mui/material/Skeleton';
 import { toast } from 'react-toastify';
 import Checkbox from '@mui/material/Checkbox';
 import { grey } from '@mui/material/colors';
-import { fetchReplyMaterial, addReplyMaterial, fetchTemplateReply } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
+import { fetchReplyMaterial, addReplyMaterial, fetchTemplateReply, deleteReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
 import { addKeyword, updateKeyword } from '../../redux/Keywords/keywordThunk.js';
 
 
@@ -22,6 +22,11 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
     const navigate = useNavigate();
 
     const [searchTerm, setSearchTerm] = useState('');
+
+
+
+    const allKeywords = useSelector((state) => state.keywords.keywords);
+
 
     const { keywords } = useSelector((state) => state.keywords);
 
@@ -116,7 +121,24 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
     const handleDelete = (e, template) => {
         e.stopPropagation();
-        dispatch(deleteTemplate(template))
+
+        const replyToDelete = template.content.materialId;
+
+        const isUsedInKeywords = allKeywords.some(keyword =>
+            keyword.replyMaterial?.some(material => material.name === replyToDelete.name)
+        );
+
+        if (isUsedInKeywords) {
+            toast.warning("Reply material is in use");
+            return;
+        }
+
+        dispatch(deleteReplyMaterial(template._id));
+        dispatch(deleteTemplate({ id: replyToDelete.id, name: replyToDelete.name }))
+            .then(() => {
+                
+                dispatch(fetchTemplateReply());
+            });
 
     }
 

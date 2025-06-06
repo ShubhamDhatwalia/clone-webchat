@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-// import { removeKeyword } from '../redux/Keywords/keywordsSlice'
 import { toast } from 'react-toastify';
 
 import { fetchKeywords, deleteKeywords } from '../redux/Keywords/keywordThunk';

@@ -9,10 +9,11 @@ import { removeChatbot } from '../../redux/Chatbot/ChatbotSlice..js';
 import { toast } from 'react-toastify';
 // import { addKeyword } from '../../redux/Keywords/keywordsSlice.js';
 // import { updateKeyword } from '..//../redux/Keywords/keywordsSlice.js'
+import { addKeyword, updateKeyword } from '../../redux/Keywords/keywordThunk.js';
 
 
 
-function ChatbotReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
+function ChatbotReplyMaterial({ onClose,  selectedReplies, setSelectedReplies }) {
 
 
 
@@ -25,7 +26,12 @@ function ChatbotReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedR
 
   const location = useLocation();
   const path = location.pathname;
-  const { keywords } = useSelector((state) => state.keyword);
+
+  const { keywords } = useSelector((state) => state.keywords);
+  console.log(keywords);
+
+
+
 
 
   const filteredChatbots = [...Chatbots].reverse().filter((chatbot) => {
@@ -54,6 +60,7 @@ function ChatbotReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedR
   };
 
 
+
   const handleFinalSubmit = () => {
 
     const updatedKeywords = {
@@ -63,30 +70,50 @@ function ChatbotReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedR
 
 
     if (selectedReplies.length === 0) {
-      toast.error("Please select at least one material")
+      toast.info("Please select at least one material")
     }
     else {
       const existingKeywordIndex = keywords.findIndex(
-        (kw) => kw.id === Keywords.id
+        (kw) => kw._id === Keywords._id
       );
 
       if (existingKeywordIndex !== -1) {
+        const id = keywords[existingKeywordIndex]._id;
+        toast.promise(
+          dispatch(updateKeyword({ id, updatedKeyword: updatedKeywords })),
 
-        dispatch(updateKeyword({ index: existingKeywordIndex, updatedKeyword: updatedKeywords }));
-        toast.success("Keyword updated successfully");
+          {
+            pending: 'updaing keywords...',
+            success: 'keyword updated successfully!',
+            error: {
+              render({ data }) {
+                return typeof data === 'string' ? data : 'Failed to update';
+              }
+            }
+          }
+        );
+
         onClose(true);
 
       } else {
 
-        dispatch(addKeyword(updatedKeywords));
-        toast.success("Keywords created successfully");
+
+        toast.promise(
+          dispatch(addKeyword(updatedKeywords)),
+          {
+            pending: 'adding keywords...',
+            success: 'Keywords added!',
+            error: 'Failed to add keywords',
+          }
+        );
+
         onClose(true);
 
       }
     }
 
-
   };
+
 
 
 

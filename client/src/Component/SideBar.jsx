@@ -7,7 +7,7 @@ import togglebtn from '../assets/togglebtn.png';
 
 function SideBar({ isOpen, toggleSidebar }) {
     const [isAutomationOpen, setAutomationOpen] = useState(false);
-  
+
 
     const location = useLocation();
 
@@ -30,8 +30,12 @@ function SideBar({ isOpen, toggleSidebar }) {
     };
 
 
+    useEffect(() => {
+        if (!isOpen) {
+            setAutomationOpen(true);
+        }
+    }, [isOpen]); // Trigger when
 
-    
 
 
 
@@ -103,7 +107,7 @@ function SideBar({ isOpen, toggleSidebar }) {
 
                     {/* Dropdown items */}
                     {isAutomationOpen && (
-                        <ul className={`' mt-4 flex flex-col gap-4 text-sm transition-all duration-500 ease-in-out'  ${isOpen ? 'ml-10' : 'ml-0'}`}>
+                        <ul className={`' mt-4 flex flex-col gap-4 text-sm transition-all duration-500 ease-in-out'  ${isOpen ? 'ml-10 ' : 'ml-0'}`}>
                             <li>
                                 <NavLink to="/keywordAction" className={({ isActive }) =>
                                     `${isActive ? 'text-green-600 font-semibold' : ' hover:text-green-600'}`
