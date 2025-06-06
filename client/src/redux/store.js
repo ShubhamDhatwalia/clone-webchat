@@ -6,6 +6,7 @@ import ChatbotReducer from './Chatbot/ChatbotSlice..js';
 import ContactReducer from './contacts/contactSlice.js';
 import ReplyMaterialSlice from './ReplyMaterial/ReplyMaterialSlice.js';
 import keywordReducer from './Keywords/keywordsSlice.js'
+import chatbotsReducer from './Chatbot/chatbotsSlice.js'
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     contact: ContactReducer,
     replyMaterial: ReplyMaterialSlice,
     keywords: keywordReducer,
+    chatbots: chatbotsReducer,
   },
 });
 

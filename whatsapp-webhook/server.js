@@ -8,6 +8,7 @@ import campaignRoutes from './routes/campaignRoutes.js';
 import contactRoutes from './routes/contactRoutes.js'
 import replyMaterialRoutes from './routes/replyMaterialRoutes.js'
 import keywordRoutes from './routes/keywordRoutes.js'
+import chatbotsRoutes from './routes/chatbotsRoutes.js'
 
 
 
@@ -39,7 +40,7 @@ app.use('/', campaignRoutes);
 app.use('/', contactRoutes);
 app.use('/', replyMaterialRoutes);
 app.use('/', keywordRoutes)
-
+app.use('/', chatbotsRoutes)
 
 
 const start = async () => {

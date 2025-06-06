@@ -26,48 +26,42 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
     const { keywords } = useSelector((state) => state.keywords);
 
 
-    const { templates, loading } = useSelector((state) => state.templates);
-    useEffect(() => {
-        if (templates.length === 0) {
-            dispatch(fetchTemplates());
-        }
-
-    }, []);
 
 
 
     const replyMaterial = useSelector((state) => state.replyMaterial.replyMaterial);
+    const templateReplys = useSelector((state) => state.replyMaterial.templateReplyMaterial);
+    const { templates, loading } = useSelector((state) => state.templates);
+
+    const [templateRepliesLoaded, setTemplateRepliesLoaded] = useState(false);
+    const [templatesLoaded, setTemplatesLoaded] = useState(false);
+    const [addedNewReplies, setAddedNewReplies] = useState(false);
+
     useEffect(() => {
         if (replyMaterial.length === 0) {
             dispatch(fetchReplyMaterial());
         }
-    }, [])
-
-
-
-    const templateReplys = useSelector((state) => state.replyMaterial.templateReplyMaterial);
-
+    }, []);
 
     useEffect(() => {
-        dispatch(fetchTemplateReply());
-    }, [templates])
-
-
-
+        dispatch(fetchTemplateReply()).then(() => setTemplateRepliesLoaded(true));
+    }, []);
 
     useEffect(() => {
-        if (templates.length > 0) {
+        if (templateRepliesLoaded && templates.length === 0) {
+            dispatch(fetchTemplates()).then(() => setTemplatesLoaded(true));
+        } else if (templateRepliesLoaded) {
+            setTemplatesLoaded(true);
+        }
+    }, [templateRepliesLoaded]);
 
-
+    useEffect(() => {
+        if (templatesLoaded && templateReplys.length >= 0 && !addedNewReplies) {
             const newTemplateReplies = templates
                 .filter(template => {
-                    const isAlreadyAdded = templateReplys.some(r => {
-                        const match = r?.content?.materialId.id === template.id;
-
-                        return match;
-                    });
-
-
+                    const isAlreadyAdded = templateReplys.some(r =>
+                        String(r?.content?.materialId?._id || r?.content?.materialId) === String(template._id)
+                    );
                     return !isAlreadyAdded;
                 })
                 .map(template => ({
@@ -80,16 +74,17 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
                     }
                 }));
 
-
-
             if (newTemplateReplies.length > 0) {
-                dispatch(addReplyMaterial([...replyMaterial, ...newTemplateReplies]));
+                dispatch(addReplyMaterial([...replyMaterial, ...newTemplateReplies]))
+                    .then(() => {
+                        dispatch(fetchTemplateReply());
+                        setAddedNewReplies(true);
+                    });
+            } else {
+                setAddedNewReplies(true);
             }
         }
-    }, [templates]);
-
-
-
+    }, [templatesLoaded, templateReplys]);
 
 
 
