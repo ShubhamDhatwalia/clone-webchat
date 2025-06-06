@@ -1,4 +1,4 @@
-import chatbots from "../models/chatbots";
+import chatbots from "../models/chatbots.js";
 
 
 
