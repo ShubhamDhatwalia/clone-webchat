@@ -23,17 +23,19 @@ export const getChatbots = async (req, res) => {
 }
 
 
-
 export const updateChatbot = async (req, res) => {
     try {
         const { id } = req.params;
         const { flow } = req.body;
 
+    
+        console.log('Request Body:', req.body);
 
-        if (!flow || !flow.nodes || !flow.edges) {
-            return res.status(400).json({ message: 'Invalid flow data' });
+      
+        if (!flow || !Array.isArray(flow.nodes) || !Array.isArray(flow.edges)) {
+            return res.status(400).json({ message: 'Invalid flow data. "nodes" and "edges" must be arrays.' });
         }
-
+       
         const updatedChatbot = await chatbots.findByIdAndUpdate(
             id,
             { $set: { flow } },
@@ -50,6 +52,7 @@ export const updateChatbot = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
+
 
 
 export const deleteChatbot = async (req, res) => {
