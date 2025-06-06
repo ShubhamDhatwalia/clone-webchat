@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import ChatbotList from '../ChatbotComponents/ChatbotList.jsx'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
-// import { v4 as uuidv4 } from 'uuid';
-// import { addChatbot } from '../../redux/Chatbot/ChatbotSlice..js';
+
 import { toast } from 'react-toastify';
 import { addChatbot } from '../../redux/Chatbot/chatbotsThunk.js';
 

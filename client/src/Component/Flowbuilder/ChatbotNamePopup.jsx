@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-// import { updateChatbotName } from '../../redux/Chatbot/ChatbotSlice..js';
 import { updateChatbotName } from '../../redux/Chatbot/chatbotsThunk.js';
+import { toast } from 'react-toastify';
 
 
 
@@ -32,7 +32,15 @@ function ChatbotNamePopup({ onClose, chatbotId, initialName }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (chatbotName.trim()) {
-            dispatch(updateChatbotName({ id: chatbotId, newName: chatbotName.trim() }));
+
+            toast.promise(
+                dispatch(updateChatbotName({ id: chatbotId, newName: chatbotName.trim() })),
+                {
+                    pending: 'updating chatbot name...',
+                    success: 'Chatbot name updated successfully!',
+                    error: 'Failed to update chatbot name',
+                }
+            );
             onClose();
         }
     };

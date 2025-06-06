@@ -22,7 +22,7 @@ const chatbotsSlice = createSlice({
     extraReducers: (builder) => {
 
         //update Chatbot name 
-        builder.addCase(updateChatbot.pending, (state) => {
+        builder.addCase(updateChatbotName.pending, (state) => {
             state.loading = true;
             state.error = null;
         });
