@@ -16,8 +16,8 @@ export const addChatbot = async (req, res) => {
 
 export const getChatbots = async (req, res) => {
     try {
-        const chatbots = await chatbots.find();
-        res.json(chatbots);
+        const chatbot = await chatbots.find();
+        res.json(chatbot);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
