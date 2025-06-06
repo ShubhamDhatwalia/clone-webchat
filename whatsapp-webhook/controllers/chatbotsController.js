@@ -23,6 +23,7 @@ export const getChatbots = async (req, res) => {
     }
 }
 
+
 export const updateChatbot = async (req, res) => {
     try {
         const { id } = req.params;

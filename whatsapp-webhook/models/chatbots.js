@@ -6,8 +6,8 @@ const ChatbotSchema = new Schema({
     finished: { type: Number, default: 0 },
     lastUpdated: { type: Date, default: Date.now },
     flow: {
-        nodes: { type: [Schema.Types.Mixed], default: [] },  // Make nodes an array of mixed types
-        edges: { type: [Schema.Types.Mixed], default: [] },  // Make edges an array of mixed types
+        nodes: { type: Schema.Types.Mixed, default: [] },  // Make nodes an array of mixed types
+        edges: { type: Schema.Types.Mixed, default: [] },  // Make edges an array of mixed types
     },
 
 }, { timestamps: true });
