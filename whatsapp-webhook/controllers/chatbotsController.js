@@ -32,9 +32,7 @@ export const updateChatbot = async (req, res) => {
         console.log('Request Body:', req.body);
 
       
-        if (!flow || !Array.isArray(flow.nodes) || !Array.isArray(flow.edges)) {
-            return res.status(400).json({ message: 'Invalid flow data. "nodes" and "edges" must be arrays.' });
-        }
+      
        
         const updatedChatbot = await chatbots.findByIdAndUpdate(
             id,
