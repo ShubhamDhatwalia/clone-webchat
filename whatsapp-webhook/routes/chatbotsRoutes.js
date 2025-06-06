@@ -4,6 +4,11 @@ import { addChatbot, getChatbots, updateChatbot, deleteChatbot } from '../contro
 
 
 router.post('/addChatbot', addChatbot);
+router.get('/getChatbots', getChatbots);
+router.put('/updateChatbot/:id', updateChatbot);
+router.delete('/deleteChatbot/:id', deleteChatbot);
+
+
 
 
 export default router;

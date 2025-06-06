@@ -27,6 +27,8 @@ import { toast } from 'react-toastify';
 import ChatbotNamePopup from './ChatbotNamePopup.jsx';
 
 
+import { getChatbots } from '../../redux/Chatbot/chatbotsThunk.js';
+
 const nodeTypes = {
     custom: CustomNode,
 };
@@ -149,7 +151,7 @@ function FlowCanvas({ chatbot, nodes, setNodes, onNodesChange, edges, setEdges, 
 
                 {namePopup && (
                     <ChatbotNamePopup onClose={handleNamePopupClose}
-                        chatbotId={chatbot.id}
+                        chatbotId={chatbot._id}
                         initialName={chatbot.name} />
                 )}
                 <ReactFlow
@@ -202,10 +204,29 @@ function Flowbuilder() {
     const dispatch = useDispatch();
 
     const chatbotId = location.state?.chatbotId;
+    console.log(chatbotId)
+
+
 
     const chatbot = useSelector((state) =>
-        state.chatbot.Chatbots.find((bot) => bot.id === chatbotId)
+        state.chatbot.Chatbots.map((bot) => bot._id === chatbotId)
     );
+
+    const chatbots = useSelector((state) => state.chatbots.chatbots);
+
+    console.log(chatbots)
+
+
+    useEffect(() => {
+        if (chatbots.length == 0) {
+            dispatch(getChatbots())
+        }
+    }, [])
+
+
+
+
+
 
     if (!chatbotId) {
         return (

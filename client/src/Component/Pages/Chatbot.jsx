@@ -63,7 +63,7 @@ function Chatbot() {
 
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
 
     const newChatbot = {
@@ -78,12 +78,14 @@ function Chatbot() {
       return;
     }
 
-    dispatch(addChatbot(newChatbot));
+    const res = await dispatch(addChatbot(newChatbot));
+    console.log(res.payload._id);
+
     setPopUp(false);
 
     navigate('/chatbot/flowbuilder', {
       state: {
-        chatbotId: newChatbot.id,
+        chatbotId: res.payload._id,
       },
     });
   };
