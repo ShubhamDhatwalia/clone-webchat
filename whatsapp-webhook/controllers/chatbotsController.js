@@ -42,7 +42,7 @@ export const getChatbots = async (req, res) => {
         const existingReplyMaterials = await ReplyMaterial.find({ replyType: 'Chatbot' });
 
         const replyMaterialIds = existingReplyMaterials.map(rm =>
-            String(rm.content?.materialId?._id || rm.content?.materialId)
+            String(rm.content?.materialId?._id)
         );
 
         const newReplyMaterials = chatbot

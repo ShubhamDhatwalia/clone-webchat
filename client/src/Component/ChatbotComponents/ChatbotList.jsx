@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-
 import { deleteChatbot, getChatbots } from '../../redux/Chatbot/chatbotsThunk.js';
 import { useEffect } from 'react';
+import { fetchChatbotReply, deleteReplyMaterial, fetchReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
+import { fetchKeywords } from '../../redux/Keywords/keywordThunk.js';
 
 
 
@@ -25,8 +26,25 @@ function ChatbotList({ onSearch }) {
         }
     }, [])
 
-    
 
+    const replyMaterial = useSelector((state) => state.replyMaterial.replyMaterial);
+
+    useEffect(() => {
+        if (replyMaterial.length === 0) {
+            dispatch(fetchReplyMaterial());
+        }
+    }, []);
+
+
+
+
+    const keywords = useSelector(state => state.keywords.keywords)
+
+    useEffect(() => {
+        if (keywords.length === 0) {
+            dispatch(fetchKeywords());
+        }
+    })
 
 
     const navigate = useNavigate();
@@ -60,20 +78,53 @@ function ChatbotList({ onSearch }) {
     const handlePrev = () => currentPage > 1 && setCurrentPage((prev) => prev - 1);
 
 
-    const handleDelete = (id) => {
 
-        toast.promise(
-            dispatch(deleteChatbot(id)),
-            {
-                pending: 'deleting chatbot...',
-                success: 'Chatbot deleted successfully!',
-                error: 'Failed to delete chatbot',
-            }
+
+
+
+
+
+    const handleDelete = (chatbot) => {
+
+        console.log("Deleting template: ", chatbot);
+
+        const replyMaterialToDelete = replyMaterial
+            .filter(reply => reply.content.materialId === chatbot._id)
+
+
+        console.log(replyMaterialToDelete);
+
+
+
+        const isUsedInKeywords = keywords.some(keyword =>
+            keyword.replyMaterial.some(material => material.name === chatbot.name)
         );
+
+        console.log(isUsedInKeywords);
+
+        if (isUsedInKeywords) {
+            toast.warning("Reply material is in use");
+            return;
+        }
+
+
+        dispatch(deleteChatbot(chatbot._id))
+            .then(() => {
+                if (replyMaterialToDelete.length > 0) {
+                    dispatch(deleteReplyMaterial(replyMaterialToDelete[0]._id));
+
+                }
+
+            });
     };
 
+
+
+
+
+
+
     const handleEdit = (chatbotId) => {
-        console.log(chatbotId);
         navigate('/chatbot/flowbuilder', { state: { chatbotId } });
     };
 
@@ -97,7 +148,6 @@ function ChatbotList({ onSearch }) {
                         <tbody className=' font-semibold '>
                             {currentData.length > 0 ? (
                                 currentData.map((chatbot) => (
-                                    console.log(chatbot),
                                     <tr key={chatbot._id} className=' text-center '>
                                         <td className='py-4 pr-1 text-left text-blue-600 max-w-[400px]'>
                                             <div className='cursor-pointer hover:underline' onClick={() => handleEdit(chatbot._id)}>{chatbot.name}</div>
@@ -117,7 +167,7 @@ function ChatbotList({ onSearch }) {
                                         <td className='py-4 text-right'>
                                             <div className='flex gap-4 justify-end'>
                                                 <i className="fa-solid fa-pen-to-square bg-gray-100 p-2 rounded-lg text-blue-500 hover:text-blue-600 hover:bg-blue-100 cursor-pointer" onClick={() => handleEdit(chatbot._id)} ></i>
-                                                <i className="fa-solid fa-trash bg-gray-100 p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => handleDelete(chatbot._id)}></i>
+                                                <i className="fa-solid fa-trash bg-gray-100 p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => handleDelete(chatbot)}></i>
                                             </div>
                                         </td>
                                     </tr>

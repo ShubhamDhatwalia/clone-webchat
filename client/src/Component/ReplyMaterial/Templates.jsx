@@ -110,6 +110,8 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
         navigate("/manageTemplates", { state: { openForm: true } });
     };
 
+
+    
     const handleFinalSubmit = () => {
         const updatedKeywords = {
             ...Keywords,

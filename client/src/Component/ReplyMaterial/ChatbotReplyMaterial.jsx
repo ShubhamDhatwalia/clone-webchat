@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Checkbox from '@mui/material/Checkbox';
 import { grey } from '@mui/material/colors';
 
@@ -10,7 +10,8 @@ import { toast } from 'react-toastify';
 // import { addKeyword } from '../../redux/Keywords/keywordsSlice.js';
 // import { updateKeyword } from '..//../redux/Keywords/keywordsSlice.js'
 import { addKeyword, updateKeyword } from '../../redux/Keywords/keywordThunk.js';
-import { deleteChatbot } from '../../redux/Chatbot/chatbotsThunk.js';
+import { deleteChatbot, } from '../../redux/Chatbot/chatbotsThunk.js';
+import { fetchReplyMaterial, fetchChatbotReply, deleteReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
 
 
 
@@ -21,6 +22,7 @@ function ChatbotReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedR
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
 
 
   const Chatbots = useSelector((state) => state.chatbots.chatbots)
@@ -30,17 +32,47 @@ function ChatbotReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedR
 
   const { keywords: allKeywords } = useSelector((state) => state.keywords);
 
+  const { replyMaterial, chatbotReplyMaterial: chatbotReplys } = useSelector((state) => state.replyMaterial);
+
+  const isLoading = loading;
+
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      try {
+        setLoading(true);
+
+        if (replyMaterial.length === 0) {
+          await dispatch(fetchReplyMaterial()).unwrap();
+        }
+
+
+        await dispatch(fetchChatbotReply()).unwrap();
+
+        if (chatbotReplys.length === 0) {
+          await dispatch(fetchChatbotReply()).unwrap();
+        }
+
+      } catch (err) {
+        console.error("Fetching failed", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAllData();
+  }, []);
 
 
 
-
-  const filteredChatbots = [...Chatbots].reverse().filter((chatbot) => {
+  const filteredChatbots = [...chatbotReplys].reverse().filter((chatbot) => {
+    console.log(chatbot);
     const search = searchTerm.toLowerCase();
     return (
       chatbot.name.toLowerCase().includes(search) ||
-      chatbot.triggered.toString().includes(search) ||
-      chatbot.finished.toString().includes(search) ||
-      chatbot.lastUpdated.toString().includes(search)
+      chatbot.content?.materialId?.triggered.toString().includes(search) ||
+      chatbot.content?.materialId?.finished.toString().includes(search) ||
+      chatbot.content?.materialId?.lastUpdated.toString().includes(search)
     )
   });
 
@@ -54,72 +86,82 @@ function ChatbotReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedR
   };
 
 
-  const handleDelete = (id) => {
+  const handleDelete = (chatbot) => {
+    const replyToDelete = chatbot.content.materialId
+    console.log(replyToDelete);
+
+
+    const isUsedInKeywords = allKeywords.some(keyword =>
+      keyword.replyMaterial?.some(material => material.name === replyToDelete.name)
+    );
+
+    if (isUsedInKeywords) {
+      toast.warning("Reply material is in use");
+      return;
+    }
+
     toast.promise(
-      dispatch(deleteChatbot(id)),
+      dispatch(deleteReplyMaterial(chatbot._id)),
       {
-        pending: 'deleting chatbot...',
-        success: 'Chatbot deleted successfully!',
-        error: 'Failed to delete chatbot',
+        pending: 'Deleting reply material...',
+        success: 'Reply material deleted successfully!',
+        error: 'Failed to delete reply material',
       }
     );
+
+
+    dispatch(deleteChatbot(replyToDelete._id,))
+      .then(() => dispatch(fetchChatbotReply()));
+
 
   };
 
 
 
-  const handleFinalSubmit = () => {
 
+
+  const handleFinalSubmit = () => {
     const updatedKeywords = {
       ...Keywords,
       replyMaterial: selectedReplies,
     };
 
-
     if (selectedReplies.length === 0) {
-      toast.info("Please select at least one material")
+      toast.info("Please select at least one material");
+      return;
     }
-    else {
-      const existingKeywordIndex = keywords.findIndex(
-        (kw) => kw._id === Keywords._id
-      );
 
-      if (existingKeywordIndex !== -1) {
-        const id = keywords[existingKeywordIndex]._id;
-        toast.promise(
-          dispatch(updateKeyword({ id, updatedKeyword: updatedKeywords })),
+    const existingKeywordIndex = allKeywords.findIndex((kw) => kw._id === Keywords._id);
+    console.log(existingKeywordIndex);
 
-          {
-            pending: 'updaing keywords...',
-            success: 'keyword updated successfully!',
-            error: {
-              render({ data }) {
-                return typeof data === 'string' ? data : 'Failed to update';
-              }
+    if (existingKeywordIndex !== -1) {
+      const id = allKeywords[existingKeywordIndex]._id;
+      toast.promise(
+        dispatch(updateKeyword({ id, updatedKeyword: updatedKeywords })),
+        {
+          pending: 'Updating keywords...',
+          success: 'Keyword updated successfully!',
+          error: {
+            render({ data }) {
+              return typeof data === 'string' ? data : 'Failed to update';
             }
           }
-        );
-
-        onClose(true);
-
-      } else {
-
-
-        toast.promise(
-          dispatch(addKeyword(updatedKeywords)),
-          {
-            pending: 'adding keywords...',
-            success: 'Keywords added!',
-            error: 'Failed to add keywords',
-          }
-        );
-
-        onClose(true);
-
-      }
+        }
+      );
+    } else {
+      toast.promise(
+        dispatch(addKeyword(updatedKeywords)),
+        {
+          pending: 'Adding keywords...',
+          success: 'Keywords added!',
+          error: 'Failed to add keywords',
+        }
+      );
     }
 
+    onClose(true);
   };
+
 
 
 
@@ -142,23 +184,28 @@ function ChatbotReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedR
               </div>
 
             </form>
+            {path === '/keywordAction' && (
+              <div className="text-gray-500 font-semibold flex items-center flex-wrap gap-2">
+                Selected Material:
+                {selectedReplies?.map((selectedId, i) => {
+                  const reply = replyMaterial.find(r => r._id === selectedId);
 
-            {path == '/keywordAction' && (<div className='text-gray-500 font-semibold flex items-center flex-wrap gap-2'>
-              Selected Material:
-              {selectedReplies?.map((reply, i) => (
-                <div
-                  key={i}
-                  className='text-xs border text-nowrap border-[#FF9933] bg-[#FFFAF5] rounded-md p-2 text-[#FF9933] max-w-[150px]  overflow-hidden'
-                >
-                  <span>{reply.replyType}</span>:{" "}
-                  <span className='truncate inline-block overflow-hidden whitespace-nowrap text-ellipsis max-w-[70px] align-bottom'>
-                    {reply.name || reply.currentReply.name}
-                  </span>
-                </div>
-              ))}
-            </div>
+                  if (!reply) return null;
+
+                  return (
+                    <div
+                      key={i}
+                      className="text-xs border text-nowrap border-[#FF9933] bg-[#FFFAF5] rounded-md p-2 text-[#FF9933] max-w-[150px] overflow-hidden"
+                    >
+                      <span>{reply.replyType}</span>:{" "}
+                      <span className="truncate inline-block overflow-hidden whitespace-nowrap text-ellipsis max-w-[70px] align-bottom">
+                        {reply.name}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
             )}
-
 
 
           </div>
@@ -203,17 +250,17 @@ function ChatbotReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedR
                       {path === '/keywordAction' && (
                         <Checkbox
                           color="success"
-                          checked={selectedReplies.some(item => item.currentReply?.name === chatbot.name)}
+                          checked={selectedReplies.some(item => item === chatbot._id)}
                           onChange={(e) => {
                             const isChecked = e.target.checked;
                             const currentReply = chatbot;
-                            const replyType = 'Chatbot';
+
 
                             if (isChecked) {
-                              setSelectedReplies(prev => [...prev, { replyType, currentReply }]);
+                              setSelectedReplies(prev => [...prev, currentReply._id]);
 
                             } else {
-                              setSelectedReplies(prev => prev.filter(item => item.currentReply?.name !== currentReply.name));
+                              setSelectedReplies(prev => prev.filter(item => item !== currentReply._id));
                             }
                           }}
 
@@ -230,11 +277,11 @@ function ChatbotReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedR
                       <div className='cursor-pointer hover:underline' onClick={() => handleEdit(chatbot._id)}>{chatbot.name}</div>
                     </td>
 
-                    <td className='py-4 pr-22'>{chatbot.triggered}</td>
-                    <td className='py-4 pr-22'>{chatbot.finished}</td>
+                    <td className='py-4 pr-22'>{chatbot.content.materialId?.triggered}</td>
+                    <td className='py-4 pr-22'>{chatbot.content.materialId?.finished}</td>
                     <td className='py-4 pr-22'>
-                      {chatbot.lastUpdated
-                        ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', }).format(new Date(chatbot.lastUpdated))
+                      {chatbot.content.materialId?.lastUpdated
+                        ? new Intl.DateTimeFormat('en-US', { dateStyle: 'medium', }).format(new Date(chatbot.content.materialId?.lastUpdated))
                         : 'N/A'}
                     </td>
 
@@ -243,8 +290,8 @@ function ChatbotReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedR
 
                     <td className='py-4 text-right'>
                       <div className='flex gap-4 justify-end'>
-                        <i className="fa-solid fa-pen-to-square bg-gray-100 p-2 rounded-lg text-blue-500 hover:text-blue-600 hover:bg-blue-100 cursor-pointer" onClick={() => handleEdit(chatbot._id)} ></i>
-                        <i className="fa-solid fa-trash bg-gray-100 p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => handleDelete(chatbot._id)}></i>
+                        <i className="fa-solid fa-pen-to-square bg-gray-100 p-2 rounded-lg text-blue-500 hover:text-blue-600 hover:bg-blue-100 cursor-pointer" onClick={() => handleEdit(chatbot.content.materialId._id)} ></i>
+                        <i className="fa-solid fa-trash bg-gray-100 p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => handleDelete(chatbot)}></i>
                       </div>
                     </td>
                   </tr>

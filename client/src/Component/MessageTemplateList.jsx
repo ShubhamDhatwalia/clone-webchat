@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import Skeleton from '@mui/material/Skeleton';
 
 import { fetchKeywords } from '../redux/Keywords/keywordThunk';
-import { fetchReplyMaterial, addReplyMaterial, deleteReplyMaterial } from '../redux/ReplyMaterial/ReplyMaterialThunk.js';
+import { fetchReplyMaterial, deleteReplyMaterial } from '../redux/ReplyMaterial/ReplyMaterialThunk.js';
 
 
 
@@ -30,7 +30,8 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
   }, []);
 
 
-  console.log(replyMaterial)
+
+
 
   const keywords = useSelector(state => state.keywords.keywords)
 
@@ -42,14 +43,24 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
 
 
 
+
+  const { templates, loading, deleteStatus } = useSelector((state) => state.templates);
+
+
   useEffect(() => {
 
-    dispatch(fetchTemplates());
+    if (templates.length === 0) {
+      dispatch(fetchTemplates());
+    }
 
   }, []);
 
 
-  const { templates, loading, deleteStatus } = useSelector((state) => state.templates);
+
+  console.log(templates);
+
+
+  console.log(replyMaterial)
 
 
   useEffect(() => {
@@ -93,13 +104,11 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
 
   const handleDelete = (e, template) => {
     e.stopPropagation();
-    console.log("Deleting template: ", template);
+
 
     const replyMaterialToDelete = replyMaterial
       .filter(reply => reply.content.materialId === template._id)
 
-
-    console.log(replyMaterialToDelete);
 
 
 
@@ -107,7 +116,6 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
       keyword.replyMaterial.some(material => material.name === template.name)
     );
 
-    console.log(isUsedInKeywords);
 
     if (isUsedInKeywords) {
       toast.warning("Reply material is in use");
@@ -130,6 +138,8 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
     e.stopPropagation();
     onSuccess(template);
   };
+
+
 
   return (
     <div className="mt-[30px] rounded-md h-[calc(100vh-210px)]  flex flex-col text-gray-600 justify-between">

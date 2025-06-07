@@ -37,7 +37,7 @@ export const fetchTemplates = async (req, res) => {
         const existingReplyMaterials = await ReplyMaterial.find({ replyType: 'Template' });
 
         const replyMaterialIds = existingReplyMaterials.map(rm =>
-            String(rm.content?.materialId?._id || rm.content?.materialId)
+            String(rm.content?.materialId?._id )
         );
 
         const newReplyMaterials = visibleTemplates
