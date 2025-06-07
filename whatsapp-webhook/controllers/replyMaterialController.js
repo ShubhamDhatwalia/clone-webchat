@@ -24,10 +24,12 @@ export const fetchTextReply = async (req, res) => {
 
 export const fetchTemplateReply = async (req, res) => {
     try {
-        const templateReplies = await ReplyMaterial.find({ replyType: 'Template' })
-            .populate('content.materialId'); 
+        const templateReplies = await ReplyMaterial.find({ replyType: 'Template' }).populate({
+            path: 'content.materialId',
+            model: doc => doc.content?.materialModel || 'Template', 
+        });
 
-            console.log(templateReplies);
+        console.log(templateReplies);
 
         res.status(200).json(templateReplies);
 
