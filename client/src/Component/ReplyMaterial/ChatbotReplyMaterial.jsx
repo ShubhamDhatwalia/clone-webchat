@@ -5,7 +5,7 @@ import { grey } from '@mui/material/colors';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { removeChatbot } from '../../redux/Chatbot/ChatbotSlice..js';
+// import { removeChatbot } from '../../redux/Chatbot/ChatbotSlice..js';
 import { toast } from 'react-toastify';
 // import { addKeyword } from '../../redux/Keywords/keywordsSlice.js';
 // import { updateKeyword } from '..//../redux/Keywords/keywordsSlice.js'

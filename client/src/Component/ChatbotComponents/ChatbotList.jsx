@@ -26,6 +26,7 @@ function ChatbotList({ onSearch }) {
         }
     }, [])
 
+    
     console.log(Chatbots);
 
 

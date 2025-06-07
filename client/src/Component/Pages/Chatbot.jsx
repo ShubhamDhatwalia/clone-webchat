@@ -29,7 +29,7 @@ function Chatbot() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showFlowbuilder, setShowFlowbuilder] = useState(false);
 
-  const chatbots = useSelector(state => state.chatbot.Chatbots);
+  const chatbots = useSelector(state => state.chatbots.chatbots);
 
   const handleClose = () => {
     setPopUp(false);

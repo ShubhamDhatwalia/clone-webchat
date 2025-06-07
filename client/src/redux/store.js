@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit';
 import templateReducer from './templateSlice.js';
 import phoneNumberReducer from './phoneNumberSlice.js';
 import campaignReducer from './Campaign/campaignSlice.js';
-import ChatbotReducer from './Chatbot/ChatbotSlice..js';
 import ContactReducer from './contacts/contactSlice.js';
 import ReplyMaterialSlice from './ReplyMaterial/ReplyMaterialSlice.js';
 import keywordReducer from './Keywords/keywordsSlice.js'
@@ -13,7 +12,6 @@ export const store = configureStore({
     templates: templateReducer,
     phoneNumbers: phoneNumberReducer,
     campaign: campaignReducer,
-    chatbot: ChatbotReducer,
     contact: ContactReducer,
     replyMaterial: ReplyMaterialSlice,
     keywords: keywordReducer,
