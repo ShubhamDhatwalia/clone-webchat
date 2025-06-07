@@ -8,7 +8,7 @@ import Skeleton from '@mui/material/Skeleton';
 import { toast } from 'react-toastify';
 import Checkbox from '@mui/material/Checkbox';
 import { grey } from '@mui/material/colors';
-import { fetchReplyMaterial, addReplyMaterial, fetchTemplateReply, deleteReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
+import { fetchReplyMaterial, fetchTemplateReply, deleteReplyMaterial } from '../../redux/ReplyMaterial/ReplyMaterialThunk.js';
 import { addKeyword, updateKeyword } from '../../redux/Keywords/keywordThunk.js';
 
 

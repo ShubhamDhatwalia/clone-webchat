@@ -1,27 +1,77 @@
 
 import chatbots from "../models/chatbots.js";
+import ReplyMaterial from "../models/ReplyMaterial.js";
 
 
 
 export const addChatbot = async (req, res) => {
     try {
+
         const chatbot = new chatbots(req.body);
-        await chatbot.save();
-        res.status(200).json(chatbot);
+        const savedChatbot = await chatbot.save();
+
+
+        const replyMaterialData = {
+            name: savedChatbot.name,
+            replyType: 'Chatbot',
+            content: {
+                text: null,
+                url: null,
+                materialModel: 'Chatbot',
+                materialId: savedChatbot._id,
+            },
+            createdAt: new Date(),
+        };
+
+        const savedReplyMaterial = await ReplyMaterial.create(replyMaterialData);
+
+        res.status(201).json({ chatbot: savedChatbot, replyMaterial: savedReplyMaterial });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        console.error('Add Chatbot Error:', error.message);
+        res.status(500).json({ message: 'Failed to create chatbot', error: error.message });
     }
-}
+};
+
+
 
 
 export const getChatbots = async (req, res) => {
     try {
-        const chatbot = await chatbots.find();
-        res.json(chatbot);
+        const chatbots = await chatbots.find();
+
+        const existingReplyMaterials = await ReplyMaterial.find({ replyType: 'Chatbot' });
+
+        const replyMaterialIds = existingReplyMaterials.map(rm =>
+            String(rm.content?.materialId?._id || rm.content?.materialId)
+        );
+
+        const newReplyMaterials = chatbots
+            .filter(chatbot => !replyMaterialIds.includes(String(chatbot._id)))
+            .map(chatbot => ({
+                name: chatbot.name,
+                replyType: 'Chatbot',
+                content: {
+                    text: null,
+                    url: null,
+                    materialModel: 'Chatbot',
+                    materialId: chatbot._id,
+                },
+                createdAt: new Date(),
+            }));
+
+        if (newReplyMaterials.length > 0) {
+            await ReplyMaterial.insertMany(newReplyMaterials);
+        }
+
+        res.status(200).json({ chatbots });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Get Chatbots Error:', error.message);
+        res.status(500).json({
+            message: 'Failed to fetch chatbots',
+            error: error.message,
+        });
     }
-}
+};
 
 
 export const updateChatbot = async (req, res) => {

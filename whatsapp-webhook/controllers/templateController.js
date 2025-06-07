@@ -75,7 +75,7 @@ export const createTemplate = async (req, res) => {
     try {
         const payload = req.body;
 
-        // 1. Create template remotely
+
         await axios.post(baseURL, payload, {
             headers: {
                 'Content-Type': 'application/json',
@@ -83,7 +83,7 @@ export const createTemplate = async (req, res) => {
             },
         });
 
-        // 2. Fetch all templates to find the newly created one
+
         const fetchResponse = await axios.get(`${baseURL}?access_token=${accessToken}&limit=1000`);
         const templates = fetchResponse.data.data;
 
@@ -93,7 +93,6 @@ export const createTemplate = async (req, res) => {
             return res.status(404).json({ message: 'Template created but not found in fetch.' });
         }
 
-        // 3. Save template locally
         const newTemplateData = {
             ...created,
             createdAt: new Date(),
@@ -101,7 +100,7 @@ export const createTemplate = async (req, res) => {
 
         const savedTemplate = await Template.create(newTemplateData);
 
-        // 4. Create corresponding reply material
+
         const replyMaterialData = {
             name: savedTemplate.name,
             replyType: 'Template',
@@ -112,12 +111,12 @@ export const createTemplate = async (req, res) => {
                 materialId: savedTemplate._id,
             },
             createdAt: new Date(),
-            // Add any other necessary fields for reply material here
+
         };
 
         const savedReplyMaterial = await ReplyMaterial.create(replyMaterialData);
 
-        // 5. Return both saved template and reply material
+
         res.status(201).json({ template: savedTemplate, replyMaterial: savedReplyMaterial });
     } catch (error) {
         console.error('Create Error:', error.message);
