@@ -27,6 +27,8 @@ export const fetchTemplateReply = async (req, res) => {
         const templateReplies = await ReplyMaterial.find({ replyType: 'Template' })
             .populate('content.materialId'); 
 
+            console.log(templateReplies);
+
         res.status(200).json(templateReplies);
 
     } catch (error) {

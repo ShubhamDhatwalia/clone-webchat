@@ -17,30 +17,20 @@ import { addKeyword, updateKeyword } from '../../redux/Keywords/keywordThunk.js'
 
 
 function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
-
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const location = useLocation();
+    const path = location.pathname;
 
     const [searchTerm, setSearchTerm] = useState('');
+    const [loadingTemplates, setLoadingTemplates] = useState(true);
+    const [loadingTemplateReplys, setLoadingTemplateReplys] = useState(true);
 
+    const { keywords: allKeywords } = useSelector((state) => state.keywords);
+    const { replyMaterial, templateReplyMaterial: templateReplys } = useSelector((state) => state.replyMaterial);
+    const { templates } = useSelector((state) => state.templates);
 
-
-    const allKeywords = useSelector((state) => state.keywords.keywords);
-
-
-    const { keywords } = useSelector((state) => state.keywords);
-
-
-
-
-
-    const replyMaterial = useSelector((state) => state.replyMaterial.replyMaterial);
-    const templateReplys = useSelector((state) => state.replyMaterial.templateReplyMaterial);
-    const { templates, loading } = useSelector((state) => state.templates);
-
-    const [templateRepliesLoaded, setTemplateRepliesLoaded] = useState(false);
-    const [templatesLoaded, setTemplatesLoaded] = useState(false);
-    const [addedNewReplies, setAddedNewReplies] = useState(false);
+    const isLoading = loadingTemplates || loadingTemplateReplys;
 
     useEffect(() => {
         if (replyMaterial.length === 0) {
@@ -49,79 +39,54 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
     }, []);
 
     useEffect(() => {
-        dispatch(fetchTemplateReply()).then(() => setTemplateRepliesLoaded(true));
-    }, []);
+        if (templates.length === 0) {
+            setLoadingTemplates(true);
+            dispatch(fetchTemplates()).finally(() => setLoadingTemplates(false));
+        } else {
+            setLoadingTemplates(false);
+        }
+    }, [templates]);
 
     useEffect(() => {
-        if (templateRepliesLoaded && templates.length === 0) {
-            dispatch(fetchTemplates()).then(() => setTemplatesLoaded(true));
-        } else if (templateRepliesLoaded) {
-            setTemplatesLoaded(true);
+        if (templateReplys.length === 0) {
+            setLoadingTemplateReplys(true);
+            dispatch(fetchTemplateReply()).finally(() => setLoadingTemplateReplys(false));
+        } else {
+            setLoadingTemplateReplys(false);
         }
-    }, [templateRepliesLoaded]);
-
-    useEffect(() => {
-        if (templatesLoaded && templateReplys.length >= 0 && !addedNewReplies) {
-            const newTemplateReplies = templates
-                .filter(template => {
-                    const isAlreadyAdded = templateReplys.some(r =>
-                        String(r?.content?.materialId?._id || r?.content?.materialId) === String(template._id)
-                    );
-                    return !isAlreadyAdded;
-                })
-                .map(template => ({
-                    name: template.name,
-                    replyType: 'Template',
-                    content: {
-                        text: null,
-                        url: null,
-                        materialId: template._id,
-                    }
-                }));
-
-            if (newTemplateReplies.length > 0) {
-                dispatch(addReplyMaterial([...replyMaterial, ...newTemplateReplies]))
-                    .then(() => {
-                        dispatch(fetchTemplateReply());
-                        setAddedNewReplies(true);
-                    });
-            } else {
-                setAddedNewReplies(true);
-            }
-        }
-    }, [templatesLoaded, templateReplys]);
-
-
+    }, [templates]);
 
     const languageMap = {
-
         en: 'English',
         en_US: 'English (US)',
         hi: 'Hindi',
     };
 
-    const filteredTemplates = [...templateReplys].reverse().filter((template) => {
-        const search = searchTerm.toLowerCase();
-        return (
-            template.status !== 'REJECTED' && (
-                template.name?.toLowerCase().includes(search) ||
-                template.content?.materialId?.category?.toLowerCase().includes(search) ||
-                template.content?.materialId?.status?.toLowerCase().includes(search) ||
-                languageMap[template.language]?.toLowerCase().includes(search) ||
-                template.id?.toLowerCase().includes(search) ||
-                template._id?.toLowerCase().includes(search)
-            )
-        );
-    });
 
 
 
+    console.log(templateReplys);
 
 
+    const filteredTemplates = [...templateReplys]
+        .reverse()
+        .filter((template) => {
+            const search = searchTerm.toLowerCase();
+            return (
+                template.status !== 'REJECTED' &&
+                (
+                    template.name?.toLowerCase().includes(search) ||
+                    template.content?.materialId?.category?.toLowerCase().includes(search) ||
+                    template.content?.materialId?.status?.toLowerCase().includes(search) ||
+                    languageMap[template.language]?.toLowerCase().includes(search) ||
+                    template.id?.toLowerCase().includes(search) ||
+                    template._id?.toLowerCase().includes(search)
+                )
+            );
+        });
 
     const handleDelete = (e, template) => {
         e.stopPropagation();
-
         const replyToDelete = template.content.materialId;
 
         const isUsedInKeywords = allKeywords.some(keyword =>
@@ -135,86 +100,53 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
         dispatch(deleteReplyMaterial(template._id));
         dispatch(deleteTemplate({ id: replyToDelete.id, name: replyToDelete.name }))
-            .then(() => {
-                
-                dispatch(fetchTemplateReply());
-            });
-
-    }
+            .then(() => dispatch(fetchTemplateReply()));
+    };
 
     const handleTemplateAdd = () => {
         navigate("/manageTemplates", { state: { openForm: true } });
-    }
-
-
-
-
-
-    const location = useLocation();
-    const path = location.pathname;
-
-
-
-
+    };
 
     const handleFinalSubmit = () => {
-
         const updatedKeywords = {
             ...Keywords,
             replyMaterial: selectedReplies,
         };
 
-
         if (selectedReplies.length === 0) {
-            toast.info("Please select at least one material")
+            toast.info("Please select at least one material");
+            return;
         }
-        else {
 
+        const existingKeywordIndex = allKeywords.findIndex((kw) => kw._id === Keywords._id);
 
-            const existingKeywordIndex = keywords.findIndex(
-                (kw) => kw._id === Keywords._id
-            );
-
-            if (existingKeywordIndex !== -1) {
-                const id = keywords[existingKeywordIndex]._id;
-
-                toast.promise(
-                    dispatch(updateKeyword({ id, updatedKeyword: updatedKeywords })),
-
-                    {
-                        pending: 'updaing keywords...',
-                        success: 'keyword updated successfully!',
-                        error: {
-                            render({ data }) {
-                                return typeof data === 'string' ? data : 'Failed to update';
-                            }
+        if (existingKeywordIndex !== -1) {
+            const id = allKeywords[existingKeywordIndex]._id;
+            toast.promise(
+                dispatch(updateKeyword({ id, updatedKeyword: updatedKeywords })),
+                {
+                    pending: 'Updating keywords...',
+                    success: 'Keyword updated successfully!',
+                    error: {
+                        render({ data }) {
+                            return typeof data === 'string' ? data : 'Failed to update';
                         }
                     }
-                );
-
-
-                onClose(true);
-
-            } else {
-
-                toast.promise(
-                    dispatch(addKeyword(updatedKeywords)),
-                    {
-                        pending: 'adding keywords...',
-                        success: 'Keywords added!',
-                        error: 'Failed to add keywords',
-                    }
-                );
-                onClose(true);
-
-            }
+                }
+            );
+        } else {
+            toast.promise(
+                dispatch(addKeyword(updatedKeywords)),
+                {
+                    pending: 'Adding keywords...',
+                    success: 'Keywords added!',
+                    error: 'Failed to add keywords',
+                }
+            );
         }
 
-
+        onClose(true);
     };
-
-
-
 
 
 
@@ -302,7 +234,7 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
                         <tbody>
 
 
-                            {loading ? (
+                            {isLoading ? (
                                 Array.from({ length: 3 }).map((_, index) => (
                                     <tr key={index}>
                                         <td className="px-[10px] py-4 text-left">
