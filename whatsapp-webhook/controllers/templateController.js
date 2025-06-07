@@ -21,7 +21,7 @@ export const fetchTemplates = async (req, res) => {
         const response = await axios.get(`${baseURL}?access_token=${accessToken}&limit=1000`);
         const templates = response.data.data;
 
-
+        // 1. Bulk upsert templates
         const operations = templates.map(t => ({
             updateOne: {
                 filter: { id: t.id },
@@ -34,7 +34,32 @@ export const fetchTemplates = async (req, res) => {
 
         await Template.bulkWrite(operations);
 
+        // 2. Fetch updated templates and all replyMaterial
         const visibleTemplates = await Template.find({ deleted: { $ne: true } });
+        const existingReplyMaterials = await ReplyMaterial.find({ replyType: 'Template' });
+
+        // 3. Find templates not present in replyMaterial
+        const replyMaterialIds = existingReplyMaterials.map(rm =>
+            String(rm.content?.materialId?._id || rm.content?.materialId)
+        );
+
+        const newReplyMaterials = visibleTemplates
+            .filter(template => !replyMaterialIds.includes(String(template._id)))
+            .map(template => ({
+                name: template.name,
+                replyType: 'Template',
+                content: {
+                    text: null,
+                    url: null,
+                    materialId: template._id,
+                },
+                createdAt: new Date(),
+            }));
+
+        // 4. Add missing reply materials
+        if (newReplyMaterials.length > 0) {
+            await ReplyMaterial.insertMany(newReplyMaterials);
+        }
 
         res.status(200).json({ templates: visibleTemplates });
     } catch (error) {
@@ -45,7 +70,6 @@ export const fetchTemplates = async (req, res) => {
         });
     }
 };
-
 
 
 
