@@ -25,6 +25,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
         content: {
             text: "",
             url: "",
+            materialModel: "Text",
             materialId: ""
         }
     })
@@ -127,6 +128,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
             content: {
                 text: "",
                 url: "",
+                materialModel: "Text",
                 materialId: ""
             }
         });
@@ -202,6 +204,7 @@ function TextReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedRepl
             content: {
                 text: "",
                 url: "",
+                materialModel: "Text",
                 materialId: ""
             }
         });

@@ -48,6 +48,7 @@ export const fetchTemplates = async (req, res) => {
                 content: {
                     text: null,
                     url: null,
+                    materialModel: 'Template',
                     materialId: template._id,
                 },
                 createdAt: new Date(),
