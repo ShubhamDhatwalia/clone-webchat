@@ -1,12 +1,13 @@
 
 import { createSlice } from '@reduxjs/toolkit';
-import { addReplyMaterial, updateReplyMaterial, deleteReplyMaterial, fetchTextReply, fetchReplyMaterial, fetchTemplateReply } from './ReplyMaterialThunk.js';
+import { addReplyMaterial, updateReplyMaterial, deleteReplyMaterial, fetchTextReply, fetchReplyMaterial, fetchTemplateReply, fetchChatbotReply } from './ReplyMaterialThunk.js';
 
 
 const initialState = {
     replyMaterial: [],
     textReplyMaterial: [],
     templateReplyMaterial: [],
+    chatbotReplyMaterial: [],
     loading: false,
     error: null,
 };
@@ -20,6 +21,22 @@ const replyMaterialSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+
+        // fetch chatbotReply
+        builder.addCase(fetchChatbotReply.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        });
+
+        builder.addCase(fetchChatbotReply.fulfilled, (state, action) => {
+            state.loading = false;
+            state.chatbotReplyMaterial = action.payload;
+        });
+
+        builder.addCase(fetchChatbotReply.rejected, (state, action) => {
+            state.loading = false;
+            state.error = action.payload;
+        })
 
 
 
@@ -51,7 +68,7 @@ const replyMaterialSlice = createSlice({
         builder.addCase(fetchReplyMaterial.fulfilled, (state, action) => {
             state.loading = false;
             state.replyMaterial = action.payload;
-            
+
         });
 
         builder.addCase(fetchReplyMaterial.rejected, (state, action) => {

@@ -63,4 +63,12 @@ export const fetchTemplateReply = createAsyncThunk('replyMaterial/fetchTemplateR
     }
 });
 
-//  
+export const fetchChatbotReply = createAsyncThunk('replyMaterial/fetchChatbotReply', async (_, { rejectWithValue }) => {
+    try {
+        const res = await axios.get('/replyMaterial/chatbotReply');
+        return res.data;
+    } catch (err) {
+        toast.error('Failed to get')
+        res.rejectWithValue(err.response?.data || err.message);
+    }
+});

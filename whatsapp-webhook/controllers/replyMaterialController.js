@@ -36,6 +36,17 @@ export const fetchTemplateReply = async (req, res) => {
     }
 };
 
+export const fetchChatbotReply = async (req, res) => {
+    try {
+        const chatbotReplies = await ReplyMaterial.find({ replyType: 'Chatbot' }).populate('content.materialId');
+        res.status(200).json(chatbotReplies);
+    } catch (error) {
+        console.error('Error fetching chatbot replies')
+        res.status(500).json({ message: 'Server error', error });
+    }
+};
+
+
 
 export const fetchReplyMaterial = async (req, res) => {
     try {

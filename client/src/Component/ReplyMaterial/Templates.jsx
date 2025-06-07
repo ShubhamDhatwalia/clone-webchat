@@ -26,6 +26,7 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
     const [loading, setLoading] = useState(true);
 
     const { keywords: allKeywords } = useSelector((state) => state.keywords);
+    
     const { replyMaterial, templateReplyMaterial: templateReplys } = useSelector((state) => state.replyMaterial);
     const { templates } = useSelector((state) => state.templates);
 

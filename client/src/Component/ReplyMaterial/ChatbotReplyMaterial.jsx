@@ -10,10 +10,11 @@ import { toast } from 'react-toastify';
 // import { addKeyword } from '../../redux/Keywords/keywordsSlice.js';
 // import { updateKeyword } from '..//../redux/Keywords/keywordsSlice.js'
 import { addKeyword, updateKeyword } from '../../redux/Keywords/keywordThunk.js';
+import { deleteChatbot } from '../../redux/Chatbot/chatbotsThunk.js';
 
 
 
-function ChatbotReplyMaterial({ onClose,  selectedReplies, setSelectedReplies }) {
+function ChatbotReplyMaterial({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
 
 
 
@@ -22,13 +23,12 @@ function ChatbotReplyMaterial({ onClose,  selectedReplies, setSelectedReplies })
   const [searchTerm, setSearchTerm] = useState('');
 
 
-  const Chatbots = useSelector((state) => state.chatbot.Chatbots)
+  const Chatbots = useSelector((state) => state.chatbots.chatbots)
 
   const location = useLocation();
   const path = location.pathname;
 
-  const { keywords } = useSelector((state) => state.keywords);
-  console.log(keywords);
+  const { keywords: allKeywords } = useSelector((state) => state.keywords);
 
 
 
@@ -54,9 +54,16 @@ function ChatbotReplyMaterial({ onClose,  selectedReplies, setSelectedReplies })
   };
 
 
-  const handleDelete = (index) => {
-    dispatch(removeChatbot(index));
-    toast.success("Chatbot removed successfully!");
+  const handleDelete = (id) => {
+    toast.promise(
+      dispatch(deleteChatbot(id)),
+      {
+        pending: 'deleting chatbot...',
+        success: 'Chatbot deleted successfully!',
+        error: 'Failed to delete chatbot',
+      }
+    );
+
   };
 
 
@@ -190,8 +197,8 @@ function ChatbotReplyMaterial({ onClose,  selectedReplies, setSelectedReplies })
 
             <tbody className=' font-semibold '>
               {filteredChatbots.length > 0 ? (
-                filteredChatbots.map((chatbot, index) => (
-                  <tr key={index} className=' text-center '>
+                filteredChatbots.map((chatbot) => (
+                  <tr key={chatbot._id} className=' text-center '>
                     <td className='px-[0px] py-4 text-left text-blue-600 flex gap-2 items-center'>
                       {path === '/keywordAction' && (
                         <Checkbox
@@ -220,7 +227,7 @@ function ChatbotReplyMaterial({ onClose,  selectedReplies, setSelectedReplies })
                         />
 
                       )}
-                      <div className='cursor-pointer hover:underline' onClick={() => handleEdit(chatbot.id)}>{chatbot.name}</div>
+                      <div className='cursor-pointer hover:underline' onClick={() => handleEdit(chatbot._id)}>{chatbot.name}</div>
                     </td>
 
                     <td className='py-4 pr-22'>{chatbot.triggered}</td>
@@ -236,8 +243,8 @@ function ChatbotReplyMaterial({ onClose,  selectedReplies, setSelectedReplies })
 
                     <td className='py-4 text-right'>
                       <div className='flex gap-4 justify-end'>
-                        <i className="fa-solid fa-pen-to-square bg-gray-100 p-2 rounded-lg text-blue-500 hover:text-blue-600 hover:bg-blue-100 cursor-pointer" onClick={() => handleEdit(chatbot.id)} ></i>
-                        <i className="fa-solid fa-trash bg-gray-100 p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => handleDelete(index)}></i>
+                        <i className="fa-solid fa-pen-to-square bg-gray-100 p-2 rounded-lg text-blue-500 hover:text-blue-600 hover:bg-blue-100 cursor-pointer" onClick={() => handleEdit(chatbot._id)} ></i>
+                        <i className="fa-solid fa-trash bg-gray-100 p-2 rounded-lg text-red-500 hover:text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => handleDelete(chatbot._id)}></i>
                       </div>
                     </td>
                   </tr>
