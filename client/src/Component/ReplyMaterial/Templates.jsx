@@ -48,13 +48,13 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
     }, [templates]);
 
     useEffect(() => {
-        if (templateReplys.length === 0) {
-            setLoadingTemplateReplys(true);
-            dispatch(fetchTemplateReply()).finally(() => setLoadingTemplateReplys(false));
-        } else {
-            setLoadingTemplateReplys(false);
-        }
-    }, [templates]);
+
+        setLoadingTemplateReplys(true);
+        dispatch(fetchTemplateReply()).finally(() => setLoadingTemplateReplys(false));
+
+        setLoadingTemplateReplys(false);
+
+    }, []);
 
     const languageMap = {
         en: 'English',

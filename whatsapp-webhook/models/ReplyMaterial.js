@@ -23,8 +23,6 @@ const ReplySchema = new mongoose.Schema({
             materialId: {
                 type: mongoose.Schema.Types.ObjectId,
                 refPath: 'content.materialModel',
-                unique: true,
-                sparse: true
             },
         }, { _id: false }),
     },
