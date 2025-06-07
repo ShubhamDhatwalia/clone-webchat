@@ -23,38 +23,40 @@ function Templates({ onClose, Keywords, selectedReplies, setSelectedReplies }) {
     const path = location.pathname;
 
     const [searchTerm, setSearchTerm] = useState('');
-    const [loadingTemplates, setLoadingTemplates] = useState(true);
-    const [loadingTemplateReplys, setLoadingTemplateReplys] = useState(true);
+    const [loading, setLoading] = useState(true);
 
     const { keywords: allKeywords } = useSelector((state) => state.keywords);
     const { replyMaterial, templateReplyMaterial: templateReplys } = useSelector((state) => state.replyMaterial);
     const { templates } = useSelector((state) => state.templates);
 
-    const isLoading = loadingTemplates || loadingTemplateReplys;
+    const isLoading = loading;
 
     useEffect(() => {
-        if (replyMaterial.length === 0) {
-            dispatch(fetchReplyMaterial());
-        }
+        const fetchAllData = async () => {
+            try {
+                setLoading(true);
+
+                if (replyMaterial.length === 0) {
+                    await dispatch(fetchReplyMaterial()).unwrap();
+                }
+
+
+                await dispatch(fetchTemplateReply()).unwrap();
+
+                if (templates.length === 0) {
+                    await dispatch(fetchTemplates()).unwrap();
+                }
+
+            } catch (err) {
+                console.error("Fetching failed", err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAllData();
     }, []);
 
-    useEffect(() => {
-        if (templates.length === 0) {
-            setLoadingTemplates(true);
-            dispatch(fetchTemplates()).finally(() => setLoadingTemplates(false));
-        } else {
-            setLoadingTemplates(false);
-        }
-    }, [templates]);
-
-    useEffect(() => {
-
-        setLoadingTemplateReplys(true);
-        dispatch(fetchTemplateReply()).finally(() => setLoadingTemplateReplys(false));
-
-        setLoadingTemplateReplys(false);
-
-    }, []);
 
     const languageMap = {
         en: 'English',

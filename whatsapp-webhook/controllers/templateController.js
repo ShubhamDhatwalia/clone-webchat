@@ -108,6 +108,7 @@ export const createTemplate = async (req, res) => {
             content: {
                 text: null,
                 url: null,
+                materialModel: 'Template',
                 materialId: savedTemplate._id,
             },
             createdAt: new Date(),
