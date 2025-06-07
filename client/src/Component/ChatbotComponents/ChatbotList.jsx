@@ -16,7 +16,6 @@ function ChatbotList({ onSearch }) {
 
 
 
-
     const Chatbots = useSelector((state) => state.chatbots.chatbots)
 
 
@@ -27,12 +26,10 @@ function ChatbotList({ onSearch }) {
     }, [])
 
     
-    console.log(Chatbots);
 
 
 
     const navigate = useNavigate();
-
 
 
 

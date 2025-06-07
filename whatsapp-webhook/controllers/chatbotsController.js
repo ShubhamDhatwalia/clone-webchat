@@ -25,7 +25,7 @@ export const addChatbot = async (req, res) => {
 
         const savedReplyMaterial = await ReplyMaterial.create(replyMaterialData);
 
-        res.status(201).json({ chatbot: savedChatbot, replyMaterial: savedReplyMaterial });
+        res.status(201).json(savedChatbot);
     } catch (error) {
         console.error('Add Chatbot Error:', error.message);
         res.status(500).json({ message: 'Failed to create chatbot', error: error.message });
@@ -63,7 +63,7 @@ export const getChatbots = async (req, res) => {
             await ReplyMaterial.insertMany(newReplyMaterials);
         }
 
-        res.status(200).json( chatbot );
+        res.status(200).json(chatbot);
     } catch (error) {
         console.error('Get Chatbots Error:', error.message);
         res.status(500).json({
