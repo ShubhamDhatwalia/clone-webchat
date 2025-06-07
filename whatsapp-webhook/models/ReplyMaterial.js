@@ -17,7 +17,7 @@ const ReplySchema = new mongoose.Schema({
 
             materialModel: {
                 type: String,
-                enum: ['Text', 'Image', 'Document', 'Video', 'Template', 'Chatbot'],
+                enum: ['Text', 'Image', 'Document', 'Video', 'templates', 'Chatbot'],
             },
             materialId: {
                 type: mongoose.Schema.Types.ObjectId,
