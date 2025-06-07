@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Template from '../models/templates.js'
+import ReplyMaterial from "../models/ReplyMaterial.js";
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -19,7 +20,7 @@ export const fetchTemplates = async (req, res) => {
     try {
         const response = await axios.get(`${baseURL}?access_token=${accessToken}&limit=1000`);
         const templates = response.data.data;
-        
+
 
         const operations = templates.map(t => ({
             updateOne: {
@@ -53,6 +54,7 @@ export const createTemplate = async (req, res) => {
     try {
         const payload = req.body;
 
+        // 1. Create template remotely
         await axios.post(baseURL, payload, {
             headers: {
                 'Content-Type': 'application/json',
@@ -60,6 +62,7 @@ export const createTemplate = async (req, res) => {
             },
         });
 
+        // 2. Fetch all templates to find the newly created one
         const fetchResponse = await axios.get(`${baseURL}?access_token=${accessToken}&limit=1000`);
         const templates = fetchResponse.data.data;
 
@@ -69,14 +72,31 @@ export const createTemplate = async (req, res) => {
             return res.status(404).json({ message: 'Template created but not found in fetch.' });
         }
 
+        // 3. Save template locally
         const newTemplateData = {
             ...created,
             createdAt: new Date(),
         };
 
-        const saved = await Template.create(newTemplateData);
+        const savedTemplate = await Template.create(newTemplateData);
 
-        res.status(201).json({ template: saved });
+        // 4. Create corresponding reply material
+        const replyMaterialData = {
+            name: savedTemplate.name,
+            replyType: 'Template',
+            content: {
+                text: null,
+                url: null,
+                materialId: savedTemplate._id,
+            },
+            createdAt: new Date(),
+            // Add any other necessary fields for reply material here
+        };
+
+        const savedReplyMaterial = await ReplyMaterial.create(replyMaterialData);
+
+        // 5. Return both saved template and reply material
+        res.status(201).json({ template: savedTemplate, replyMaterial: savedReplyMaterial });
     } catch (error) {
         console.error('Create Error:', error.message);
         res.status(500).json({
@@ -87,12 +107,13 @@ export const createTemplate = async (req, res) => {
 };
 
 
+
 // ------------------------- Edit Template -------------------------
 export const editTemplate = async (req, res) => {
     try {
         const { id } = req.params;
         const payload = req.body;
-      
+
 
         const response = await axios.post(`https://graph.facebook.com/v22.0/${id}`, payload, {
             headers: {
