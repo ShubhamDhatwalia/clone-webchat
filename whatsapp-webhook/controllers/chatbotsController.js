@@ -37,7 +37,7 @@ export const addChatbot = async (req, res) => {
 
 export const getChatbots = async (req, res) => {
     try {
-        const chatbots = await chatbots.find();
+        const chatbot = await chatbots.find();
 
         const existingReplyMaterials = await ReplyMaterial.find({ replyType: 'Chatbot' });
 
@@ -45,7 +45,7 @@ export const getChatbots = async (req, res) => {
             String(rm.content?.materialId?._id || rm.content?.materialId)
         );
 
-        const newReplyMaterials = chatbots
+        const newReplyMaterials = chatbot
             .filter(chatbot => !replyMaterialIds.includes(String(chatbot._id)))
             .map(chatbot => ({
                 name: chatbot.name,
@@ -63,7 +63,7 @@ export const getChatbots = async (req, res) => {
             await ReplyMaterial.insertMany(newReplyMaterials);
         }
 
-        res.status(200).json({ chatbots });
+        res.status(200).json({ chatbot });
     } catch (error) {
         console.error('Get Chatbots Error:', error.message);
         res.status(500).json({
