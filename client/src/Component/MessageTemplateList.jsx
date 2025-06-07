@@ -60,7 +60,6 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
   console.log(templates);
 
 
-  console.log(replyMaterial)
 
 
   useEffect(() => {
@@ -108,6 +107,10 @@ function MessageTemplateList({ onSuccess, onSelectTemplateId, selectedTemplateId
 
     const replyMaterialToDelete = replyMaterial
       .filter(reply => reply.content.materialId === template._id)
+
+      console.log(replyMaterialToDelete);
+      console.log(replyMaterial)
+
 
 
 

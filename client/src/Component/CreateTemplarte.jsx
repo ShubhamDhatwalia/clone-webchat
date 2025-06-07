@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { TextField, FormControl, InputLabel, Select, MenuItem, Button } from '@mui/material';
 import { createTemplate, editTemplate } from '../redux/templateThunks.js';
 import { useDispatch } from 'react-redux';
+import { fetchTemplates, } from '../redux/templateThunks.js';
 
 
 
@@ -581,11 +582,14 @@ function CreateTemplate({ onSuccess, templateData, onTemplateChange }) {
         try {
             if (templateData) {
                 await dispatch(editTemplate({ id: templateData.id, payload })).unwrap();
-               
+
             } else {
                 await dispatch(createTemplate(payload)).unwrap();
-                
+
             }
+
+            dispatch(fetchTemplates());
+            onTemplateChange({});
 
             onSuccess();
         } catch (error) {
