@@ -13,6 +13,9 @@ import contactRoutes from './routes/contactRoutes.js';
 import replyMaterialRoutes from './routes/replyMaterialRoutes.js';
 import keywordRoutes from './routes/keywordRoutes.js';
 import chatbotsRoutes from './routes/chatbotsRoutes.js';
+import { sendTextMessage } from './controllers/messageController/sendTextMessage.js';
+
+
 
 dotenv.config();
 
@@ -49,6 +52,33 @@ app.use('/', chatbotsRoutes);
 app.set('io', io);
 
 
+io.on('connection', (socket) => {
+  console.log(`🔌 New socket connection: ${socket.id}`);
+
+  socket.on('sendMessage', async (payload) => {
+    console.log('📨 Received sendMessage:', payload);
+
+    // ✅ Immediately emit to all clients
+    io.emit('newMessage', payload);
+
+    try {
+      // 📤 Call controller logic instead of duplicating it
+      await sendTextMessage(payload);
+      console.log('✅ WhatsApp message sent.');
+    } catch (error) {
+      console.error('❌ Error sending message:', error.response?.data || error.message);
+
+      socket.emit('messageError', {
+        to: payload.to,
+        error: error.response?.data || error.message
+      });
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log(`❌ Socket disconnected: ${socket.id}`);
+  });
+});
 
 
 const start = async () => {
