@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import UserProfileDetails from '../Chat/UserProfileDetails.jsx';
 import MediaModal from '../Chat/MediaModal.jsx';
 import VoiceRecorder from '../Chat/VoiceRecording.jsx';
+import { io } from 'socket.io-client';
 
 
 
@@ -25,6 +26,22 @@ function Chat() {
   const modalRef = useRef(null);
   const textareaRef = useRef(null);
 
+
+  const socket = io('https://clone-webchat.onrender.com/', { withCredentials: true });
+
+
+
+
+  useEffect(() => {
+
+    const currentUserPhone = selectedUser?.phone;
+
+    socket.emit("register", currentUserPhone);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, [selectedUser]);
 
 
   const tabs = [
