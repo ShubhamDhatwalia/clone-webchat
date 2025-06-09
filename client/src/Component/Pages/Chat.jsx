@@ -77,6 +77,7 @@ function Chat() {
       }
     };
 
+    console.log(payload)
 
     socket.emit('sendMessage', payload);
 

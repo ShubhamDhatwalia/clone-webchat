@@ -50,16 +50,6 @@ app.set('io', io);
 
 
 
-// Handle socket connection
-io.on('connection', (socket) => {
-  console.log(`🔌 New socket connection: ${socket.id}`);
-
-  socket.on('disconnect', () => {
-    console.log(`❌ Socket disconnected: ${socket.id}`);
-  });
-});
-
-
 
 const start = async () => {
   try {
