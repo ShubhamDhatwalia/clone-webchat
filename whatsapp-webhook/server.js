@@ -2,7 +2,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import http from 'http';
-import { Server as SocketIOServer } from 'socket.io'; 
+import { Server as SocketIOServer } from 'socket.io';
 import cors from 'cors';
 
 import connect from './database/connection.js';
@@ -17,7 +17,7 @@ import chatbotsRoutes from './routes/chatbotsRoutes.js';
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app); 
+const server = http.createServer(app);
 const io = new SocketIOServer(server, {
   cors: {
     origin: ['http://localhost:5173', 'https://clone-webchat.onrender.com'],
@@ -48,6 +48,8 @@ app.use('/', chatbotsRoutes);
 // Make `io` accessible in routes/middleware
 app.set('io', io);
 
+
+
 // Handle socket connection
 io.on('connection', (socket) => {
   console.log(`🔌 New socket connection: ${socket.id}`);
@@ -56,6 +58,8 @@ io.on('connection', (socket) => {
     console.log(`❌ Socket disconnected: ${socket.id}`);
   });
 });
+
+
 
 const start = async () => {
   try {

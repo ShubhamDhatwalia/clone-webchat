@@ -136,28 +136,28 @@ export async function sendSimpleTextMessage(to, text) {
 
 
 
-export async function sendTextMessages(req, res) {
-    console.log(req.body);
-    const payload = req.body;
+// export async function sendTextMessages(req, res) {
+//     console.log(req.body);
+//     const payload = req.body;
 
-    try {
-        const response = await axios.post(
-            `https://graph.facebook.com/v18.0/${process.env.PHONE_NUMBER_ID}/messages`,
-            payload,
-            {
-                headers: {
-                    Authorization: `Bearer ${process.env.WHATSAPP_API_TOKEN}`,
-                    "Content-Type": "application/json",
-                },
-            }
-        );
-        res.status(200).json(response.data);
-    } catch (error) {
-        console.error("Error sending message:", error.response?.data || error.message);
-        res.status(500).json({ error: error.response?.data || error.message });
-    }
+//     try {
+//         const response = await axios.post(
+//             `https://graph.facebook.com/v18.0/${process.env.PHONE_NUMBER_ID}/messages`,
+//             payload,
+//             {
+//                 headers: {
+//                     Authorization: `Bearer ${process.env.WHATSAPP_API_TOKEN}`,
+//                     "Content-Type": "application/json",
+//                 },
+//             }
+//         );
+//         res.status(200).json(response.data);
+//     } catch (error) {
+//         console.error("Error sending message:", error.response?.data || error.message);
+//         res.status(500).json({ error: error.response?.data || error.message });
+//     }
 
-}
+// }
 
 
 

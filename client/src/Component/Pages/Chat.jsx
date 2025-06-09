@@ -44,6 +44,51 @@ function Chat() {
   }, [selectedUser]);
 
 
+
+
+
+  useEffect(() => {
+    socket.on('newMessage', (data) => {
+      console.log('📥 New message received from socket:', data);
+
+    });
+
+    return () => {
+      socket.off('newMessage');
+    };
+  }, [selectedUser]);
+
+
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMessage('');
+    if (message.trim() === '') return;
+
+    const payload = {
+      messaging_product: "whatsapp",
+      recipient_type: "individual",
+      to: selectedUser.phone,
+      type: "text",
+      text: {
+        preview_url: true,
+        body: message,
+      }
+    };
+
+
+    socket.emit('sendMessage', payload);
+
+  }
+
+
+
+
+
+
+
+
   const tabs = [
     { id: 'chats', label: 'Chats', icon: <FaComments /> },
     { id: 'calls', label: 'Calls', icon: <FaPhoneAlt /> },
@@ -61,7 +106,6 @@ function Chat() {
 
     setMessage(newText);
 
-    // Wait for state update and then move cursor
     setTimeout(() => {
       input.focus();
       const cursorPosition = start + emoji.length;
@@ -112,32 +156,6 @@ function Chat() {
   }
 
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setMessage('');
-    if (message.trim() === '') return;
-
-    const payload = {
-      messaging_product: "whatsapp",
-      recipient_type: "individual",
-      to: selectedUser.phone,
-      type: "text",
-      text: {
-        preview_url: true,
-        body: message,
-      }
-    };
-
-
-
-    try {
-      await axios.post(`/sendTextMessage`, payload);
-      toast.success("Message sent successfully");
-    } catch (error) {
-      console.error(error);
-    }
-
-  }
 
 
 
