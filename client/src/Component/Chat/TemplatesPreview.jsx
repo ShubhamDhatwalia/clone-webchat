@@ -22,7 +22,7 @@ function TemplatesPreview({ template, onClose, onBack, selectedUser }) {
 
 
     useEffect(() => {
-        socket.on('newMessage', (data) => {
+        socket.on('newTemplateMessage', (data) => {
             console.log('New message received from socket:', data);
 
         });

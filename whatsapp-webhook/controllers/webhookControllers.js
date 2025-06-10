@@ -233,7 +233,6 @@ export async function handleWebhook(req, res) {
         const messageType = message.type;
         const senderName = contact?.profile?.name || "Unknown";
 
-        console.log('Sender Name:', senderName);
 
         if (messageType === 'text') {
             const textContent = message.text.body;

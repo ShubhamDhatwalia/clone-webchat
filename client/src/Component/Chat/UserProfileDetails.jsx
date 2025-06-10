@@ -1,7 +1,7 @@
 import React from 'react'
 import profile_icon from '../../assets/profile_icon.svg'
-import Tags from './Tags';
-import Notes from './Notes';
+import Tags from '../Contact/Tags';
+import Notes from '../Contact/Notes';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 
