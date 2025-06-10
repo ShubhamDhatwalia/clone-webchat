@@ -17,6 +17,7 @@ export async function sendTextMessage(payload) {
 
 
 export async function sendTemplateMessages(req, res) {
+  console.log(req.body);
   const { to, template } = req.body;
 
   const url = `https://graph.facebook.com/v22.0/${process.env.PHONE_NUMBER_ID}/messages`;

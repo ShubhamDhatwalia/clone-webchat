@@ -16,6 +16,21 @@ function TemplatesPreview({ template, onClose, onBack, selectedUser }) {
     // const [template, setTemplate] = useState(null);
     const [variableInputs, setVariableInputs] = useState({});
 
+    const socket = io('https://clone-webchat.onrender.com/', { withCredentials: true });
+
+
+
+
+    useEffect(() => {
+        socket.on('newMessage', (data) => {
+            console.log('New message received from socket:', data);
+
+        });
+
+        return () => {
+            socket.off('newMessage');
+        };
+    }, [selectedUser]);
 
 
 
@@ -214,7 +229,7 @@ function TemplatesPreview({ template, onClose, onBack, selectedUser }) {
         }
 
         try {
-            await axios.post(`/sendTemplateMessages`, payload);
+            // await axios.post(`/sendTemplateMessages`, payload);
             socket.emit('sendTemplateMessage', payload);
 
             toast.success("Template sent successfully");
