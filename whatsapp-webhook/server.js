@@ -48,7 +48,6 @@ app.use('/', replyMaterialRoutes);
 app.use('/', keywordRoutes);
 app.use('/', chatbotsRoutes);
 
-// Make `io` accessible in routes/middleware
 app.set('io', io);
 
 
@@ -58,15 +57,14 @@ io.on('connection', (socket) => {
   socket.on('sendMessage', async (payload) => {
     console.log('📨 Received sendMessage:', payload);
 
-    // ✅ Immediately emit to all clients
     io.emit('newMessage', payload);
 
     try {
-      // 📤 Call controller logic instead of duplicating it
+
       await sendTextMessage(payload);
-      console.log('✅ WhatsApp message sent.');
+      console.log(' WhatsApp message sent.');
     } catch (error) {
-      console.error('❌ Error sending message:', error.response?.data || error.message);
+      console.error(' Error sending message:', error.response?.data || error.message);
 
       socket.emit('messageError', {
         to: payload.to,
@@ -76,7 +74,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log(`❌ Socket disconnected: ${socket.id}`);
+    console.log(` Socket disconnected: ${socket.id}`);
   });
 });
 
@@ -85,10 +83,10 @@ const start = async () => {
   try {
     await connect(process.env.ATLAS_URI);
     server.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
+      console.log(` Server running on http://localhost:${PORT}`);
     });
   } catch (err) {
-    console.error('❌ Failed to start server:', err.message);
+    console.error(' Failed to start server:', err.message);
   }
 };
 
