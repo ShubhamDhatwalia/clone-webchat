@@ -1,11 +1,11 @@
 import { Router } from 'express';
 const router = Router();
-import { verifyWebhook, handleWebhook, sendTemplateMessages} from '../controllers/webhookControllers.js';
+import { verifyWebhook, handleWebhook} from '../controllers/webhookControllers.js';
 
 
 router.get('/webhook', verifyWebhook);
 router.post('/webhook', handleWebhook);
-router.post('/sendTemplateMessages', sendTemplateMessages);
+// router.post('/sendTemplateMessages', sendTemplateMessages);
 // router.post('/sendTextMessage', sendTextMessages);
 
 

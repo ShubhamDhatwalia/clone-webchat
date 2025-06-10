@@ -32,24 +32,11 @@ function Chat() {
 
 
 
-  useEffect(() => {
-
-    const currentUserPhone = selectedUser?.phone;
-
-    socket.emit("register", currentUserPhone);
-
-    return () => {
-      socket.disconnect();
-    };
-  }, [selectedUser]);
-
-
-
 
 
   useEffect(() => {
     socket.on('newMessage', (data) => {
-      console.log('📥 New message received from socket:', data);
+      console.log('New message received from socket:', data);
 
     });
 

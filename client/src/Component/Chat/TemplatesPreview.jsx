@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { TextField } from '@mui/material';
+import { io } from 'socket.io-client';
 
 
 
@@ -214,6 +215,8 @@ function TemplatesPreview({ template, onClose, onBack, selectedUser }) {
 
         try {
             await axios.post(`/sendTemplateMessages`, payload);
+            socket.emit('sendTemplateMessage', payload);
+
             toast.success("Template sent successfully");
         } catch (error) {
             console.error(error);
