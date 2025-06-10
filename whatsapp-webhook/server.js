@@ -57,7 +57,6 @@ io.on('connection', (socket) => {
   socket.on('sendTextMessage', async (payload) => {
     console.log('📨 Received sendMessage:', payload);
 
-    io.emit('newMessage', payload);
 
     try {
 
