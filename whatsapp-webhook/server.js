@@ -61,8 +61,10 @@ io.on('connection', (socket) => {
 
     try {
 
-      await sendTextMessage(payload);
-      console.log(' WhatsApp message sent.');
+      const res = await sendTextMessage(payload);
+
+
+      console.log(' WhatsApp message sent: ' + JSON.stringify(res.data));
     } catch (error) {
       console.error(' Error sending message:', error.response?.data || error.message);
 
