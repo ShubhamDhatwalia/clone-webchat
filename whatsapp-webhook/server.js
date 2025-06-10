@@ -54,7 +54,7 @@ app.set('io', io);
 io.on('connection', (socket) => {
   console.log(`🔌 New socket connection: ${socket.id}`);
 
-  socket.on('sendMessage', async (payload) => {
+  socket.on('sendTextMessage', async (payload) => {
     console.log('📨 Received sendMessage:', payload);
 
     io.emit('newMessage', payload);
