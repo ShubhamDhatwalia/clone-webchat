@@ -5,6 +5,6 @@ import { fetchChat } from '../controllers/chatController.js';
 
 
 
-router.get('/chat:phone', fetchChat);
+router.get('/chat/:phone', fetchChat);
 
 export default router
