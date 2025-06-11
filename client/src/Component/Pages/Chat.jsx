@@ -68,6 +68,8 @@ function Chat() {
   useEffect(() => {
     socket.on('newMessage', (data) => {
       console.log('New message received from socket:', data);
+      setShowChat((prev) => [...prev, data]);
+      dispatch(fetchChat({ phone: selectedUser.phone }))
 
     });
 
@@ -190,6 +192,11 @@ function Chat() {
   }
 
 
+  const fetchImage = (mediaId) => {
+
+  }
+
+
 
 
   return (
@@ -260,6 +267,7 @@ function Chat() {
                 <div className="p-4 text-gray-700">
                   {showChat.length > 0 ? (
                     showChat.map((chat) => (
+                      console.log(chat),
 
                       <div key={chat.id} className="mb-4">
                         <div
@@ -270,7 +278,25 @@ function Chat() {
                             className={`px-2 flex items-center gap-4  rounded-lg max-w-xs ${chat.messageType === "received" ? "bg-green-50" : "bg-gray-50"}`}
                           >
 
-                            <div className="  text-black font-semibold">{chat.message?.text?.body}</div>
+                            {chat.message?.type === "text" && (
+                              <div className="text-black font-semibold">{chat.message?.text?.body}</div>
+                            )}
+
+
+                            {chat.message?.type === "image" && (
+
+
+
+                              <div className="flex flex-col items-center">
+
+
+                                <img
+                                  src=""
+                                  alt="Image"
+                                  className="max-w-[200px] h-auto mt-2"
+                                />
+                              </div>
+                            )}
 
 
                             <div className=" text-gray-500  text-right text-[10px] font-semibold flex items-end justify-end mt-6">
