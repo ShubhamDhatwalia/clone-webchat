@@ -228,39 +228,39 @@ export async function handleWebhook(req, res) {
     if (message) {
         console.log('New message received:', JSON.stringify(message, null, 2));
 
-        const senderId = message.from;
-        const messageId = message.id;
-        const messageType = message.type;
-        const senderName = contact?.profile?.name || "Unknown";
+        // const senderId = message.from;
+        // const messageId = message.id;
+        // const messageType = message.type;
+        // const senderName = contact?.profile?.name || "Unknown";
 
 
-        if (messageType === 'text') {
-            const textContent = message.text.body;
-            if (textContent.toLowerCase() === 'hey' || textContent.toLowerCase() === 'hi') {
-                console.log("keyword mattched")
-                await sendTemplateMessage(senderId, testing_chatbot);
-            }
+        //     if (messageType === 'text') {
+        //         const textContent = message.text.body;
+        //         if (textContent.toLowerCase() === 'hey' || textContent.toLowerCase() === 'hi') {
+        //             console.log("keyword mattched")
+        //             await sendTemplateMessage(senderId, testing_chatbot);
+        //         }
 
 
-            console.log(`Received text message: ${textContent}`);
-        } else if (messageType === 'audio') {
-            const audioId = message.audio.id;
-            console.log(`Received audio message with ID: ${audioId}`);
-            const mediaUrl = await getMediaUrl(audioId);
-            if (mediaUrl) {
-                console.log(`Audio message URL: ${mediaUrl}`);
-            }
-        } else if (messageType === 'button') {
+        //         console.log(`Received text message: ${textContent}`);
+        //     } else if (messageType === 'audio') {
+        //         const audioId = message.audio.id;
+        //         console.log(`Received audio message with ID: ${audioId}`);
+        //         const mediaUrl = await getMediaUrl(audioId);
+        //         if (mediaUrl) {
+        //             console.log(`Audio message URL: ${mediaUrl}`);
+        //         }
+        //     } else if (messageType === 'button') {
 
-            const textContent = message.button.text;
+        //         const textContent = message.button.text;
 
-            if (textContent.toLowerCase() === 'sure') {
-                await sendSimpleTextMessage(senderId, "We will reach you soon on Call");
-            }
+        //         if (textContent.toLowerCase() === 'sure') {
+        //             await sendSimpleTextMessage(senderId, "We will reach you soon on Call");
+        //         }
 
-        } else {
-            console.log(`Received unsupported message type: ${messageType}`);
-        }
+        //     } else {
+        //         console.log(`Received unsupported message type: ${messageType}`);
+        //     }
     }
 
     if (statusUpdate) {
