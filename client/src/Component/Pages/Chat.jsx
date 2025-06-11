@@ -23,6 +23,7 @@ function Chat() {
   const [showMediaModal, setShowMediaModal] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [recording, setRecording] = useState(false);
+  const [showChat, setShowChat] = useState([]);
 
   const modalRef = useRef(null);
   const textareaRef = useRef(null);
@@ -33,16 +34,23 @@ function Chat() {
 
 
   const chats = useSelector((state) => state.chat.chats)
+
   console.log(chats)
+  console.log(selectedUser)
 
 
   useEffect(() => {
-    if (chats.length == 0) {
+    setShowChat(chats);
+  }, [chats]);
+
+ 
+  useEffect(() => {
+
       if (selectedUser) {
         console.log(selectedUser.phone)
         dispatch(fetchChat({ phone: selectedUser.phone }))
       }
-    }
+    
 
   }, [selectedUser])
 
@@ -235,12 +243,49 @@ function Chat() {
                   <img src={profile_icon} alt="" />
                   <div>
                     <h2 className='text-md font-bold'>{selectedUser.name}</h2>
-                    {/* <p className='text-gray-500 text-sm font-semibold'> {selectedUser.name}</p> */}
                   </div>
                 </div>
 
-                {/* Chat messages would go here */}
-                <div className="p-4 text-gray-700">Start chatting with {selectedUser.name}...</div>
+
+
+                {/* chat messages */}
+
+                <div className="p-4 text-gray-700">
+                  {showChat.length > 0 ? (
+                    showChat.map((chat) => (
+                     
+                      <div key={chat.id} className="mb-4">
+                        <div
+                          className={`flex ${chat.messageType === "received" ? "justify-start" : "justify-end"}`}
+                        >
+                          {/* Chat message container */}
+                          <div
+                            className={`px-2 flex items-center gap-4  rounded-lg max-w-xs ${chat.messageType === "received" ? "bg-green-50" : "bg-gray-50"}`}
+                          >
+                           
+                            <div className="  text-black font-semibold">{chat.message?.text?.body}</div>
+
+                            
+                            <div className=" text-gray-500  text-right text-[10px] font-semibold flex items-end justify-end mt-6">
+                              {chat.message?.timestamp &&
+                                new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
+                                  hour: 'numeric',
+                                  minute: 'numeric',
+                                  hour12: true,
+                                })
+                              }
+                            </div>
+
+
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div>Start chatting with {selectedUser.name}...</div>
+                  )}
+                </div>
+
 
 
                 {/* Footer */}

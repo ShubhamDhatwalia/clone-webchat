@@ -8,7 +8,7 @@ export const fetchChat = async (req, res) => {
 
         console.log('Sanitized phone:', phone);
 
-        const chats = await chat.find({ phone: phone });
+        const chats = await chat.find({ "message.from": phone });
         res.json(chats);
 
     } catch (err) {
