@@ -39,7 +39,7 @@ app.use(cors({
 
 app.use(express.json());
 
-// Attach routes
+
 app.use('/', webhookRoutes);
 app.use('/', templateRoutes);
 app.use('/', campaignRoutes);

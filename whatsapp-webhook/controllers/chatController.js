@@ -4,6 +4,7 @@ import chat from "../models/chat.js";
 export const fetchChat = async (req, res) => {
     try {
         const phone = req.params.phone;
+        console.log(phone);
         const chat = await chat.find({ phone: phone });
         res.json(chat);
     } catch (err) {

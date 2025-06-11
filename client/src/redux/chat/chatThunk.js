@@ -5,6 +5,7 @@ import axios from 'axios';
 
 export const fetchChat = createAsyncThunk('chat/fetchChat', async ({ phone }, { rejectWithValue }) => {
 
+    console.log(phone);
     try {
         const response = await axios.get(`/chat/${phone}`);
         return response.data;

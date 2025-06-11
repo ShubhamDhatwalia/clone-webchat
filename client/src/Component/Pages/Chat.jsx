@@ -10,7 +10,8 @@ import UserProfileDetails from '../Chat/UserProfileDetails.jsx';
 import MediaModal from '../Chat/MediaModal.jsx';
 import VoiceRecorder from '../Chat/VoiceRecording.jsx';
 import { io } from 'socket.io-client';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchChat } from '../../redux/chat/chatThunk.js';
 
 
 function Chat() {
@@ -25,10 +26,25 @@ function Chat() {
 
   const modalRef = useRef(null);
   const textareaRef = useRef(null);
+  const dispatch = useDispatch();
 
 
   const socket = io('https://clone-webchat.onrender.com/', { withCredentials: true });
 
+
+  const chats = useSelector((state) => state.chat.chats)
+  console.log(chats)
+
+
+  useEffect(() => {
+    if (chats.length == 0) {
+      if (selectedUser) {
+        console.log(selectedUser.phone)
+        dispatch(fetchChat({ phone: selectedUser.phone }))
+      }
+    }
+
+  }, [selectedUser])
 
 
 
