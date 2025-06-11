@@ -240,7 +240,7 @@ export async function handleWebhook(req, res) {
         try {
             await chatDoc.save();
 
-            io.emit('newMessage', updatedPayload);
+            io.emit('newMessage', chatDoc);
 
             console.log('Message stored successfully.');
         } catch (err) {
