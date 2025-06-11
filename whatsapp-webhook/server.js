@@ -14,7 +14,7 @@ import replyMaterialRoutes from './routes/replyMaterialRoutes.js';
 import keywordRoutes from './routes/keywordRoutes.js';
 import chatbotsRoutes from './routes/chatbotsRoutes.js';
 import { sendTextMessage, sendTemplateMessages } from './controllers/messageController/sendTextMessage.js';
-
+import chatRoutes from './routes/chatRoutes.js'
 
 
 dotenv.config();
@@ -47,6 +47,8 @@ app.use('/', contactRoutes);
 app.use('/', replyMaterialRoutes);
 app.use('/', keywordRoutes);
 app.use('/', chatbotsRoutes);
+app.use('/', chatRoutes);
+
 
 app.set('io', io);
 
@@ -62,13 +64,13 @@ io.on('connection', (socket) => {
 
       const res = await sendTextMessage(payload);
 
-    
+
       const messageId = res.data.messages.map(m => m.id);
 
-    
+
       const updatedPayload = {
         ...payload,
-        messageId: messageId, 
+        messageId: messageId,
       };
 
       io.emit('newMessage', updatedPayload);
