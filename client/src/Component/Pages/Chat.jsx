@@ -33,7 +33,7 @@ function Chat() {
   const socket = io('https://clone-webchat.onrender.com/', { withCredentials: true });
 
 
-  const chats = useSelector((state) => state.chat.chats)
+  const chats = useSelector((state) => state.chat.chats);
 
   console.log(chats)
   console.log(selectedUser)
@@ -43,14 +43,21 @@ function Chat() {
     setShowChat(chats);
   }, [chats]);
 
- 
+
+  useEffect(() => {
+    setShowChat([]);
+
+  }, [selectedUser])
+
+
+
   useEffect(() => {
 
-      if (selectedUser) {
-        console.log(selectedUser.phone)
-        dispatch(fetchChat({ phone: selectedUser.phone }))
-      }
-    
+    if (selectedUser) {
+      console.log(selectedUser.phone)
+      dispatch(fetchChat({ phone: selectedUser.phone }))
+    }
+
 
   }, [selectedUser])
 
@@ -253,7 +260,7 @@ function Chat() {
                 <div className="p-4 text-gray-700">
                   {showChat.length > 0 ? (
                     showChat.map((chat) => (
-                     
+
                       <div key={chat.id} className="mb-4">
                         <div
                           className={`flex ${chat.messageType === "received" ? "justify-start" : "justify-end"}`}
@@ -262,10 +269,10 @@ function Chat() {
                           <div
                             className={`px-2 flex items-center gap-4  rounded-lg max-w-xs ${chat.messageType === "received" ? "bg-green-50" : "bg-gray-50"}`}
                           >
-                           
+
                             <div className="  text-black font-semibold">{chat.message?.text?.body}</div>
 
-                            
+
                             <div className=" text-gray-500  text-right text-[10px] font-semibold flex items-end justify-end mt-6">
                               {chat.message?.timestamp &&
                                 new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {

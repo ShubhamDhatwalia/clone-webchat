@@ -228,13 +228,20 @@ export async function handleWebhook(req, res) {
     if (message) {
         console.log('New message received:', JSON.stringify(message, null, 2));
 
+
+
+        const io = req.app.get('io');
+
         const chatDoc = new chat({
-            message: message,        
-            messageType: 'received'   
+            message: message,
+            messageType: 'received'
         });
 
         try {
             await chatDoc.save();
+
+            io.emit('newMessage', updatedPayload);
+
             console.log('Message stored successfully.');
         } catch (err) {
             console.error('Error saving message:', err);
