@@ -221,9 +221,7 @@ const fetchImage = async (mediaId) => {
 
 
     const url = response.data.url;
-    console.log(url);
-
-
+    
 
     const imageRes = await axios.get(url, {
         headers: {
@@ -248,7 +246,7 @@ const fetchImage = async (mediaId) => {
 
 export async function handleWebhook(req, res) {
     const body = req.body;
-    console.log(JSON.stringify(body) + " body ::: ");
+    
 
     if (!body.entry || !body.entry[0].changes) {
         console.error('Invalid webhook structure:', body);
@@ -271,8 +269,6 @@ export async function handleWebhook(req, res) {
             try {
 
                 const { base64, contentType } = await fetchImage(mediaId);
-                console.log(base64);
-                console.log(contentType);
                 message.image.url = `data:${contentType};base64,${base64}`;
 
             } catch (error) {
@@ -285,8 +281,7 @@ export async function handleWebhook(req, res) {
             const mediaId = message.video.id
             try {
                 const { base64, contentType } = await fetchImage(mediaId);
-                console.log(base64);
-                console.log(contentType);
+               
                 message.video.url = `data:${contentType};base64,${base64}`;
             } catch (error) {
                 console.error('Error fetching video from WhatsApp:', error);
