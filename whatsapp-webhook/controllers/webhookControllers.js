@@ -213,6 +213,14 @@ async function getMediaUrl(mediaId) {
 const fetchImage = async (mediaId) => {
     console.log(mediaId);
 
+    const response = await axios.get(`https://graph.facebook.com/v15.0/${mediaId}`, {
+        headers: {
+            'Authorization': `Bearer ${process.env.WHATSAPP_API_TOKEN}`
+        }
+    })
+    console.log(response.data);
+
+
 }
 
 
