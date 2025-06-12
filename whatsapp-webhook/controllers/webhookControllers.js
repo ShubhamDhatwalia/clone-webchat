@@ -218,7 +218,6 @@ const fetchImage = async (mediaId) => {
             'Authorization': `Bearer ${process.env.WHATSAPP_API_TOKEN}`
         }
     })
-    const url = response.data.url;
 
 
     const image = await axios.get(url, {
@@ -230,7 +229,8 @@ const fetchImage = async (mediaId) => {
 
 
     const base64Image = Buffer.from(image.data).toString('base64')
-    console.log(base64Image);
+    
+    return base64Image;
 
 }
 
@@ -258,8 +258,10 @@ export async function handleWebhook(req, res) {
 
         if (message.type === 'image') {
             const mediaId = message.image.id;
-            console.log(`Received image message with ID: ${mediaId}`);
-            const mediaUrl = await fetchImage(mediaId);
+            const base64Image = await fetchImage(mediaId);
+            console.log(base64Image);
+
+
         }
 
 
