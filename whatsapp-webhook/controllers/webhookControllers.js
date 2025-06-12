@@ -220,17 +220,17 @@ const fetchImage = async (mediaId) => {
     })
 
 
-    const image = await axios.get(url, {
+    const imageRes = await axios.get(url, {
         headers: {
             'Authorization': `Bearer ${process.env.WHATSAPP_API_TOKEN}`
         },
-         responseType: 'arraybuffer'
+        responseType: 'arraybuffer'
     });
+    return {
+        base64: Buffer.from(imageRes.data).toString('base64'),
+        contentType: imageRes.headers['content-type'],
+    };
 
-
-    const base64Image = Buffer.from(image.data).toString('base64')
-    
-    return base64Image;
 
 }
 
@@ -252,29 +252,31 @@ export async function handleWebhook(req, res) {
     if (message) {
         console.log('New message received:', JSON.stringify(message, null, 2));
 
-
-
         const io = req.app.get('io');
 
-        if (message.type === 'image') {
+        if (message.type === 'image' && message.image?.id) {
             const mediaId = message.image.id;
-            const base64Image = await fetchImage(mediaId);
-            console.log(base64Image);
 
+            try {
 
+                const { base64, contentType } = await fetchImage(mediaId);
+                console.log(base64);
+                console.log(contentType);
+                message.image.url = `data:${contentType};base64,${base64}`;
+
+            } catch (error) {
+                console.error('Error fetching image from WhatsApp:', error);
+            }
         }
-
 
         const chatDoc = new chat({
             message: message,
-            messageType: 'received'
+            messageType: 'received',
         });
 
         try {
             await chatDoc.save();
-
             io.emit('newMessage', chatDoc);
-
             console.log('Message stored successfully.');
         } catch (err) {
             console.error('Error saving message:', err);

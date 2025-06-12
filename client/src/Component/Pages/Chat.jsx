@@ -28,7 +28,7 @@ function Chat() {
   const modalRef = useRef(null);
   const textareaRef = useRef(null);
   const dispatch = useDispatch();
-
+  const messagesEndRef = useRef(null);
 
   const socket = io('https://clone-webchat.onrender.com/', { withCredentials: true });
 
@@ -61,6 +61,11 @@ function Chat() {
 
   }, [selectedUser])
 
+
+  useEffect(() => {
+
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [showChat]);
 
 
 
@@ -251,7 +256,7 @@ function Chat() {
         <div className='flex-[50%] '>
           <div className='bg-[url("./assets/whatsapp-bg.jpg")] bg-no-repeat bg-center bg-cover opacity-70 w-full h-full relative'>
             {selectedUser ? (
-              <>
+              <div className='flex flex-col  h-full' >
                 {/* Chat header */}
                 <div className='bg-gray-100 px-[20px] py-[10px] flex items-center gap-[10px]'>
                   <img src={profile_icon} alt="" />
@@ -264,52 +269,42 @@ function Chat() {
 
                 {/* chat messages */}
 
-                <div className="p-4 text-gray-700">
+                <div className="p-4 text-gray-700 flex-grow overflow-y-scroll max-h-[calc(100vh-176px)]">
                   {showChat.length > 0 ? (
                     showChat.map((chat) => (
-                      console.log(chat),
-
                       <div key={chat.id} className="mb-4">
                         <div
-                          className={`flex ${chat.messageType === "received" ? "justify-start" : "justify-end"}`}
+                          className={`flex ${chat.messageType === 'received' ? 'justify-start' : 'justify-end'
+                            }`}
                         >
-                          {/* Chat message container */}
                           <div
-                            className={`px-2 flex items-center gap-4  rounded-lg max-w-xs ${chat.messageType === "received" ? "bg-green-50" : "bg-gray-50"}`}
+                            className={`px-2 flex items-center gap-4 rounded-lg max-w-xs ${chat.messageType === 'received' ? 'bg-green-50' : 'bg-gray-50'
+                              }`}
                           >
-
-                            {chat.message?.type === "text" && (
-                              <div className="text-black font-semibold">{chat.message?.text?.body}</div>
+                            {chat.message?.type === 'text' && (
+                              <div className="text-black font-semibold">
+                                {chat.message?.text?.body}
+                              </div>
                             )}
 
-
-                            {chat.message?.type === "image" && (
-
-
-
+                            {chat.message?.type === 'image' && chat.message?.image?.url && (
                               <div className="flex flex-col items-center">
-
-
                                 <img
                                   src=""
                                   alt="Image"
-                                  className="max-w-[200px] h-auto mt-2"
+                                  className="max-w-[200px] h-auto mt-2 rounded"
                                 />
                               </div>
                             )}
 
-
-                            <div className=" text-gray-500  text-right text-[10px] font-semibold flex items-end justify-end mt-6">
+                            <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end mt-6">
                               {chat.message?.timestamp &&
                                 new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
                                   hour: 'numeric',
                                   minute: 'numeric',
                                   hour12: true,
-                                })
-                              }
+                                })}
                             </div>
-
-
                           </div>
                         </div>
                       </div>
@@ -317,12 +312,15 @@ function Chat() {
                   ) : (
                     <div>Start chatting with {selectedUser.name}...</div>
                   )}
+
+                  {/* 👇 This empty div will be scrolled into view */}
+                  <div ref={messagesEndRef} />
                 </div>
 
 
 
                 {/* Footer */}
-                <div className='chat-footer flex items-center gap-[20px] bg-white px-[20px] py-[10px] absolute bottom-0 w-full'>
+                <div className='chat-footer flex items-center gap-[20px] bg-white px-[20px] py-[10px]  w-full'>
                   <div className='flex items-center gap-[15px]'>
 
 
@@ -387,7 +385,7 @@ function Chat() {
                     </div>
                   )}
                 </div>
-              </>
+              </div>
             ) : (
               <div className='flex items-center justify-center h-full text-gray-600 font-medium'>
                 Click on a user to start chatting.
