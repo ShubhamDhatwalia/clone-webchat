@@ -210,6 +210,11 @@ async function getMediaUrl(mediaId) {
 }
 
 
+const fetchImage = async (mediaId) => {
+    console.log(mediaId);
+
+}
+
 
 export async function handleWebhook(req, res) {
     const body = req.body;
@@ -231,6 +236,13 @@ export async function handleWebhook(req, res) {
 
 
         const io = req.app.get('io');
+
+        if (message.type === 'image') {
+            const mediaId = message.image.id;
+            console.log(`Received image message with ID: ${mediaId}`);
+            const mediaUrl = await fetchImage(mediaId);
+        }
+
 
         const chatDoc = new chat({
             message: message,
