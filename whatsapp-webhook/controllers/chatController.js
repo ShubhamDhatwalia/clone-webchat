@@ -1,23 +1,26 @@
 import chat from "../models/chat.js";
-
 export const fetchChat = async (req, res) => {
     try {
         const rawPhone = req.params.phone;
         const phone = rawPhone.replace(/^\+/, '');
 
-        console.log('Sanitized phone:', phone);
+        const limit = parseInt(req.query.limit) || 20;
+        const skip = parseInt(req.query.skip) || 0;
 
         const chats = await chat
             .find({ "message.from": phone })
-            .sort({ "message.timestamp": 1 })
-            .lean(); 
+            .sort({ "message.timestamp": -1 }) 
+            .skip(skip)
+            .limit(limit)
+            .lean();
 
-        res.json(chats);
+        res.json(chats.reverse()); 
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: err.message });
     }
 };
+
 
 
 export const fetchAllChats = async (req, res) => {

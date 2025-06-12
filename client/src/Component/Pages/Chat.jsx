@@ -25,6 +25,10 @@ function Chat() {
   const [recording, setRecording] = useState(false);
   const [showChat, setShowChat] = useState([]);
 
+  const [page, setPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+
+
   const modalRef = useRef(null);
   const textareaRef = useRef(null);
   const dispatch = useDispatch();
@@ -37,31 +41,39 @@ function Chat() {
 
 
 
-  useEffect(() => {
-    setShowChat(chats);
-  }, [chats]);
+  // useEffect(() => {
+  //   setShowChat(chats);
+  // }, [chats]);
 
 
   useEffect(() => {
-    setShowChat([]);
-
-  }, [selectedUser])
-
-
-
-  useEffect(() => {
-
     if (selectedUser) {
-      dispatch(fetchChat({ phone: selectedUser.phone }))
+      setShowChat([]);
+      setPage(0);
+      setHasMore(true);
+      loadChats(0);
     }
+  }, [selectedUser]);
+
+  const loadChats = async (currentPage) => {
+    try {
+      const res = await dispatch(fetchChat({ phone: selectedUser.phone, page: currentPage }));
+      if (res.data.length === 0) {
+        setHasMore(false);
+      } else {
+        setShowChat((prev) => [...res.data, ...prev]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
 
-  }, [selectedUser])
 
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      messagesEndRef.current?.scrollIntoView();
     }, 50);
 
     return () => clearTimeout(timeout);
