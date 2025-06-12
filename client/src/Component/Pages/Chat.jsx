@@ -27,6 +27,7 @@ function Chat() {
 
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const chatContainerRef = useRef(null);
 
 
   const modalRef = useRef(null);
@@ -54,6 +55,35 @@ function Chat() {
       loadChats(0);
     }
   }, [selectedUser]);
+
+
+  const handleScroll = () => {
+    const container = chatContainerRef.current;
+    if (!container) return;
+
+    if (container.scrollTop < 100 && hasMore) {
+      loadMoreChats();
+    }
+  };
+
+
+  const loadMoreChats = () => {
+    const nextPage = page + 1;
+
+    const container = chatContainerRef.current;
+    const prevScrollHeight = container?.scrollHeight;
+
+    loadChats(nextPage).then(() => {
+      setPage(nextPage);
+
+      setTimeout(() => {
+        const newScrollHeight = container?.scrollHeight;
+        if (container) {
+          container.scrollTop = newScrollHeight - prevScrollHeight + container.scrollTop;
+        }
+      }, 0);
+    });
+  };
 
 
 
@@ -209,10 +239,6 @@ function Chat() {
   }
 
 
-  const fetchImage = (mediaId) => {
-
-  }
-
 
 
 
@@ -281,7 +307,7 @@ function Chat() {
 
                 {/* chat messages */}
 
-                <div className="p-4 px-6 text-gray-700 flex-grow overflow-y-scroll max-h-[calc(100vh-176px)]">
+                <div className="p-4 px-6 text-gray-700 flex-grow overflow-y-scroll max-h-[calc(100vh-176px)] " ref={chatContainerRef} onScroll={handleScroll}>
                   {showChat.length > 0 ? (
                     showChat.map((chat) => (
                       <div key={chat.id} className="mb-4">

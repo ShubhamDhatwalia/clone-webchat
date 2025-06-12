@@ -16,7 +16,7 @@ import axios from 'axios';
 //     }
 
 // })
-export const fetchChat = createAsyncThunk('chat/fetchChat', async ({ phone, page = 0, limit = 20 }, { rejectWithValue }) => {
+export const fetchChat = createAsyncThunk('chat/fetchChat', async ({ phone, page = 0, limit = 15 }, { rejectWithValue }) => {
         try {
             const res = await axios.get(`/chat/${phone}?skip=${page * limit}&limit=${limit}`);
             return res.data;
