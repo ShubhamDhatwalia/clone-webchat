@@ -232,12 +232,9 @@ const fetchImage = async (mediaId) => {
         responseType: 'arraybuffer'
     });
 
-    // 👉 Check content type before converting
     const contentType = imageRes.headers['content-type'];
 
-    if (!contentType.startsWith('image/')) {
-        throw new Error(`Invalid content type: ${contentType}`);
-    }
+
 
     return {
         base64: Buffer.from(imageRes.data).toString('base64'),
