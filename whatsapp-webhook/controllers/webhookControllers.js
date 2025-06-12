@@ -2,6 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 import axios from 'axios';
 import chat from '../models/chat.js';
+import Contacts from "../models/contacts.js";
+
 
 
 const testing_chatbot = {
@@ -221,7 +223,7 @@ const fetchImage = async (mediaId) => {
 
 
     const url = response.data.url;
-    
+
 
     const imageRes = await axios.get(url, {
         headers: {
@@ -246,7 +248,9 @@ const fetchImage = async (mediaId) => {
 
 export async function handleWebhook(req, res) {
     const body = req.body;
-    
+    console.log('Received webhook:', JSON.stringify(body, null, 2));
+
+
 
     if (!body.entry || !body.entry[0].changes) {
         console.error('Invalid webhook structure:', body);
@@ -281,76 +285,86 @@ export async function handleWebhook(req, res) {
             const mediaId = message.video.id
             try {
                 const { base64, contentType } = await fetchImage(mediaId);
-               
+
                 message.video.url = `data:${contentType};base64,${base64}`;
             } catch (error) {
                 console.error('Error fetching video from WhatsApp:', error);
             }
         }
-    
 
 
-    const chatDoc = new chat({
-        message: message,
-        messageType: 'received',
-    });
+        const sender = `+ ${message.from}`;
 
-    try {
-        await chatDoc.save();
-        io.emit('newMessage', chatDoc);
-        console.log('Message stored successfully.');
-    } catch (err) {
-        console.error('Error saving message:', err);
+        const existingContact = await Contacts.findOne({ phone: sender });
+
+        // if (!existingContact) {
+        //     const newContact = new Contacts({
+
+        // }
+
+
+
+        const chatDoc = new chat({
+            message: message,
+            messageType: 'received',
+        });
+
+        try {
+            await chatDoc.save();
+            io.emit('newMessage', chatDoc);
+            console.log('Message stored successfully.');
+        } catch (err) {
+            console.error('Error saving message:', err);
+        }
+
+        // const senderId = message.from;
+        // const messageId = message.id;
+        // const messageType = message.type;
+        // const senderName = contact?.profile?.name || "Unknown";
+
+
+        //     if (messageType === 'text') {
+        //         const textContent = message.text.body;
+        //         if (textContent.toLowerCase() === 'hey' || textContent.toLowerCase() === 'hi') {
+        //             console.log("keyword mattched")
+        //             await sendTemplateMessage(senderId, testing_chatbot);
+        //         }
+
+
+        //         console.log(`Received text message: ${textContent}`);
+        //     } else if (messageType === 'audio') {
+        //         const audioId = message.audio.id;
+        //         console.log(`Received audio message with ID: ${audioId}`);
+        //         const mediaUrl = await getMediaUrl(audioId);
+        //         if (mediaUrl) {
+        //             console.log(`Audio message URL: ${mediaUrl}`);
+        //         }
+        //     } else if (messageType === 'button') {
+
+        //         const textContent = message.button.text;
+
+        //         if (textContent.toLowerCase() === 'sure') {
+        //             await sendSimpleTextMessage(senderId, "We will reach you soon on Call");
+        //         }
+
+        //     } else {
+        //         console.log(`Received unsupported message type: ${messageType}`);
+        //     }
     }
 
-    // const senderId = message.from;
-    // const messageId = message.id;
-    // const messageType = message.type;
-    // const senderName = contact?.profile?.name || "Unknown";
+    if (statusUpdate) {
+        console.log('Message status update:', JSON.stringify(statusUpdate, null, 2));
+
+        const { status, id, timestamp, recipient_id } = statusUpdate;
 
 
-    //     if (messageType === 'text') {
-    //         const textContent = message.text.body;
-    //         if (textContent.toLowerCase() === 'hey' || textContent.toLowerCase() === 'hi') {
-    //             console.log("keyword mattched")
-    //             await sendTemplateMessage(senderId, testing_chatbot);
-    //         }
-
-
-    //         console.log(`Received text message: ${textContent}`);
-    //     } else if (messageType === 'audio') {
-    //         const audioId = message.audio.id;
-    //         console.log(`Received audio message with ID: ${audioId}`);
-    //         const mediaUrl = await getMediaUrl(audioId);
-    //         if (mediaUrl) {
-    //             console.log(`Audio message URL: ${mediaUrl}`);
-    //         }
-    //     } else if (messageType === 'button') {
-
-    //         const textContent = message.button.text;
-
-    //         if (textContent.toLowerCase() === 'sure') {
-    //             await sendSimpleTextMessage(senderId, "We will reach you soon on Call");
-    //         }
-
-    //     } else {
-    //         console.log(`Received unsupported message type: ${messageType}`);
-    //     }
-}
-
-if (statusUpdate) {
-    console.log('Message status update:', JSON.stringify(statusUpdate, null, 2));
-
-    const { status, id, timestamp, recipient_id } = statusUpdate;
-
-
-    if (status === 'delivered') {
-        console.log('Message delivered successfully!');
-    } else if (status === 'read') {
-        console.log('Message was read!');
+        if (status === 'delivered') {
+            console.log('Message delivered successfully!');
+        } else if (status === 'read') {
+            console.log('Message was read!');
+        }
     }
-}
 
-res.sendStatus(200);
+    res.sendStatus(200);
 }
 

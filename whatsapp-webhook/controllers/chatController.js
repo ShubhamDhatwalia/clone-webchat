@@ -10,7 +10,7 @@ export const fetchChat = async (req, res) => {
         const chats = await chat
             .find({ "message.from": phone })
             .sort({ "message.timestamp": 1 })
-            .lean(); // boost performance
+            .lean(); 
 
         res.json(chats);
     } catch (err) {
