@@ -278,11 +278,11 @@ function Chat() {
                             }`}
                         >
                           <div
-                            className={`px-2 flex items-center gap-4 rounded-lg max-w-xs ${chat.messageType === 'received' ? 'bg-green-50' : 'bg-gray-50'
+                            className={`p-2 pb-0 items-end flex flex-col   rounded-lg min-w-[150px] max-w-[400px] ${chat.messageType === 'received' ? 'bg-green-50' : 'bg-gray-50'
                               }`}
                           >
                             {chat.message?.type === 'text' && (
-                              <div className="text-black font-semibold">
+                              <div className="text-black font-semibold self-start whitespace-pre-wrap">
                                 {chat.message?.text?.body}
                               </div>
                             )}
@@ -292,12 +292,24 @@ function Chat() {
                                 <img
                                   src={chat.message?.image?.url}
                                   alt="Image"
-                                  className="max-w-[200px] h-auto mt-2 rounded"
+                                  className="max-w-[300px] h-auto  rounded"
+                                />
+                                <div className="text-black font-semibold self-start whitespace-pre-wrap text-sm">{chat.message?.image?.caption}</div>
+                              </div>
+                            )}
+
+
+                            {chat.message?.type === 'video' && chat.message?.video?.url && (
+                              <div className="flex flex-col items-center">
+                                <video
+                                  src={chat.message?.video?.url}
+                                  alt="Video"
+                                  className="max-w-[300px] h-auto  rounded"
                                 />
                               </div>
                             )}
 
-                            <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end mt-6">
+                            <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end ">
                               {chat.message?.timestamp &&
                                 new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
                                   hour: 'numeric',
@@ -320,7 +332,7 @@ function Chat() {
 
 
                 {/* Footer */}
-                <div className='chat-footer flex items-center gap-[20px] bg-white px-[20px] py-[10px]  w-full'>
+                < div className='chat-footer flex items-center gap-[20px] bg-white px-[20px] py-[10px]  w-full' >
                   <div className='flex items-center gap-[15px]'>
 
 
