@@ -4,7 +4,7 @@ export const fetchChat = async (req, res) => {
         const rawPhone = req.params.phone;
         const phone = rawPhone.replace(/^\+/, '');
 
-        const limit = parseInt(req.query.limit) || 20;
+        const limit = parseInt(req.query.limit) || 15;
         const skip = parseInt(req.query.skip) || 0;
 
         const chats = await chat

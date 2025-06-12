@@ -28,7 +28,6 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
   const dispatch = useDispatch();
   const chats = useSelector((state) => state.chat.allChats);
 
-  console.log(chats.map(chat => chat.message.from.replace(/^\+/, '')));
 
 
   const chatMap = new Map();
@@ -52,7 +51,6 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
   });
 
   const chatData = Array.from(chatMap.values());
-  console.log(chatData)
 
 
 
@@ -84,7 +82,6 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
     );
   });
 
-  console.log(filteredChatData)
 
 
   useEffect(() => {
@@ -101,12 +98,10 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
   return (
     <ul>
       {filteredChatData.map((chat) => (
-        console.log(chat),
         <li
           key={chat.message.from}
           onClick={() => {
             const contact = contacts.find(c =>c.phone === `+${chat.message.from}`);
-            console.log(contact)
             if (contact) onSelectUser(contact);
           }}
           className={`cursor-pointer hover:bg-green-50 px-2 ${selectedUser?.phone.replace(/^\+/, '') === chat.message.from ? 'bg-green-100' : ''

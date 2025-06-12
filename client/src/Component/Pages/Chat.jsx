@@ -55,18 +55,25 @@ function Chat() {
     }
   }, [selectedUser]);
 
+
+
   const loadChats = async (currentPage) => {
+    if (!selectedUser) return;
+
     try {
       const res = await dispatch(fetchChat({ phone: selectedUser.phone, page: currentPage }));
-      if (res.data.length === 0) {
+      console.log(res.payload);
+
+      if (res.payload.length === 0) {
         setHasMore(false);
       } else {
-        setShowChat((prev) => [...res.data, ...prev]);
+        setShowChat((prev) => [...res.payload, ...prev]);
       }
     } catch (err) {
       console.error(err);
     }
   };
+
 
 
 
