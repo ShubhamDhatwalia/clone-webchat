@@ -218,8 +218,16 @@ const fetchImage = async (mediaId) => {
             'Authorization': `Bearer ${process.env.WHATSAPP_API_TOKEN}`
         }
     })
-    console.log(response.data);
+    const url = response.data.url;
 
+
+    const image = await axios.get(url, {
+        headers: {
+            'Authorization': `Bearer ${process.env.WHATSAPP_API_TOKEN}`
+        }
+    });
+
+    console.log(image);
 
 }
 
