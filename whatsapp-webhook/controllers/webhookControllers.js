@@ -224,10 +224,13 @@ const fetchImage = async (mediaId) => {
     const image = await axios.get(url, {
         headers: {
             'Authorization': `Bearer ${process.env.WHATSAPP_API_TOKEN}`
-        }
+        },
+         responseType: 'arraybuffer'
     });
 
-    console.log(image);
+
+    const base64Image = Buffer.from(image.data).toString('base64')
+    console.log(base64Image);
 
 }
 
