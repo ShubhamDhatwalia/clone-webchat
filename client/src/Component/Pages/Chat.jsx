@@ -290,7 +290,7 @@ function Chat() {
                             {chat.message?.type === 'image' && chat.message?.image?.url && (
                               <div className="flex flex-col items-center">
                                 <img
-                                  src=""
+                                  src={chat.message?.image?.url}
                                   alt="Image"
                                   className="max-w-[200px] h-auto mt-2 rounded"
                                 />

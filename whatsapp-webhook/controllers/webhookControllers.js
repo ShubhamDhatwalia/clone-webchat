@@ -222,14 +222,23 @@ const fetchImage = async (mediaId) => {
 
     const imageRes = await axios.get(url, {
         headers: {
-            'Authorization': `Bearer ${process.env.WHATSAPP_API_TOKEN}`
+            Authorization: `Bearer ${process.env.WHATSAPP_API_TOKEN}`
         },
         responseType: 'arraybuffer'
     });
+
+   
+    const contentType = imageRes.headers['content-type'];
+
+    if (!contentType.startsWith('image/')) {
+        throw new Error(`Invalid content type: ${contentType}`);
+    }
+
     return {
         base64: Buffer.from(imageRes.data).toString('base64'),
-        contentType: imageRes.headers['content-type'],
+        contentType
     };
+
 
 
 }
