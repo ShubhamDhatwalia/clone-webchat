@@ -35,7 +35,7 @@ function Chat() {
 
   const chats = useSelector((state) => state.chat.chats);
 
-  
+
 
   useEffect(() => {
     setShowChat(chats);
@@ -60,8 +60,11 @@ function Chat() {
 
 
   useEffect(() => {
+    const timeout = setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 50);
 
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    return () => clearTimeout(timeout);
   }, [showChat]);
 
 
@@ -102,11 +105,6 @@ function Chat() {
     socket.emit('sendTextMessage', payload);
 
   }
-
-
-
-
-
 
 
 
@@ -264,7 +262,7 @@ function Chat() {
 
                 {/* chat messages */}
 
-                <div className="p-4 text-gray-700 flex-grow overflow-y-scroll max-h-[calc(100vh-176px)]">
+                <div className="p-4 px-6 text-gray-700 flex-grow overflow-y-scroll max-h-[calc(100vh-176px)]">
                   {showChat.length > 0 ? (
                     showChat.map((chat) => (
                       <div key={chat.id} className="mb-4">
@@ -273,7 +271,7 @@ function Chat() {
                             }`}
                         >
                           <div
-                            className={`p-2 pb-0 items-end flex flex-col   rounded-lg min-w-[150px] max-w-[400px] ${chat.messageType === 'received' ? 'bg-green-50' : 'bg-gray-50'
+                            className={`p-2 pb-0 items-end flex flex-col   rounded-lg min-w-[150px] max-w-[500px]  ${chat.messageType === 'received' ? 'bg-green-50' : 'bg-gray-50'
                               }`}
                           >
                             {chat.message?.type === 'text' && (
@@ -287,7 +285,7 @@ function Chat() {
                                 <img
                                   src={chat.message?.image?.url}
                                   alt="Image"
-                                  className="max-w-[300px] h-auto  rounded"
+                                  className="max-w-[400px] h-auto max-h-[500px]  rounded"
                                 />
                                 <div className="text-black font-semibold self-start whitespace-pre-wrap text-sm">{chat.message?.image?.caption}</div>
                               </div>
@@ -300,7 +298,7 @@ function Chat() {
                                   src={chat.message?.video?.url}
                                   alt="Video"
                                   controls
-                                  className="max-w-[300px] h-auto  rounded"
+                                  className="max-w-[400px] max-h-[500px] h-auto  rounded"
                                 />
                                 <div className="text-black font-semibold self-start whitespace-pre-wrap text-sm">{chat.message?.video?.caption}</div>
                               </div>
