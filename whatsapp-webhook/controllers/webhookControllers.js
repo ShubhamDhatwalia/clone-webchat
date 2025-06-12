@@ -261,8 +261,9 @@ export async function handleWebhook(req, res) {
     const message = change?.value?.messages?.[0];
     const contact = change?.value?.contacts?.[0];
     const statusUpdate = change?.value?.statuses?.[0];
+    const contactInfo = value?.contacts?.[0];
 
-    if (message) {
+    if (message && contactInfo) {
         console.log('New message received:', JSON.stringify(message, null, 2));
 
         const io = req.app.get('io');
@@ -297,10 +298,19 @@ export async function handleWebhook(req, res) {
 
         const existingContact = await Contacts.findOne({ phone: sender });
 
-        // if (!existingContact) {
-        //     const newContact = new Contacts({
+        if (!existingContact) {
+            const newContact = new Contacts({
+                name: contactInfo.profile?.name || sender,
+                phone: sender,
+            })
+            try {
+                await newContact.save();
+                console.log('New contact saved:', newContact);
+            } catch (err) {
+                console.error('Error saving contact:', err);
+            }
 
-        // }
+        }
 
 
 
