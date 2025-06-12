@@ -16,3 +16,13 @@ export const fetchChat = createAsyncThunk('chat/fetchChat', async ({ phone }, { 
     }
 
 })
+
+export const fetchAllChats = createAsyncThunk('chat/fetchAllChats', async (_, { rejectWithValue }) => {
+    try {
+        const response = await axios.get('/chat');
+        return response.data;
+    }
+    catch (error) {
+        return rejectWithValue(error.message);
+    }
+})

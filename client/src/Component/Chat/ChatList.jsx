@@ -3,6 +3,7 @@ import profile_icon from '../../assets/profile_icon.svg';
 import { useSelector, useDispatch } from 'react-redux';
 import Chat from '../Pages/Chat';
 import { fetchContacts } from '../../redux/contacts/contactThunk';
+import { fetchAllChats } from '../../redux/chat/chatThunk';
 
 const conversation = [
   {
@@ -25,10 +26,15 @@ const conversation = [
 function ChatList({ onSelectUser, selectedUser, onSearch }) {
   const contacts = useSelector((state) => state.contact.contacts);
   const dispatch = useDispatch();
+  const chats = useSelector((state) => state.chat.allChats);
 
-  const chatData = conversation
+  console.log(chats.map(chat => chat.message.from.replace(/^\+/, '')));
+
+
+  const chatData = chats
     .map((chat) => {
-      const contact = contacts.find((c) => c.phone === chat.phone);
+      const contact = contacts.find((c) => c.phone.replace(/^\+/, '') === chat.message.from.phone);
+      console.log(contact);
       if (!contact) return null;
       return {
         ...chat,
@@ -44,6 +50,14 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
       dispatch(fetchContacts())
     }
   }, []);
+
+
+  useEffect(() => {
+    if (chats.length === 0) {
+      dispatch(fetchAllChats())
+    }
+  }, []);
+
 
 
 

@@ -35,9 +35,7 @@ function Chat() {
 
   const chats = useSelector((state) => state.chat.chats);
 
-  console.log(chats)
-  console.log(selectedUser)
-
+  
 
   useEffect(() => {
     setShowChat(chats);
@@ -54,7 +52,6 @@ function Chat() {
   useEffect(() => {
 
     if (selectedUser) {
-      console.log(selectedUser.phone)
       dispatch(fetchChat({ phone: selectedUser.phone }))
     }
 
@@ -72,7 +69,6 @@ function Chat() {
 
   useEffect(() => {
     socket.on('newMessage', (data) => {
-      console.log('New message received from socket:', data);
       setShowChat((prev) => [...prev, data]);
       dispatch(fetchChat({ phone: selectedUser.phone }))
 
@@ -102,7 +98,6 @@ function Chat() {
       }
     };
 
-    console.log(payload)
 
     socket.emit('sendTextMessage', payload);
 
@@ -304,8 +299,10 @@ function Chat() {
                                 <video
                                   src={chat.message?.video?.url}
                                   alt="Video"
+                                  controls
                                   className="max-w-[300px] h-auto  rounded"
                                 />
+                                <div className="text-black font-semibold self-start whitespace-pre-wrap text-sm">{chat.message?.video?.caption}</div>
                               </div>
                             )}
 

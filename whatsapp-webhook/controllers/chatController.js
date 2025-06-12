@@ -17,3 +17,12 @@ export const fetchChat = async (req, res) => {
 
     }
 }
+
+export const fetchAllChats = async (req, res) => {
+    try {
+        const chats = await chat.find();
+        res.json(chats);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
