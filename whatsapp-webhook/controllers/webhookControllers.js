@@ -220,6 +220,11 @@ const fetchImage = async (mediaId) => {
     })
 
 
+    const url = response.data.url;
+    console.log(url);
+
+
+
     const imageRes = await axios.get(url, {
         headers: {
             Authorization: `Bearer ${process.env.WHATSAPP_API_TOKEN}`
@@ -227,7 +232,7 @@ const fetchImage = async (mediaId) => {
         responseType: 'arraybuffer'
     });
 
-   
+    // 👉 Check content type before converting
     const contentType = imageRes.headers['content-type'];
 
     if (!contentType.startsWith('image/')) {
