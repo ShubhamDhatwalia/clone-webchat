@@ -298,6 +298,8 @@ export async function handleWebhook(req, res) {
         const sender = `+ ${message.from}`;
 
         const existingContact = await Contacts.findOne({ phone: sender });
+        console.log(existingContact);
+
 
         if (!existingContact) {
             const newContact = new Contacts({
