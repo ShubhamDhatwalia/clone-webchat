@@ -421,8 +421,21 @@ function Chat() {
                                   src={chat.message?.audio?.url}
                                   alt="Audio"
                                   controls
-                                  className="max-w-[400px] max-h-[500px] h-auto  rounded"
+                                  className=""
                                 />
+                              </div>
+                            )}
+
+
+                            {chat.message?.type === 'document' && chat.message?.document?.url && (
+                              <div className="flex flex-col items-center">
+                                <a
+                                  href={chat.message?.document?.url}
+                                  download
+                                  className=""
+                                >
+                                  download
+                                </a>
                               </div>
                             )}
 

@@ -306,6 +306,19 @@ export async function handleWebhook(req, res) {
             }
         }
 
+        if (message.type === 'document' && message.document?.id) {
+            const mediaId = message.document.id
+
+            try {
+                const { base64, contentType } = await fetchImage(mediaId);
+
+                message.document.url = `data:${contentType};base64,${base64}`;
+                
+            } catch (error) {
+                console.error('Error fetching document from WhatsApp:', error);
+            }
+        }
+
 
         const sender = `+${message.from}`;
         console.log(sender);
