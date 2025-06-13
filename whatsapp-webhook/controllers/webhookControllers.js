@@ -262,6 +262,7 @@ export async function handleWebhook(req, res) {
     const contact = change?.value?.contacts?.[0];
     const statusUpdate = change?.value?.statuses?.[0];
     const contactInfo = body.entry[0].changes[0]?.value?.contacts?.[0];
+    console.log(contactInfo);
 
     if (message && contactInfo) {
         console.log('New message received:', JSON.stringify(message, null, 2));

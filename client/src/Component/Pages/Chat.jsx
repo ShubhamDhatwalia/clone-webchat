@@ -97,12 +97,18 @@ function Chat() {
       if (res.payload.length === 0) {
         setHasMore(false);
       } else {
-        setShowChat((prev) => [...res.payload, ...prev]);
+        setShowChat((prev) => {
+          const existingMessageIds = prev.map((msg) => msg._id);
+          const newMessages = res.payload.filter((msg) => !existingMessageIds.includes(msg._id));
+
+          return [...newMessages, ...prev];
+        });
       }
     } catch (err) {
       console.error(err);
     }
   };
+
 
 
 
