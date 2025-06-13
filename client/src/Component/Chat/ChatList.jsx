@@ -4,29 +4,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import Chat from '../Pages/Chat';
 import { fetchContacts } from '../../redux/contacts/contactThunk';
 import { fetchAllChats } from '../../redux/chat/chatThunk';
+import { io } from 'socket.io-client';
 
-// const conversation = [
-//   {
-//     message: 'Plan A',
-//     time: '03:30 PM',
-//     phone: '+917876054918',
-//   },
-//   {
-//     message: 'Stop promotions',
-//     time: '12:52 PM',
-//     phone: '+917876054920',
-//   },
-//   {
-//     message: 'A',
-//     time: '12:33 PM',
-//     phone: '+917876054919',
-//   },
-// ];
 
 function ChatList({ onSelectUser, selectedUser, onSearch }) {
   const contacts = useSelector((state) => state.contact.contacts);
   const dispatch = useDispatch();
   const chats = useSelector((state) => state.chat.allChats);
+  const socket = io('https://clone-webchat.onrender.com/', { withCredentials: true });
 
 
 
@@ -52,6 +37,20 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
 
   const chatData = Array.from(chatMap.values());
 
+
+
+
+  useEffect(() => {
+    socket.on('newMessage', (data) => {
+      dispatch(fetchAllChats())
+      dispatch(fetchContacts())
+
+    });
+
+    return () => {
+      socket.off('newMessage');
+    };
+  }, [selectedUser]);
 
 
 
@@ -95,13 +94,15 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
 
 
 
+
+
   return (
     <ul>
       {filteredChatData.map((chat) => (
         <li
           key={chat.message.from}
           onClick={() => {
-            const contact = contacts.find(c =>c.phone === `+${chat.message.from}`);
+            const contact = contacts.find(c => c.phone === `+${chat.message.from}`);
             if (contact) onSelectUser(contact);
           }}
           className={`cursor-pointer hover:bg-green-50 px-2 ${selectedUser?.phone.replace(/^\+/, '') === chat.message.from ? 'bg-green-100' : ''

@@ -294,6 +294,18 @@ export async function handleWebhook(req, res) {
             }
         }
 
+        if (message.type === 'audio' && message.audio?.id) {
+            const mediaId = message.audio.id
+
+            try {
+                const { base64, contentType } = await fetchImage(mediaId);
+
+                message.audio.url = `data:${contentType};base64,${base64}`;
+            } catch (error) {
+                console.error('Error fetching audio from WhatsApp:', error);
+            }
+        }
+
 
         const sender = `+${message.from}`;
         console.log(sender);

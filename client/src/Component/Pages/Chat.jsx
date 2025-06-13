@@ -28,6 +28,8 @@ function Chat() {
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const chatContainerRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
 
 
   const modalRef = useRef(null);
@@ -59,17 +61,20 @@ function Chat() {
 
   const handleScroll = () => {
     const container = chatContainerRef.current;
-    if (!container) return;
+    if (!container || isLoading || !hasMore) return;
 
-    if (container.scrollTop < 100 && hasMore) {
+    if (container.scrollTop < 100) {
       loadMoreChats();
     }
   };
 
 
-  const loadMoreChats = () => {
-    const nextPage = page + 1;
 
+  const loadMoreChats = () => {
+    if (isLoading) return;
+    setIsLoading(true);
+
+    const nextPage = page + 1;
     const container = chatContainerRef.current;
     const prevScrollHeight = container?.scrollHeight;
 
@@ -81,16 +86,23 @@ function Chat() {
         if (container) {
           container.scrollTop = newScrollHeight - prevScrollHeight + container.scrollTop;
         }
+        setIsLoading(false);
       }, 0);
+    }).catch((err) => {
+      console.error(err);
+      setIsLoading(false);
     });
   };
-
-
 
   const loadChats = async (currentPage) => {
     if (!selectedUser) return;
 
     try {
+      // 👇 Disable auto-scroll when loading older messages
+      if (currentPage > 0) {
+        setShouldScrollToBottom(false);
+      }
+
       const res = await dispatch(fetchChat({ phone: selectedUser.phone, page: currentPage }));
       console.log(res.payload);
 
@@ -100,7 +112,6 @@ function Chat() {
         setShowChat((prev) => {
           const existingMessageIds = prev.map((msg) => msg._id);
           const newMessages = res.payload.filter((msg) => !existingMessageIds.includes(msg._id));
-
           return [...newMessages, ...prev];
         });
       }
@@ -113,21 +124,25 @@ function Chat() {
 
 
 
-
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView();
-    }, 50);
+    if (shouldScrollToBottom) {
+      const timeout = setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView();
+      }, 50);
 
-    return () => clearTimeout(timeout);
+      return () => clearTimeout(timeout);
+    }
   }, [showChat]);
-
 
 
 
   useEffect(() => {
     socket.on('newMessage', (data) => {
+      setShouldScrollToBottom(true);
+      console.log(data);
+
       setShowChat((prev) => [...prev, data]);
+
       dispatch(fetchChat({ phone: selectedUser.phone }))
 
     });
@@ -314,6 +329,16 @@ function Chat() {
                 {/* chat messages */}
 
                 <div className="p-4 px-6 text-gray-700 flex-grow overflow-y-scroll max-h-[calc(100vh-176px)] " ref={chatContainerRef} onScroll={handleScroll}>
+
+                  {isLoading && hasMore && (
+                    <div className="flex justify-center my-4">
+                      <div className="relative w-6 h-6">
+                        <div className="absolute inset-0 border-3 border-gray-300 rounded-full"></div>
+                        <div className="absolute inset-0 border-3 border-t-green-600 border-r-green-600 rounded-full animate-spin"></div>
+                      </div>
+                    </div>
+                  )}
+
                   {showChat.length > 0 ? (
                     showChat.map((chat) => (
                       <div key={chat.id} className="mb-4">
@@ -322,12 +347,23 @@ function Chat() {
                             }`}
                         >
                           <div
-                            className={`p-2 pb-0 items-end flex flex-col   rounded-lg min-w-[150px] max-w-[500px]  ${chat.messageType === 'received' ? 'bg-green-50' : 'bg-gray-50'
+                            className={`p-2 py-2 items-end flex gap-2   rounded-lg min-w-[50px] max-w-[500px]  ${chat.messageType === 'received' ? 'bg-green-50' : 'bg-gray-50'
                               }`}
                           >
                             {chat.message?.type === 'text' && (
-                              <div className="text-black font-semibold self-start whitespace-pre-wrap">
-                                {chat.message?.text?.body}
+                              <div className='flex gap-3'>
+                                <div className="text-black font-semibold self-center whitespace-pre-wrap">
+                                  {chat.message?.text?.body}
+                                </div>
+
+                                <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end mt-3 ">
+                                  {chat.message?.timestamp &&
+                                    new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
+                                      hour: 'numeric',
+                                      minute: 'numeric',
+                                      hour12: true,
+                                    })}
+                                </div>
                               </div>
                             )}
 
@@ -338,7 +374,18 @@ function Chat() {
                                   alt="Image"
                                   className="max-w-[400px] h-auto max-h-[500px]  rounded"
                                 />
-                                <div className="text-black font-semibold self-start whitespace-pre-wrap text-sm">{chat.message?.image?.caption}</div>
+                                <div className='flex gap-2 justify-between w-full mt-1'>
+                                  <div className="text-black font-semibold self-start whitespace-pre-wrap text-sm">{chat.message?.image?.caption}</div>
+
+                                  <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end  ">
+                                    {chat.message?.timestamp &&
+                                      new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        hour12: true,
+                                      })}
+                                  </div>
+                                </div>
                               </div>
                             )}
 
@@ -351,18 +398,42 @@ function Chat() {
                                   controls
                                   className="max-w-[400px] max-h-[500px] h-auto  rounded"
                                 />
-                                <div className="text-black font-semibold self-start whitespace-pre-wrap text-sm">{chat.message?.video?.caption}</div>
+                                <div className='flex gap-2 justify-between w-full mt-1'>
+                                  <div className="text-black font-semibold self-start whitespace-pre-wrap text-sm">{chat.message?.video?.caption}</div>
+
+                                  <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end  ">
+                                    {chat.message?.timestamp &&
+                                      new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        hour12: true,
+                                      })}
+                                  </div>
+                                </div>
                               </div>
                             )}
 
-                            <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end ">
-                              {chat.message?.timestamp &&
-                                new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
-                                  hour: 'numeric',
-                                  minute: 'numeric',
-                                  hour12: true,
-                                })}
-                            </div>
+
+
+                            {chat.message?.type === 'audio' && chat.message?.audio?.url && (
+                              <div className="flex flex-col items-center">
+                                <audio
+                                  src={chat.message?.audio?.url}
+                                  alt="Audio"
+                                  controls
+                                  className="max-w-[400px] max-h-[500px] h-auto  rounded"
+                                />
+                              </div>
+                            )}
+
+                            {/* <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end mt-4 ">
+                                {chat.message?.timestamp &&
+                                  new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
+                                    hour: 'numeric',
+                                    minute: 'numeric',
+                                    hour12: true,
+                                  })}
+                              </div> */}
                           </div>
                         </div>
                       </div>
