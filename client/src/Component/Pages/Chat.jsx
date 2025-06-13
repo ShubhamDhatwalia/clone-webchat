@@ -434,7 +434,7 @@ function Chat() {
                                   download
                                   className=""
                                 >
-                                  download
+                                  <i class="fa-solid fa-file"></i>
                                 </a>
                               </div>
                             )}
