@@ -347,7 +347,7 @@ function Chat() {
                             }`}
                         >
                           <div
-                            className={`p-2 py-2 items-end flex gap-2   rounded-lg min-w-[50px] max-w-[500px]  ${chat.messageType === 'received' ? 'bg-green-50' : 'bg-gray-50'
+                            className={`p-2 py-2 items-end flex gap-2  min-w-[50px] max-w-[500px]  ${chat.messageType === 'received' ? 'bg-gray-50 rounded-b-2xl rounded-tr-2xl' : 'bg-green-50 rounded-b-2xl rounded-tl-2xl'
                               }`}
                           >
                             {chat.message?.type === 'text' && (
@@ -372,7 +372,7 @@ function Chat() {
                                 <img
                                   src={chat.message?.image?.url}
                                   alt="Image"
-                                  className="max-w-[400px] h-auto max-h-[500px]  rounded"
+                                  className="max-w-[400px] h-auto max-h-[400px]  rounded-xl"
                                 />
                                 <div className='flex gap-2 justify-between w-full mt-1'>
                                   <div className="text-black font-semibold self-start whitespace-pre-wrap text-sm">{chat.message?.image?.caption}</div>
@@ -396,7 +396,7 @@ function Chat() {
                                   src={chat.message?.video?.url}
                                   alt="Video"
                                   controls
-                                  className="max-w-[400px] max-h-[500px] h-auto  rounded"
+                                  className="max-w-[400px] max-h-[500px] h-auto  rounded-xl"
                                 />
                                 <div className='flex gap-2 justify-between w-full mt-1'>
                                   <div className="text-black font-semibold self-start whitespace-pre-wrap text-sm">{chat.message?.video?.caption}</div>
@@ -423,19 +423,45 @@ function Chat() {
                                   controls
                                   className=""
                                 />
+
+                                <div className='flex gap-2 justify-between w-full mt-1'>
+                                  <div className="text-black font-semibold self-start whitespace-pre-wrap text-sm">{chat.message?.audio?.caption}</div>
+
+                                  <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end  ">
+                                    {chat.message?.timestamp &&
+                                      new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        hour12: true,
+                                      })}
+                                  </div>
+                                </div>
                               </div>
                             )}
 
 
                             {chat.message?.type === 'document' && chat.message?.document?.url && (
-                              <div className="flex flex-col items-center">
+                              <div className="flex flex-col items-center max-w-[300px]">
                                 <a
                                   href={chat.message?.document?.url}
                                   download
-                                  className=""
+                                  className=" flex justify-center items-center cursor-pointer w-full"
                                 >
-                                  <i class="fa-solid fa-file"></i>
+                                  <i className="fa-solid fa-file text-4xl p-3"></i>
                                 </a>
+
+                                <div className='flex gap-6 justify-between w-full mt-1'>
+                                  <div className="text-black font-semibold self-start  text-xs max-w-[200px] truncate">{chat.message?.document?.filename}</div>
+
+                                  <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end text-nowrap ">
+                                    {chat.message?.timestamp &&
+                                      new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
+                                        hour: 'numeric',
+                                        minute: 'numeric',
+                                        hour12: true,
+                                      })}
+                                  </div>
+                                </div>
                               </div>
                             )}
 
