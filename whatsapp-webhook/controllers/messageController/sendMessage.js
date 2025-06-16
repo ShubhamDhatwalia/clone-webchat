@@ -1,4 +1,6 @@
 import axios from 'axios';
+import chat from '../models/chat.js';
+
 
 export async function sendTextMessage(payload) {
   return await axios.post(
@@ -57,6 +59,19 @@ export function setupMessageSocket(io) {
         };
 
         io.emit('newMessage', updatedPayload);
+        
+        const chatDoc = new chat({
+          message: updatedPayload,
+          messageType: 'sent',
+        });
+
+        try {
+          await chatDoc.save();
+          console.log('Message stored successfully.');
+        } catch (err) {
+          console.log('Error saving message:', err)
+        }
+
         console.log(' WhatsApp text message sent:', JSON.stringify(messageId));
       } catch (error) {
         console.error(' Error sending text message:', error.response?.data || error.message);

@@ -468,12 +468,12 @@ function Chat() {
                             {chat.type === 'text' && (
                               <div className='flex gap-3'>
                                 <div className="text-black font-semibold self-center whitespace-pre-wrap">
-                                  {chat.message?.text?.body}
+                                  {chat?.text?.body}
                                 </div>
 
                                 <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end mt-3 ">
                                   {chat.message?.timestamp &&
-                                    new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
+                                    new Date(chat?.timestamp * 1000).toLocaleString('en-US', {
                                       hour: 'numeric',
                                       minute: 'numeric',
                                       hour12: true,
