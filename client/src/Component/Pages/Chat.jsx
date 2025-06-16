@@ -467,7 +467,7 @@ function Chat() {
                               </div>
                             )}
 
-                            {chat.type === 'text' && (
+                            {/* {chat.type === 'text' && (
                               <div className='flex gap-3'>
                                 <div className="text-black font-semibold self-center whitespace-pre-wrap">
                                   {chat?.text?.body}
@@ -483,7 +483,7 @@ function Chat() {
                                 </div>
                               </div>
 
-                            )}
+                            )} */}
 
                             {/* <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end mt-4 ">
                                 {chat.message?.timestamp &&

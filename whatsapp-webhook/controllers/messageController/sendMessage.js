@@ -55,9 +55,8 @@ export function setupMessageSocket(io) {
         const updatedPayload = {
           ...payload,
           messageId,
-          timestamp: new Date().toISOString(),
+          timestamp: Math.floor(Date.now() / 1000).toString(),
         };
-
 
 
         const chatDoc = new chat({
