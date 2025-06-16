@@ -369,7 +369,7 @@ function Chat() {
 
                                   <div>
                                     {chat.messageType === 'sent' && (
-                                      <i class="fa-solid fa-check"></i>
+                                      <i className="fa-solid fa-check"></i>
                                     )}
                                   </div>
                                 </div>
