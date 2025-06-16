@@ -41,13 +41,12 @@ function Chat() {
 
 
   const chats = useSelector((state) => state.chat.chats);
-  console.log(chats);
 
 
 
-  // useEffect(() => {
-  //   setShowChat(chats);
-  // }, [chats]);
+  useEffect(() => {
+    setShowChat(chats);
+  }, [chats]);
 
 
   useEffect(() => {
@@ -99,13 +98,12 @@ function Chat() {
     if (!selectedUser) return;
 
     try {
-      // 👇 Disable auto-scroll when loading older messages
       if (currentPage > 0) {
         setShouldScrollToBottom(false);
       }
 
       const res = await dispatch(fetchChat({ phone: selectedUser.phone, page: currentPage }));
-      console.log(res.payload);
+      
 
       if (res.payload.length === 0) {
         setHasMore(false);
@@ -140,7 +138,6 @@ function Chat() {
   useEffect(() => {
     socket.on('newMessage', (data) => {
       setShouldScrollToBottom(true);
-      console.log(data);
 
       setShowChat((prev) => [...prev, data]);
 
@@ -153,18 +150,19 @@ function Chat() {
     };
   }, [selectedUser]);
 
-  useEffect(() => {
-    const handler = (data) => {
-      console.log('Received status update:', data);
-      dispatch(fetchChat({ phone: selectedUser.phone }));
-    };
 
-    socket.on('messageStatusUpdate', handler);
+  useEffect(() => {
+    socket.on('messageStatusUpdate', (data) => {
+
+      dispatch(fetchChat({ phone: selectedUser.phone }));
+
+    });
 
     return () => {
-      socket.off('messageStatusUpdate', handler);
+      socket.off('messageStatusUpdate');
     };
-  }, [dispatch]);
+  }, [dispatch, selectedUser]);
+
 
 
 
@@ -355,7 +353,6 @@ function Chat() {
 
                   {showChat.length > 0 ? (
                     showChat.map((chat) => (
-                      console.log(chat),
                       <div key={chat.id} className="mb-4">
                         <div
                           className={`flex ${chat.messageType === 'received' ? 'justify-start' : 'justify-end'

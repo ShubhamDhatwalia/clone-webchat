@@ -248,7 +248,6 @@ const fetchImage = async (mediaId) => {
 
 export async function handleWebhook(req, res) {
     const body = req.body;
-    console.log('Received webhook:', JSON.stringify(body, null, 2));
     const io = req.app.get('io');
 
 
@@ -263,10 +262,8 @@ export async function handleWebhook(req, res) {
     const contact = change?.value?.contacts?.[0];
     const statusUpdate = change?.value?.statuses?.[0];
     const contactInfo = body.entry[0].changes[0]?.value?.contacts?.[0];
-    console.log(contactInfo);
 
     if (message && contactInfo) {
-        console.log('New message received:', JSON.stringify(message, null, 2));
 
 
         if (message.type === 'image' && message.image?.id) {
@@ -321,10 +318,8 @@ export async function handleWebhook(req, res) {
 
 
         const sender = `+${message.from}`;
-        console.log(sender);
 
         const existingContact = await Contacts.findOne({ phone: sender });
-        console.log(existingContact);
 
 
         if (!existingContact) {
@@ -334,7 +329,6 @@ export async function handleWebhook(req, res) {
             })
             try {
                 await newContact.save();
-                console.log('New contact saved:', newContact);
             } catch (err) {
                 console.error('Error saving contact:', err);
             }
@@ -351,7 +345,6 @@ export async function handleWebhook(req, res) {
         try {
             await chatDoc.save();
             io.emit('newMessage', chatDoc);
-            console.log('Message stored successfully.');
         } catch (err) {
             console.error('Error saving message:', err);
         }
@@ -392,7 +385,6 @@ export async function handleWebhook(req, res) {
     }
 
     if (statusUpdate) {
-        console.log('Message status update:', JSON.stringify(statusUpdate, null, 2));
 
         const { status, id, timestamp, recipient_id } = statusUpdate;
 
@@ -408,16 +400,13 @@ export async function handleWebhook(req, res) {
             );
 
             if (updated) {
-                console.log(`Message ${id} updated with status: ${status}`);
 
 
                 io.emit('messageStatusUpdate', {
                     messageId: id,
                     status,
                 });
-            } else {
-                console.log(`Message with ID ${id} not found.`);
-            }
+            } 
         }
     }
 
