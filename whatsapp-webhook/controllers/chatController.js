@@ -11,7 +11,7 @@ export const fetchChat = async (req, res) => {
             .find({
                 $or: [
                     { "message.from": phone },
-                    { "to": phone }
+                    { "message.to": rawPhone }
                 ]
             })
             .sort({ "message.timestamp": -1 })

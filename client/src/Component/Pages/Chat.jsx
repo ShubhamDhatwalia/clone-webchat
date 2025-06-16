@@ -41,6 +41,7 @@ function Chat() {
 
 
   const chats = useSelector((state) => state.chat.chats);
+  console.log(chats);
 
 
 
