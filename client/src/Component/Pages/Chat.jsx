@@ -403,6 +403,26 @@ function Chat() {
                               </div>
                             )}
 
+
+                            {chat.message?.type === 'button' && (
+                              <div className="flex gap-3">
+                                <div className="text-black font-semibold self-center whitespace-pre-wrap max-w-[420px]">
+                                  <p className='break-words'>{chat.message?.button?.text}</p>
+                                </div>
+
+                                <div className="text-gray-500 text-right text-[10px]  font-semibold flex items-end justify-end mt-3 ">
+                                  {chat.message?.timestamp &&
+                                    new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
+                                      hour: 'numeric',
+                                      minute: 'numeric',
+                                      hour12: true,
+                                    })}
+
+                                </div>
+                              </div>
+
+                            )}
+
                             {chat.message?.type === 'image' && chat.message?.image?.url && (
                               <div className="flex flex-col items-center">
                                 <img

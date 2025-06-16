@@ -82,10 +82,32 @@ export function setupMessageSocket(io) {
       console.log('Received sendTemplateMessage:', payload);
 
       try {
-        const res =  await sendTemplateMessages(payload);
+        const res = await sendTemplateMessages(payload);
         console.log(res.data);
-        io.emit('newTemplateMessage', payload);
-        console.log(' WhatsApp template message sent.');
+
+        const messageId = res.data.messages.map((m) => m.id);
+
+
+        const updatedPayload = {
+          ...payload,
+          messageId,
+          timestamp: Math.floor(Date.now() / 1000).toString(),
+        };
+
+
+        const chatDoc = new chat({
+          message: updatedPayload,
+          messageType: 'sent',
+        });
+
+
+        io.emit('newTemplateMessage', chatDoc);
+        try {
+          await chatDoc.save();
+        } catch (err) {
+          console.log('Error saving message:', err)
+        }
+
       } catch (error) {
         console.error(' Error sending template message:', error.response?.data || error.message);
         socket.emit('messageError', {
