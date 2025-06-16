@@ -352,19 +352,26 @@ function Chat() {
                             className={`p-2 py-2 items-end flex gap-2  min-w-[50px] max-w-[500px]  ${chat.messageType === 'received' ? 'bg-gray-50 rounded-b-2xl rounded-tr-2xl' : 'bg-green-50 rounded-b-2xl rounded-tl-2xl'
                               }`}
                           >
+
                             {chat.message?.type === 'text' && (
                               <div className='flex gap-3'>
                                 <div className="text-black font-semibold self-center whitespace-pre-wrap">
                                   {chat.message?.text?.body}
                                 </div>
 
-                                <div className="text-gray-500 text-right text-[10px] font-semibold flex items-end justify-end mt-3 ">
+                                <div className="text-gray-500 text-right text-[10px] gap-1 font-semibold flex items-end justify-end mt-3 ">
                                   {chat.message?.timestamp &&
                                     new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
                                       hour: 'numeric',
                                       minute: 'numeric',
                                       hour12: true,
                                     })}
+
+                                  <div>
+                                    {chat.messageType === 'sent' && (
+                                      <i class="fa-solid fa-check"></i>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             )}
