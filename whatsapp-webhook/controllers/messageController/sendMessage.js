@@ -58,12 +58,14 @@ export function setupMessageSocket(io) {
           timestamp: new Date().toISOString(),
         };
 
-        io.emit('newMessage', updatedPayload);
+
 
         const chatDoc = new chat({
           message: updatedPayload,
           messageType: 'sent',
         });
+
+        io.emit('newMessage', chatDoc);
 
         try {
           await chatDoc.save();
