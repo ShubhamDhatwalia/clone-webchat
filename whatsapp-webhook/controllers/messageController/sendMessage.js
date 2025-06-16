@@ -61,8 +61,7 @@ export function setupMessageSocket(io) {
 
         const chatDoc = new chat({
           message: updatedPayload,
-          messageType: 'sent',
-          status: '',
+          messageType: '',
         });
 
         io.emit('newMessage', chatDoc);
