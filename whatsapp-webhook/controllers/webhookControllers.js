@@ -249,6 +249,7 @@ const fetchImage = async (mediaId) => {
 export async function handleWebhook(req, res) {
     const body = req.body;
     console.log('Received webhook:', JSON.stringify(body, null, 2));
+    const io = req.app.get('io');
 
 
 
@@ -267,7 +268,6 @@ export async function handleWebhook(req, res) {
     if (message && contactInfo) {
         console.log('New message received:', JSON.stringify(message, null, 2));
 
-        const io = req.app.get('io');
 
         if (message.type === 'image' && message.image?.id) {
             const mediaId = message.image.id;
@@ -398,7 +398,7 @@ export async function handleWebhook(req, res) {
 
         if (['delivered', 'read'].includes(status)) {
             const updated = await chat.findOneAndUpdate(
-                { "message.messageId": id }, 
+                { "message.messageId": id },
                 {
                     $set: {
                         "messageType": status,
@@ -410,7 +410,7 @@ export async function handleWebhook(req, res) {
             if (updated) {
                 console.log(`Message ${id} updated with status: ${status}`);
 
-               
+
                 io.emit('messageStatusUpdate', {
                     messageId: id,
                     status,

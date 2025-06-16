@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { use, useEffect, useRef, useState } from 'react';
 import { FaComments, FaPhoneAlt } from 'react-icons/fa';
 import ChatList from "../Chat/ChatList.jsx";
 import profile_icon from '../../assets/profile_icon.svg'
@@ -152,6 +152,19 @@ function Chat() {
       socket.off('newMessage');
     };
   }, [selectedUser]);
+
+  useEffect(() => {
+    const handler = (data) => {
+      console.log('Received status update:', data);
+      dispatch(fetchChat({ phone: selectedUser.phone }));
+    };
+
+    socket.on('messageStatusUpdate', handler);
+
+    return () => {
+      socket.off('messageStatusUpdate', handler);
+    };
+  }, [dispatch]);
 
 
 
@@ -371,7 +384,15 @@ function Chat() {
                                     {chat.messageType === 'sent' && (
                                       <i className="fa-solid fa-check"></i>
                                     )}
+                                    {chat.messageType === 'delivered' && (
+                                      <i className="fa-solid fa-check-double"></i>
+                                    )}
+                                    {chat.messageType === 'read' && (
+                                      <i className="fa-solid fa-check-double text-blue-600"></i>
+                                    )}
                                   </div>
+
+
                                 </div>
                               </div>
                             )}
