@@ -194,7 +194,7 @@ function FilePreview({ files, setFiles, onClose, selectedUser }) {
                 const selectedFile = files[i];
                 const caption = previewFiles[i]?.caption || '';
 
-                // Step 1: Upload media
+                
                 const formData = new FormData();
                 formData.append('file', selectedFile);
                 formData.append('messaging_product', 'whatsapp');
@@ -217,7 +217,7 @@ function FilePreview({ files, setFiles, onClose, selectedUser }) {
 
                 const mediaId = uploadData.id;
 
-                // Step 2: Send message with uploaded media
+              
                 const mediaType = getFileType(selectedFile.type, selectedFile.name);
                 if (!['image', 'video', 'audio', 'document'].includes(mediaType)) {
                     console.warn('Unsupported file type for sending message:', selectedFile.name);

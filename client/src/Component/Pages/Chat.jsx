@@ -12,7 +12,7 @@ import VoiceRecorder from '../Chat/VoiceRecording.jsx';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchChat } from '../../redux/chat/chatThunk.js';
 import socket from '../Chat/socket.jsx'
-
+import TemplateMessagePreview from '../Chat/templateMessagePreview.jsx';
 
 
 function Chat() {
@@ -124,6 +124,22 @@ function Chat() {
     }
   };
 
+
+
+
+  useEffect(() => {
+    socket.on('newTemplateMessage', (data) => {
+      setShouldScrollToBottom(true);
+      console.log(data);
+      setShowChat((prev) => [...prev, data]);
+      dispatch(fetchChat({ phone: selectedUser.phone }))
+    })
+
+    return () => {
+      socket.off('newTemplateMessage');
+    };
+
+  })
 
 
 
@@ -368,7 +384,7 @@ function Chat() {
                             }`}
                         >
                           <div
-                            className={`p-2 py-2 items-end flex gap-2  min-w-[50px] max-w-[500px]  ${chat.messageType === 'received' ? 'bg-gray-50 rounded-b-2xl rounded-tr-2xl' : 'bg-green-50 rounded-b-2xl rounded-tl-2xl'
+                            className={`p-2 py-2 items-end flex gap-2  min-w-[50px] max-w-[48%] shadow-2xl ${chat.messageType === 'received' ? 'bg-gray-50 rounded-b-2xl rounded-tr-2xl' : 'bg-green-50 rounded-b-2xl rounded-tl-2xl'
                               }`}
                           >
 
@@ -379,6 +395,37 @@ function Chat() {
                                 </div>
 
                                 <div className="text-gray-500 text-right text-[10px] gap-1 font-semibold flex items-end justify-end mt-3 ">
+                                  {chat.message?.timestamp &&
+                                    new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
+                                      hour: 'numeric',
+                                      minute: 'numeric',
+                                      hour12: true,
+                                    })}
+
+                                  <div>
+                                    {chat.messageType === 'sent' && (
+                                      <i className="fa-solid fa-check"></i>
+                                    )}
+                                    {chat.messageType === 'delivered' && (
+                                      <i className="fa-solid fa-check-double"></i>
+                                    )}
+                                    {chat.messageType === 'read' && (
+                                      <i className="fa-solid fa-check-double text-blue-600"></i>
+                                    )}
+                                  </div>
+
+
+                                </div>
+                              </div>
+                            )}
+
+                            {chat.message?.type === 'template' && (
+                              <div className='flex flex-col '>
+                                <div className="text-black font-semibold self-center whitespace-pre-wrap max-w-[420px]">
+                                  <TemplateMessagePreview templateMessage={chat.message?.template} />
+                                </div>
+
+                                <div className="text-gray-500 text-right text-[10px] gap-1 font-semibold flex items-end justify-end  ">
                                   {chat.message?.timestamp &&
                                     new Date(chat.message?.timestamp * 1000).toLocaleString('en-US', {
                                       hour: 'numeric',
