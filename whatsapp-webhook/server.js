@@ -13,7 +13,7 @@ import contactRoutes from './routes/contactRoutes.js';
 import replyMaterialRoutes from './routes/replyMaterialRoutes.js';
 import keywordRoutes from './routes/keywordRoutes.js';
 import chatbotsRoutes from './routes/chatbotsRoutes.js';
-import { sendTextMessage, sendTemplateMessages } from './controllers/messageController/sendTextMessage.js';
+import { setupMessageSocket } from './controllers/messageController/sendMessage.js';
 import chatRoutes from './routes/chatRoutes.js'
 
 
@@ -51,64 +51,65 @@ app.use('/', chatRoutes);
 
 
 app.set('io', io);
+setupMessageSocket(io);
 
 
-io.on('connection', (socket) => {
-  console.log(`🔌 New socket connection: ${socket.id}`);
+// io.on('connection', (socket) => {
+//   console.log(`🔌 New socket connection: ${socket.id}`);
 
-  socket.on('sendTextMessage', async (payload) => {
-    console.log('📨 Received sendMessage:', payload);
-
-
-    try {
-
-      const res = await sendTextMessage(payload);
+//   socket.on('sendTextMessage', async (payload) => {
+//     console.log('📨 Received sendMessage:', payload);
 
 
-      const messageId = res.data.messages.map(m => m.id);
+//     try {
+
+//       const res = await sendTextMessage(payload);
 
 
-      const updatedPayload = {
-        ...payload,
-        messageId: messageId,
-      };
-
-      io.emit('newMessage', updatedPayload);
-
-      console.log('WhatsApp message sent: ' + JSON.stringify(messageId));
-    } catch (error) {
-      console.error(' Error sending message:', error.response?.data || error.message);
-
-      socket.emit('messageError', {
-        to: payload.to,
-        error: error.response?.data || error.message
-      });
-    }
-  });
+//       const messageId = res.data.messages.map(m => m.id);
 
 
+//       const updatedPayload = {
+//         ...payload,
+//         messageId: messageId,
+//       };
 
-  socket.on('sendTemplateMessage', async (payload) => {
-    console.log('📨 Received sendMessage:', payload);
+//       io.emit('newMessage', updatedPayload);
 
-    io.emit('newTemplateMessage', payload);
-    try {
-      await sendTemplateMessages(payload);
-      console.log('WhatsApp message sent.');
-    } catch (error) {
-      console.error(' Error sending message:', error.response?.data || error.message);
-      socket.emit('messageError', {
-        to: payload.to,
-        error: error.response?.data || error.message
-      });
-    }
-  });
+//       console.log('WhatsApp message sent: ' + JSON.stringify(messageId));
+//     } catch (error) {
+//       console.error(' Error sending message:', error.response?.data || error.message);
+
+//       socket.emit('messageError', {
+//         to: payload.to,
+//         error: error.response?.data || error.message
+//       });
+//     }
+//   });
 
 
-  socket.on('disconnect', () => {
-    console.log(` Socket disconnected: ${socket.id}`);
-  });
-});
+
+//   socket.on('sendTemplateMessage', async (payload) => {
+//     console.log('📨 Received sendMessage:', payload);
+
+//     io.emit('newTemplateMessage', payload);
+//     try {
+//       await sendTemplateMessages(payload);
+//       console.log('WhatsApp message sent.');
+//     } catch (error) {
+//       console.error(' Error sending message:', error.response?.data || error.message);
+//       socket.emit('messageError', {
+//         to: payload.to,
+//         error: error.response?.data || error.message
+//       });
+//     }
+//   });
+
+
+//   socket.on('disconnect', () => {
+//     console.log(` Socket disconnected: ${socket.id}`);
+//   });
+// });
 
 
 const start = async () => {
