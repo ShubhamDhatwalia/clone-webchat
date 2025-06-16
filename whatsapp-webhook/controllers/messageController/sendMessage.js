@@ -1,5 +1,5 @@
 import axios from 'axios';
-import chat from '../models/chat.js';
+import chat from '../../models/chat.js';
 
 
 export async function sendTextMessage(payload) {
@@ -59,7 +59,7 @@ export function setupMessageSocket(io) {
         };
 
         io.emit('newMessage', updatedPayload);
-        
+
         const chatDoc = new chat({
           message: updatedPayload,
           messageType: 'sent',
