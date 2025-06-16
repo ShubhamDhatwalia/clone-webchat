@@ -9,9 +9,10 @@ import { toast } from 'react-toastify';
 import UserProfileDetails from '../Chat/UserProfileDetails.jsx';
 import MediaModal from '../Chat/MediaModal.jsx';
 import VoiceRecorder from '../Chat/VoiceRecording.jsx';
-import { io } from 'socket.io-client';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchChat } from '../../redux/chat/chatThunk.js';
+import socket from '../Chat/socket.jsx'
+
 
 
 function Chat() {
@@ -37,7 +38,7 @@ function Chat() {
   const dispatch = useDispatch();
   const messagesEndRef = useRef(null);
 
-  const socket = io('https://clone-webchat.onrender.com/', { withCredentials: true });
+
 
 
   const chats = useSelector((state) => state.chat.chats);
@@ -46,6 +47,9 @@ function Chat() {
 
   useEffect(() => {
     setShowChat(chats);
+    if (chats.length < 15) {
+      setHasMore(false);
+    }
   }, [chats]);
 
 
@@ -53,7 +57,7 @@ function Chat() {
     if (selectedUser) {
       setShowChat([]);
       setPage(0);
-      setHasMore(true);
+      // setHasMore(true);
       loadChats(0);
     }
   }, [selectedUser]);
@@ -64,6 +68,7 @@ function Chat() {
     if (!container || isLoading || !hasMore) return;
 
     if (container.scrollTop < 100) {
+      console.log("scroll")
       loadMoreChats();
     }
   };
@@ -103,7 +108,7 @@ function Chat() {
       }
 
       const res = await dispatch(fetchChat({ phone: selectedUser.phone, page: currentPage }));
-      
+
 
       if (res.payload.length === 0) {
         setHasMore(false);
@@ -183,6 +188,10 @@ function Chat() {
       }
     };
 
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+    }
 
     socket.emit('sendTextMessage', payload);
 
@@ -365,8 +374,8 @@ function Chat() {
 
                             {chat.message?.type === 'text' && (
                               <div className='flex gap-3'>
-                                <div className="text-black font-semibold self-center whitespace-pre-wrap">
-                                  {chat.message?.text?.body}
+                                <div className="text-black font-semibold self-center whitespace-pre-wrap max-w-[420px]">
+                                  <p className='break-words'>{chat.message?.text?.body}</p>
                                 </div>
 
                                 <div className="text-gray-500 text-right text-[10px] gap-1 font-semibold flex items-end justify-end mt-3 ">
@@ -509,14 +518,14 @@ function Chat() {
                     <div>Start chatting with {selectedUser.name}...</div>
                   )}
 
-                  {/* 👇 This empty div will be scrolled into view */}
+
                   <div ref={messagesEndRef} />
                 </div>
 
 
 
                 {/* Footer */}
-                < div className='chat-footer flex items-center gap-[20px] bg-white px-[20px] py-[10px]  w-full' >
+                < div className='chat-footer flex items-center gap-[20px] bg-white px-[20px] py-[10px] w-full' >
                   <div className='flex items-center gap-[15px]'>
 
 

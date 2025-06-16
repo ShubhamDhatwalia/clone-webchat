@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { TextField } from '@mui/material';
-import { io } from 'socket.io-client';
+import socket from './socket';
 
 
 
@@ -16,7 +16,6 @@ function TemplatesPreview({ template, onClose, onBack, selectedUser }) {
     // const [template, setTemplate] = useState(null);
     const [variableInputs, setVariableInputs] = useState({});
 
-    const socket = io('https://clone-webchat.onrender.com/', { withCredentials: true });
 
 
 

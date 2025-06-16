@@ -82,7 +82,8 @@ export function setupMessageSocket(io) {
       console.log('Received sendTemplateMessage:', payload);
 
       try {
-        await sendTemplateMessages(payload);
+        const res =  await sendTemplateMessages(payload);
+        console.log(res.data);
         io.emit('newTemplateMessage', payload);
         console.log(' WhatsApp template message sent.');
       } catch (error) {

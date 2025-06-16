@@ -4,14 +4,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import Chat from '../Pages/Chat';
 import { fetchContacts } from '../../redux/contacts/contactThunk';
 import { fetchAllChats } from '../../redux/chat/chatThunk';
-import { io } from 'socket.io-client';
+import socket from './socket';
 
 
 function ChatList({ onSelectUser, selectedUser, onSearch }) {
   const contacts = useSelector((state) => state.contact.contacts);
   const dispatch = useDispatch();
   const chats = useSelector((state) => state.chat.allChats);
-  const socket = io('https://clone-webchat.onrender.com/', { withCredentials: true });
 
 
 
