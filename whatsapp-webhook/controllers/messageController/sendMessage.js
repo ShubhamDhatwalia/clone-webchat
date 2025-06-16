@@ -53,6 +53,7 @@ export function setupMessageSocket(io) {
         const updatedPayload = {
           ...payload,
           messageId,
+          timestamp: new Date().toISOString(),
         };
 
         io.emit('newMessage', updatedPayload);
