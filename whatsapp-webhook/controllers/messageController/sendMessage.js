@@ -48,7 +48,7 @@ export function setupMessageSocket(io) {
         const res = await sendTextMessage(payload);
         const messageId = res.data.messages.map((m) => m.id);
 
-        console.log(res)
+        console.log(res.data)
 
         const updatedPayload = {
           ...payload,
