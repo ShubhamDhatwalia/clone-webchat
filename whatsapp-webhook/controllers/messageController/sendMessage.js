@@ -35,16 +35,20 @@ export async function sendTemplateMessages(payload) {
 }
 
 
+
+
 export function setupMessageSocket(io) {
   io.on('connection', (socket) => {
-    console.log(`🔌 New socket connection: ${socket.id}`);
+    console.log(`New socket connection: ${socket.id}`);
 
     socket.on('sendTextMessage', async (payload) => {
-      console.log('📨 Received sendTextMessage:', payload);
+      console.log('Received sendTextMessage:', payload);
 
       try {
         const res = await sendTextMessage(payload);
         const messageId = res.data.messages.map((m) => m.id);
+
+        console.log(res)
 
         const updatedPayload = {
           ...payload,
@@ -54,7 +58,7 @@ export function setupMessageSocket(io) {
         io.emit('newMessage', updatedPayload);
         console.log(' WhatsApp text message sent:', JSON.stringify(messageId));
       } catch (error) {
-        console.error('❌ Error sending text message:', error.response?.data || error.message);
+        console.error(' Error sending text message:', error.response?.data || error.message);
         socket.emit('messageError', {
           to: payload.to,
           error: error.response?.data || error.message,
