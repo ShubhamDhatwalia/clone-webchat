@@ -8,13 +8,18 @@ export const fetchChat = async (req, res) => {
         const skip = parseInt(req.query.skip) || 0;
 
         const chats = await chat
-            .find({ "message.from": phone })
-            .sort({ "message.timestamp": -1 }) 
+            .find({
+                $or: [
+                    { "message.from": phone },
+                    { "to": phone }
+                ]
+            })
+            .sort({ "message.timestamp": -1 })
             .skip(skip)
             .limit(limit)
             .lean();
 
-        res.json(chats.reverse()); 
+        res.json(chats.reverse());
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: err.message });

@@ -341,6 +341,7 @@ function Chat() {
 
                   {showChat.length > 0 ? (
                     showChat.map((chat) => (
+                      console.log(chat),
                       <div key={chat.id} className="mb-4">
                         <div
                           className={`flex ${chat.messageType === 'received' ? 'justify-start' : 'justify-end'
