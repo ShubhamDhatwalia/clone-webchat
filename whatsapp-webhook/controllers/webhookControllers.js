@@ -313,7 +313,7 @@ export async function handleWebhook(req, res) {
                 const { base64, contentType } = await fetchImage(mediaId);
 
                 message.document.url = `data:${contentType};base64,${base64}`;
-                
+
             } catch (error) {
                 console.error('Error fetching document from WhatsApp:', error);
             }
@@ -396,13 +396,31 @@ export async function handleWebhook(req, res) {
 
         const { status, id, timestamp, recipient_id } = statusUpdate;
 
+        if (['delivered', 'read'].includes(status)) {
+            const updated = await chat.findOneAndUpdate(
+                { "message.messageId": id }, 
+                {
+                    $set: {
+                        "messageType": status,
+                    }
+                },
+                { new: true }
+            );
 
-        if (status === 'delivered') {
-            console.log('Message delivered successfully!');
-        } else if (status === 'read') {
-            console.log('Message was read!');
+            if (updated) {
+                console.log(`Message ${id} updated with status: ${status}`);
+
+               
+                io.emit('messageStatusUpdate', {
+                    messageId: id,
+                    status,
+                });
+            } else {
+                console.log(`Message with ID ${id} not found.`);
+            }
         }
     }
+
 
     res.sendStatus(200);
 }
