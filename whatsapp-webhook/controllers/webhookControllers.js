@@ -249,7 +249,7 @@ const fetchImage = async (mediaId) => {
 export async function handleWebhook(req, res) {
     const body = req.body;
     const io = req.app.get('io');
-    console.log('Received webhook:', body);
+    console.log('Received webhook:', JSON.stringify(body, null, 2));
 
 
 
@@ -408,7 +408,7 @@ export async function handleWebhook(req, res) {
                     messageId: id,
                     status,
                 });
-            } 
+            }
         }
     }
 
