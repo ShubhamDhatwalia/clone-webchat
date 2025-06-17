@@ -13,7 +13,7 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
   const chats = useSelector((state) => state.chat.allChats);
 
   const unreadCounts = useSelector((state) => state.chat.unreadCounts);
- 
+
 
 
 
@@ -66,6 +66,12 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
       socket.off('newMessage');
     };
   }, [selectedUser]);
+
+
+  socket.onAny((event, data) => {
+    console.log(`🔊 Socket event received: ${event}`, data);
+  });
+
 
 
 
@@ -162,13 +168,13 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
 
 
                 <div className='flex-grow  flex  items-center'>
-                 
-                    {unread > 0 && !isSelected && (
-                      <span className='text-white text-xs font-bold bg-green-500 rounded-full px-2 py-0.5 mt-1'>
-                        {unread}
-                      </span>
-                    )}
-                 
+
+                  {unread > 0 && !isSelected && (
+                    <span className='text-white text-xs font-bold bg-green-500 rounded-full px-2 py-0.5 mt-1'>
+                      {unread}
+                    </span>
+                  )}
+
                 </div>
 
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import EmojiPicker from 'emoji-picker-react';
+import socket from './socket';
 
 
 
@@ -186,87 +187,25 @@ function FilePreview({ files, setFiles, onClose, selectedUser }) {
 
 
 
-    const handleSubmit = async () => {
+    const handleSubmit = () => {
         if (!files.length) return alert('No files selected.');
 
-        try {
-            for (let i = 0; i < files.length; i++) {
-                const selectedFile = files[i];
-                const caption = previewFiles[i]?.caption || '';
+        const filePayload = files.map((file, i) => ({
+            file,
+            caption: previewFiles[i]?.caption || ''
+        }));
 
-                
-                const formData = new FormData();
-                formData.append('file', selectedFile);
-                formData.append('messaging_product', 'whatsapp');
+        socket.emit("sendMediaMessage", {
+            files: filePayload,
+            selectedUser,
+        });
 
-                const uploadRes = await fetch(`https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/media`, {
-                    method: 'POST',
-                    headers: {
-                        Authorization: `Bearer ${accessToken}`
-                    },
-                    body: formData
-                });
-
-                const uploadData = await uploadRes.json();
-
-                if (!uploadRes.ok || !uploadData.id) {
-                    console.error(`Media upload failed for ${selectedFile.name}:`, uploadData);
-
-                    continue;
-                }
-
-                const mediaId = uploadData.id;
-
-              
-                const mediaType = getFileType(selectedFile.type, selectedFile.name);
-                if (!['image', 'video', 'audio', 'document'].includes(mediaType)) {
-                    console.warn('Unsupported file type for sending message:', selectedFile.name);
-                    alert(`Unsupported file type for ${selectedFile.name}. Skipping.`);
-                    continue;
-                }
-
-                const messageBody = {
-                    messaging_product: 'whatsapp',
-                    to: selectedUser?.phone,
-                    type: mediaType,
-                    [mediaType]: {
-                        id: mediaId,
-                        caption: caption,
-                        ...(mediaType === 'document' ? { filename: selectedFile.name } : {})
-                    }
-                };
-
-
-                const messageRes = await fetch(`https://graph.facebook.com/v22.0/${PHONE_NUMBER_ID}/messages`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(messageBody)
-                });
-
-                const messageData = await messageRes.json();
-
-                if (!messageRes.ok) {
-                    console.error(`Message send failed for ${selectedFile.name}:`, messageData);
-                    toast.error("Failed to send " + selectedFile.name)
-                    continue;
-                }
-
-            }
-
-            toast.success("Sent successfully!");
-            setFiles([]);
-            setPreviewFiles([]);
-            setSelectedIndex(0);
-            onClose();
-
-        } catch (error) {
-            console.error('Error during batch sending:', error);
-            toast.error("An error occurred while sending files.");
-        }
+        setFiles([]);
+        setPreviewFiles([]);
+        setSelectedIndex(0);
+        onClose();
     };
+
 
 
 

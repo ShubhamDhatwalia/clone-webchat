@@ -195,7 +195,7 @@ function Chat() {
     return () => {
       socket.off("newMessage", handleNewMessage);
     };
-  }, [selectedUser, dispatch]);
+  });
 
 
 
