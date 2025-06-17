@@ -141,7 +141,7 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
 
 
   return (
-    <ul>
+    <ul className='mx-2'>
       {filteredChatData.map((chat) => {
         const phone = chat.message?.from?.replace(/^\+/, "");
         const unread = unreadCounts[phone] || 0;
@@ -152,25 +152,25 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
           <li
             key={chat.message.from}
             onClick={() => handleClick(chat)}
-            className={`cursor-pointer hover:bg-green-50 px-2 ${isSelected ? 'bg-green-100' : ''}`}
+            className={`cursor-pointer hover:bg-green-50  rounded-lg px-2 ${isSelected ? 'bg-green-100 drop-shadow-xl ' : ''}`}
           >
-            <div className='flex justify-between items-stretch h-[70px]'>
+            <div className='flex justify-between items-stretch h-[60px]'>
               <div className='flex items-center flex-grow'>
                 <img src={profile_icon} alt="Profile" />
-                <div className='ml-[10px] flex flex-col justify-center border-b border-gray-300 w-full h-full'>
+                <div className='ml-[10px] flex flex-col justify-center  w-full h-full'>
                   <h2 className='UserName font-semibold'>{chat.name}</h2>
                   {chat.message && (
                     <p className='text-gray-500 font-semibold text-xs'>{chat.message.text?.body}</p>
                   )}
                 </div>
               </div>
-              <div className='flex flex-col justify-between items-end pl-2 border-b border-gray-300'>
+              <div className='flex flex-col gap-1 justify-center items-end pl-2 '>
 
 
-                <div className='flex-grow  flex  items-center'>
+                <div className=' flex  items-cen'>
 
                   {unread > 0 && !isSelected && (
-                    <span className='text-white text-xs font-bold bg-green-500 rounded-full px-2 py-0.5 mt-1'>
+                    <span className='text-white text-sm font-bold bg-green-500 rounded-full px-[7px] '>
                       {unread}
                     </span>
                   )}

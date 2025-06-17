@@ -320,8 +320,8 @@ function Chat() {
 
 
   return (
-    <div className="bg-gray-100 h-[calc(100vh-60px)] w-full">
-      <div className="bg-white rounded-md flex">
+    <div className="bg-gray-100  w-full">
+      <div className="bg-white rounded-md flex ">
         <div className="flex-[15%] border-r border-gray-300">
           <div className="flex items-center gap-[10px] px-2 mt-3">
             <form className="flex-grow">
@@ -376,10 +376,10 @@ function Chat() {
         </div>
 
         {/* Main chat area */}
-        <div className="flex-[50%] ">
-          <div className='bg-[url("./assets/whatsapp-bg.jpg")] bg-no-repeat bg-center bg-cover opacity-70 w-full h-full relative'>
+       
+          <div className=' flex-[50%] bg-[url("./assets/whatsapp-bg.jpg")] bg-no-repeat bg-center bg-cover opacity-70 w-full  relative'>
             {selectedUser ? (
-              <div className="flex flex-col  h-full">
+              <div className="flex flex-col h-full">
                 {/* Chat header */}
                 <div className="bg-gray-100 px-[20px] py-[10px] flex items-center gap-[10px]">
                   <img src={profile_icon} alt="" />
@@ -815,7 +815,7 @@ function Chat() {
               </div>
             )}
           </div>
-        </div>
+       
 
         <div className="flex-[10%] border-l border-gray-300 p-4">
           <UserProfileDetails selectedUser={selectedUser} />

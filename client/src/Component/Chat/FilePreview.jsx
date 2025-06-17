@@ -199,6 +199,10 @@ function FilePreview({ files, setFiles, onClose, selectedUser }) {
             caption: previewFiles[i]?.caption || ''
         }));
 
+
+        console.log(filePayload);
+
+
         socket.emit("sendMediaMessage", {
             files: filePayload,
             selectedUser,
