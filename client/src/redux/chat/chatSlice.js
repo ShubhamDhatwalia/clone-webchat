@@ -8,14 +8,24 @@ const chatSlice = createSlice({
         chats: [],
         allChats: [],
         loading: false,
-        error: null
+        error: null,
+        unreadCounts: {}
     },
     reducers: {
         clearChats: (state) => {
             state.chats = [];
             state.error = null;
+        },
+        incrementUnread: (state, action) => {
+            const phone = action.payload.replace(/^\+/, "");
+            state.unreadCounts[phone] = (state.unreadCounts[phone] || 0) + 1;
+        },
+        clearUnread: (state, action) => {
+            const phone = action.payload.replace(/^\+/, "");
+            delete state.unreadCounts[phone];
         }
     },
+
     extraReducers: (builder) => {
 
         builder
@@ -51,5 +61,5 @@ const chatSlice = createSlice({
     }
 });
 
-export const { clearChats } = chatSlice.actions;
+export const { clearChats, incrementUnread, clearUnread} = chatSlice.actions;
 export default chatSlice.reducer;

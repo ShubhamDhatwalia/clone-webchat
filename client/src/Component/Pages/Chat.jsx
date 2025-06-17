@@ -4,8 +4,6 @@ import ChatList from "../Chat/ChatList.jsx";
 import profile_icon from "../../assets/profile_icon.svg";
 import EmojiPicker from "emoji-picker-react";
 import Templates from "../Chat/Templates.jsx";
-import axios from "axios";
-import { toast } from "react-toastify";
 import UserProfileDetails from "../Chat/UserProfileDetails.jsx";
 import MediaModal from "../Chat/MediaModal.jsx";
 import VoiceRecorder from "../Chat/VoiceRecording.jsx";
@@ -13,6 +11,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { fetchChat } from "../../redux/chat/chatThunk.js";
 import socket from "../Chat/socket.jsx";
 import TemplateMessagePreview from "../Chat/TemplateMessagePreview.jsx";
+import { incrementUnread, clearUnread } from "../../redux/chat/chatSlice.js";
+
+
+
+
+
+
 
 function Chat() {
   const [activeTab, setActiveTab] = useState("chats");
@@ -37,11 +42,21 @@ function Chat() {
   const messagesEndRef = useRef(null);
 
   const chats = useSelector((state) => state.chat.chats);
+ 
+
+
+  useEffect(() => {
+    if (selectedUser) {
+      dispatch(clearUnread(selectedUser.phone));
+    }
+  }, [selectedUser, dispatch]);
+
 
   useEffect(() => {
     setShowChat(chats);
     if (chats.length < 15) {
       setHasMore(false);
+
     } else {
       setHasMore(true);
     }
@@ -73,7 +88,7 @@ function Chat() {
     }
   };
 
-  const loadMoreChats = () => {
+  const loadMoreChats = async () => {
     if (isLoading) return;
     setIsLoading(true);
 
@@ -81,26 +96,24 @@ function Chat() {
     const container = chatContainerRef.current;
     const prevScrollHeight = container?.scrollHeight;
 
-    loadChats(nextPage);
-    console
-      .log(nextPage)
-      .then(() => {
-        setPage(nextPage);
+    try {
+      await loadChats(nextPage);
+      setPage(nextPage);
 
-        setTimeout(() => {
-          const newScrollHeight = container?.scrollHeight;
-          if (container) {
-            container.scrollTop =
-              newScrollHeight - prevScrollHeight + container.scrollTop;
-          }
-          setIsLoading(false);
-        }, 0);
-      })
-      .catch((err) => {
-        console.error(err);
+      setTimeout(() => {
+        const newScrollHeight = container?.scrollHeight;
+        if (container) {
+          container.scrollTop =
+            newScrollHeight - prevScrollHeight + container.scrollTop;
+        }
         setIsLoading(false);
-      });
+      }, 0);
+    } catch (err) {
+      console.error(err);
+      setIsLoading(false);
+    }
   };
+
 
   const loadChats = async (currentPage) => {
     if (!selectedUser) return;
@@ -156,19 +169,24 @@ function Chat() {
 
 
 
-  
   useEffect(() => {
     const handleNewMessage = (data) => {
+      const messageFrom = data.message.from?.replace(/^\+/, "");
+      const selectedPhone = selectedUser?.phone?.replace(/^\+/, "");
 
-      const isForCurrentChat = data.message.from === selectedUser.phone.replace(/^\+/, '');
+      const isForCurrentChat = messageFrom === selectedPhone;
+      console.log(data)
 
       if (isForCurrentChat) {
+
         setShouldScrollToBottom(true);
         setShowChat((prev) => [...prev, data]);
+
+        dispatch(fetchChat({ phone: selectedUser.phone }));
+      } else {
+
+        dispatch(incrementUnread(messageFrom));
       }
-
-
-      dispatch(fetchChat({ phone: selectedUser.phone }));
     };
 
     socket.on("newMessage", handleNewMessage);
@@ -176,7 +194,8 @@ function Chat() {
     return () => {
       socket.off("newMessage", handleNewMessage);
     };
-  }, [selectedUser]);
+  }, [selectedUser, dispatch]);
+
 
 
 
@@ -191,6 +210,14 @@ function Chat() {
       socket.off("messageStatusUpdate");
     };
   }, [dispatch, selectedUser]);
+
+
+
+
+
+
+
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -284,6 +311,12 @@ function Chat() {
   const handleRecording = () => {
     setRecording(!recording);
   };
+
+
+
+
+
+
 
   return (
     <div className="bg-gray-100 h-[calc(100vh-60px)] w-full">

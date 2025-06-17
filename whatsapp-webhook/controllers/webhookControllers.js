@@ -249,6 +249,8 @@ const fetchImage = async (mediaId) => {
 export async function handleWebhook(req, res) {
     const body = req.body;
     const io = req.app.get('io');
+    console.log('Received webhook:', body);
+
 
 
 
