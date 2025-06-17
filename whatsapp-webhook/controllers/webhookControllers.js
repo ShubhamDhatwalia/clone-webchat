@@ -267,6 +267,8 @@ export async function handleWebhook(req, res) {
 
     if (message && contactInfo) {
 
+        console.log(message);
+
 
         if (message.type === 'image' && message.image?.id) {
             const mediaId = message.image.id;
