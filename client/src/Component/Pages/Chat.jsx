@@ -176,6 +176,7 @@ function Chat() {
 
       const isForCurrentChat = messageFrom === selectedPhone;
       console.log(data)
+      console.log(isForCurrentChat)
 
       if (isForCurrentChat) {
 

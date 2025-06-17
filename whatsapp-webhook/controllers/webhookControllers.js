@@ -348,6 +348,7 @@ export async function handleWebhook(req, res) {
 
         try {
             await chatDoc.save();
+            console.log(chatDoc)
             io.emit('newMessage', chatDoc);
         } catch (err) {
             console.error('Error saving message:', err);
