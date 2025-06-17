@@ -188,9 +188,13 @@ function FilePreview({ files, setFiles, onClose, selectedUser }) {
 
 
     const handleSubmit = () => {
-        if (!files.length) return alert('No files selected.');
+        const fileArray = Array.from(files); 
 
-        const filePayload = files.map((file, i) => ({
+        if (fileArray.length === 0) {
+            return alert('No files selected.');
+        }
+
+        const filePayload = fileArray.map((file, i) => ({
             file,
             caption: previewFiles[i]?.caption || ''
         }));
@@ -205,6 +209,7 @@ function FilePreview({ files, setFiles, onClose, selectedUser }) {
         setSelectedIndex(0);
         onClose();
     };
+
 
 
 

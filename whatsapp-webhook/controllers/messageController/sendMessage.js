@@ -173,6 +173,8 @@ export function setupMessageSocket(io) {
     });
 
     socket.on('sendMediaMessage', async (payload) => {
+      console.log('Received sendMediaMessage:', payload);
+
       try {
         const results = await sendMediaMessage(payload);
         console.log(results);
