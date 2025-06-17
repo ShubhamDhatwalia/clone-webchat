@@ -37,7 +37,6 @@ function Chat() {
   const messagesEndRef = useRef(null);
 
   const chats = useSelector((state) => state.chat.chats);
-  console.log(chats);
 
   useEffect(() => {
     setShowChat(chats);
@@ -52,17 +51,24 @@ function Chat() {
     if (selectedUser) {
       setShowChat([]);
       setPage(0);
-      // setHasMore(true);
-      loadChats(0);
+      setIsLoading(false);
+      setHasMore(true);
+      setShouldScrollToBottom(true);
     }
   }, [selectedUser]);
+
+  useEffect(() => {
+    if (selectedUser && showChat.length === 0) {
+      loadChats(0);
+    }
+  }, [showChat, selectedUser]);
+
 
   const handleScroll = () => {
     const container = chatContainerRef.current;
     if (!container || isLoading || !hasMore) return;
 
     if (container.scrollTop < 100) {
-      console.log("scroll");
       loadMoreChats();
     }
   };
@@ -112,8 +118,6 @@ function Chat() {
         setHasMore(false);
       } else {
         setShowChat((prev) => {
-          console.log(prev);
-          console.log(showChat);
           const existingMessageIds = showChat.map((msg) => msg._id);
           const newMessages = res.payload.filter(
             (msg) => !existingMessageIds.includes(msg._id)
@@ -126,10 +130,11 @@ function Chat() {
     }
   };
 
+
+
   useEffect(() => {
     socket.on("newTemplateMessage", (data) => {
       setShouldScrollToBottom(true);
-      console.log(data);
       setShowChat((prev) => [...prev, data]);
       dispatch(fetchChat({ phone: selectedUser.phone }));
     });
@@ -149,19 +154,33 @@ function Chat() {
     }
   }, [showChat]);
 
-  useEffect(() => {
-    socket.on("newMessage", (data) => {
-      setShouldScrollToBottom(true);
 
-      setShowChat((prev) => [...prev, data]);
+
+  
+  useEffect(() => {
+    const handleNewMessage = (data) => {
+
+      const isForCurrentChat = data.message.from === selectedUser.phone.replace(/^\+/, '');
+
+      if (isForCurrentChat) {
+        setShouldScrollToBottom(true);
+        setShowChat((prev) => [...prev, data]);
+      }
+
 
       dispatch(fetchChat({ phone: selectedUser.phone }));
-    });
+    };
+
+    socket.on("newMessage", handleNewMessage);
 
     return () => {
-      socket.off("newMessage");
+      socket.off("newMessage", handleNewMessage);
     };
   }, [selectedUser]);
+
+
+
+
 
   useEffect(() => {
     socket.on("messageStatusUpdate", (data) => {
@@ -291,11 +310,10 @@ function Chat() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`cursor-pointer flex items-center gap-2 px-4 py-2 border rounded-t-sm bg-gray-100 flex-1 ${
-                    activeTab === tab.id
-                      ? "border-gray-400 border-b-0 rounded-b-[-5px] bg-white text-blue-600 font-semibold"
-                      : "border border-gray-400 text-black hover:text-blue-500"
-                  }`}
+                  className={`cursor-pointer flex items-center gap-2 px-4 py-2 border rounded-t-sm bg-gray-100 flex-1 ${activeTab === tab.id
+                    ? "border-gray-400 border-b-0 rounded-b-[-5px] bg-white text-blue-600 font-semibold"
+                    : "border border-gray-400 text-black hover:text-blue-500"
+                    }`}
                 >
                   {tab.icon}
                   {tab.label}
@@ -356,18 +374,16 @@ function Chat() {
                     showChat.map((chat) => (
                       <div key={chat.id} className="mb-4">
                         <div
-                          className={`flex ${
-                            chat.messageType === "received"
-                              ? "justify-start"
-                              : "justify-end"
-                          }`}
+                          className={`flex ${chat.messageType === "received"
+                            ? "justify-start"
+                            : "justify-end"
+                            }`}
                         >
                           <div
-                            className={`p-2 py-2 items-end flex gap-2  min-w-[50px] max-w-[48%] shadow-2xl ${
-                              chat.messageType === "received"
-                                ? "bg-gray-50 rounded-b-2xl rounded-tr-2xl"
-                                : "bg-green-50 rounded-b-2xl rounded-tl-2xl"
-                            }`}
+                            className={`p-2 py-2 items-end flex gap-2  min-w-[50px] max-w-[48%] shadow-2xl ${chat.messageType === "received"
+                              ? "bg-gray-50 rounded-b-2xl rounded-tr-2xl"
+                              : "bg-green-50 rounded-b-2xl rounded-tl-2xl"
+                              }`}
                           >
                             {chat.message?.type === "text" && (
                               <div className="flex gap-3">

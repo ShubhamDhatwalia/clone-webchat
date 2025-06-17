@@ -27,14 +27,42 @@ export const fetchChat = async (req, res) => {
 };
 
 
-
 export const fetchAllChats = async (req, res) => {
     try {
         const chats = await chat.aggregate([
+            {
+                $addFields: {
+                    fromNormalized: {
+                        $cond: [
+                            { $eq: [{ $substrBytes: ["$message.from", 0, 1] }, "+"] },
+                            { $substrBytes: ["$message.from", 1, { $strLenBytes: "$message.from" }] },
+                            "$message.from"
+                        ]
+                    },
+                    toNormalized: {
+                        $cond: [
+                            { $eq: [{ $substrBytes: ["$message.to", 0, 1] }, "+"] },
+                            { $substrBytes: ["$message.to", 1, { $strLenBytes: "$message.to" }] },
+                            "$message.to"
+                        ]
+                    }
+                }
+            },
+            {
+                $addFields: {
+                    chatKey: {
+                        $cond: {
+                            if: { $gt: ["$fromNormalized", "$toNormalized"] },
+                            then: { $concat: ["$toNormalized", "_", "$fromNormalized"] },
+                            else: { $concat: ["$fromNormalized", "_", "$toNormalized"] }
+                        }
+                    }
+                }
+            },
             { $sort: { "message.timestamp": -1 } },
             {
                 $group: {
-                    _id: "$message.from",
+                    _id: "$chatKey",
                     latestChat: { $first: "$$ROOT" }
                 }
             },
@@ -52,3 +80,4 @@ export const fetchAllChats = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
+
