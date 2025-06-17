@@ -13,7 +13,7 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
   const chats = useSelector((state) => state.chat.allChats);
 
   const unreadCounts = useSelector((state) => state.chat.unreadCounts);
-  console.log(unreadCounts);
+ 
 
 
 
@@ -55,6 +55,7 @@ function ChatList({ onSelectUser, selectedUser, onSearch }) {
 
   useEffect(() => {
     socket.on('newMessage', (data) => {
+      console.log(data);
 
       dispatch(fetchAllChats())
       dispatch(fetchContacts())

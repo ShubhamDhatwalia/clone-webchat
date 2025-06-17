@@ -249,9 +249,7 @@ const fetchImage = async (mediaId) => {
 export async function handleWebhook(req, res) {
     const body = req.body;
     const io = req.app.get('io');
-    console.log('Received webhook:', JSON.stringify(body, null, 2));
-
-
+    
 
 
     if (!body.entry || !body.entry[0].changes) {
@@ -267,7 +265,7 @@ export async function handleWebhook(req, res) {
 
     if (message && contactInfo) {
 
-        console.log(message);
+        
 
 
         if (message.type === 'image' && message.image?.id) {
